@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>זיהוי צבעי תמונה</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+            background-color: #f8f9fa;
+        }
+        canvas {
+            display: none;
+        }
+        .colors {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        .color-box {
+            width: 150px;
+            height: 150px;
+            margin: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            color: white;
+            transition: transform 0.3s ease;
+        }
+        .color-box:hover {
+            transform: scale(1.05);
+        }
+        .color-code {
+            margin-top: 10px;
+            font-size: 14px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 5px;
+            border-radius: 5px;
+        }
+        .color-name {
+            margin-top: 5px;
+            font-size: 12px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 3px;
+            border-radius: 5px;
+        }
+        .button {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .loader {
+            display: none;
+            margin: 20px 0;
+            font-size: 18px;
+            font-weight: bold;
+            color: #555;
+        }
+        .loader:after {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 4px solid rgba(0, 0, 0, 0.2);
+            border-top: 4px solid #007bff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        #preview {
+            max-width: 25%;
+            margin: auto;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            display: none;
+        }
+       @media (max-width: 768px) {
+           #preview {
+             max-width: 100%;
+           }
+      }
+    </style>
+</head>
+<body>
+    <h1>זיהוי צבעי תמונה</h1>
+    <input type="file" id="imageUploader" accept="image/*" />
+    <button class="button" id="showColorsButton" disabled>זיהוי צבעים</button>
+    <div class="loader" id="loader"></div>
+    <img id="preview" alt="תצוגה מקדימה" />
+    <canvas id="canvas"></canvas>
+    <div class="colors" id="colorDisplay"></div>
+
+    <script src="https://chir.ag/projects/ntc/ntc.js"></script>
+    <script>
+        let colorsReady = false;
+
+        document.getElementById('imageUploader').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.src = e.target.result;
+                    img.onload = function() {
+                        const canvas = document.getElementById('canvas');
+                        const ctx = canvas.getContext('2d');
+                        canvas.width = img.width;
+                        canvas.height = img.height;
+                        ctx.drawImage(img, 0, 0);
+
+                        const preview = document.getElementById('preview');
+                        preview.src = e.target.result;
+                        preview.style.display = 'block';
+
+                        colorsReady = true;
+                        document.getElementById('showColorsButton').disabled = false;
+                    };
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        document.getElementById('showColorsButton').addEventListener('click', function() {
+            if (colorsReady) {
+                const loader = document.getElementById('loader');
+                loader.style.display = 'block';
+
+                const canvas = document.getElementById('canvas');
+                const imageData = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height);
+                
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                    const colors = extractColors(imageData);
+                    displayColors(colors);
+                    document.getElementById('colorDisplay').scrollIntoView({ behavior: 'smooth' });
+                }, 1000);
+            }
+        });
+
+        function extractColors(imageData) {
+            const pixels = imageData.data;
+            const colorMap = {};
+            const significantColors = [];
+
+            for (let i = 0; i < pixels.length; i += 4) {
+                const r = pixels[i];
+                const g = pixels[i + 1];
+                const b = pixels[i + 2];
+                const rgb = `rgb(${r}, ${g}, ${b})`;
+
+                if (colorMap[rgb]) {
+                    colorMap[rgb]++;
+                } else {
+                    colorMap[rgb] = 1;
+                }
+            }
+
+            const sortedColors = Object.entries(colorMap).sort((a, b) => b[1] - a[1]);
+            const threshold = 50;
+
+            sortedColors.forEach(([color]) => {
+                const hexColor = rgbToHex(color);
+                if (!isSimilarColor(hexColor, significantColors, threshold)) {
+                    significantColors.push(hexColor);
+                }
+            });
+
+            return significantColors;
+        }
+
+        function rgbToHex(rgb) {
+            const result = rgb.match(/\d+/g);
+            const hex = '#' + ((1 << 24) + (parseInt(result[0]) << 16) + (parseInt(result[1]) << 8) + parseInt(result[2])).toString(16).slice(1);
+            return hex;
+        }
+
+        function isSimilarColor(hexColor, colors, threshold) {
+            const [r1, g1, b1] = hexToRgb(hexColor);
+            for (const color of colors) {
+                const [r2, g2, b2] = hexToRgb(color);
+                const distance = Math.sqrt(
+                    Math.pow(r1 - r2, 2) +
+                    Math.pow(g1 - g2, 2) +
+                    Math.pow(b1 - b2, 2)
+                );
+                if (distance < threshold) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        function hexToRgb(hex) {
+            const bigint = parseInt(hex.slice(1), 16);
+            const r = (bigint >> 16) & 255;
+            const g = (bigint >> 8) & 255;
+            const b = bigint & 255;
+            return [r, g, b];
+        }
+
+        function displayColors(colors) {
+            const colorDisplay = document.getElementById('colorDisplay');
+            colorDisplay.innerHTML = '';
+            colors.forEach(hex => {
+                const ntcMatch = ntc.name(hex);
+                const colorBox = document.createElement('div');
+                colorBox.classList.add('color-box');
+                colorBox.style.backgroundColor = hex;
+
+                const colorCode = document.createElement('div');
+                colorCode.classList.add('color-code');
+                colorCode.innerText = hex;
+
+                const colorName = document.createElement('div');
+                colorName.classList.add('color-name');
+                colorName.innerText = ntcMatch[1];
+
+                colorBox.appendChild(colorCode);
+                colorBox.appendChild(colorName);
+                colorDisplay.appendChild(colorBox);
+            });
+        }
+    </script>
+</body>
+</html>
