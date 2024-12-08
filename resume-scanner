@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>התאמת קורות חיים לסורקים אוטומטיים (ATS)</title>
+    <style>
+        /* Reset some basic elements */
+        body, h1, h2, p, textarea, button {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5;
+            direction: rtl; /* RTL for Hebrew */
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: right;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 20px;
+            color: #555;
+        }
+
+        input[type="file"] {
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        textarea {
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            resize: vertical;
+            min-height: 120px;
+            font-size: 16px;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+
+        button:hover {
+            background-color: #218838;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        #result {
+            margin-top: 30px;
+            display: none; /* התוצאה מוסתרת בהתחלה */
+        }
+
+        #score {
+            font-size: 18px;
+            font-weight: 500;
+            color: #333;
+            margin-top: 10px;
+        }
+
+        #matchedKeywords {
+            margin-top: 10px;
+            font-size: 16px;
+            color: #555;
+        }
+
+        h2 {
+            font-size: 20px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>התאמת קורות חיים לסורקים אוטומטיים (ATS)</h1>
+        <form id="atsForm">
+            <label for="resume">העלו את קובץ ה-PDF של קורות החיים שלכם:</label>
+            <input type="file" id="resume" accept=".pdf" />
+
+            <label for="jobDescription">הזינו את דרישות המשרה:</label>
+            <textarea id="jobDescription" placeholder="הזינו את דרישות המשרה כאן..."></textarea>
+
+            <button type="button" onclick="calculateScore()">חישוב התאמה</button>
+        </form>
+
+        <div id="result">
+            <h2>תוצאות התאמה:</h2>
+            <p id="score">הניקוד יופיע כאן...</p>
+            <p id="matchedKeywords">מילות המפתח שנמצאו: </p>
+        </div>
+    </div>
+
+    <!-- PDF.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <script>
+        // פונקציה לקרוא את תוכן קובץ ה-PDF
+        async function readPdf(file) {
+            const reader = new FileReader();
+            return new Promise((resolve, reject) => {
+                reader.onload = async function() {
+                    const typedarray = new Uint8Array(this.result);
+                    try {
+                        const pdf = await pdfjsLib.getDocument(typedarray).promise;
+                        const numPages = pdf.numPages;
+                        let text = '';
+                        for (let pageNum = 1; pageNum <= numPages; pageNum++) {
+                            const page = await pdf.getPage(pageNum);
+                            const content = await page.getTextContent();
+                            text += content.items.map(item => item.str).join(' ');
+                        }
+                        resolve(text.toLowerCase());
+                    } catch (error) {
+                        reject(error);
+                    }
+                };
+                reader.readAsArrayBuffer(file);
+            });
+        }
+
+        // פונקציה לחישוב התאמה
+        async function calculateScore() {
+            // קבלת התכנים מהטפסים
+            const fileInput = document.getElementById('resume');
+            let jobDescriptionText = document.getElementById('jobDescription').value.toLowerCase();
+
+            if (!fileInput.files.length) {
+                alert("אנא העלו קובץ PDF של קורות החיים שלכם.");
+                return;
+            }
+
+            // הסרת הסימן "/" מדרישות המשרה
+            jobDescriptionText = jobDescriptionText.replace(/\//g, '');
+
+            // רשימת מילות מפתח להתעלם
+            const ignoreKeywords = new Set(['חובה', 'יתרון', 'ניסיון']);
+
+            const resumeFile = fileInput.files[0];
+            try {
+                const resumeText = await readPdf(resumeFile);
+
+                // בדיקת מילות מפתח בקורות החיים
+                const jobKeywords = jobDescriptionText.split(/\s+/).filter(keyword => !ignoreKeywords.has(keyword));
+                let matchCount = 0;
+                const matchedKeywordsSet = new Set();
+
+                jobKeywords.forEach(keyword => {
+                    if (keyword.length > 1 && resumeText.includes(keyword)) { // סינון תווים בודדים
+                        matchedKeywordsSet.add(keyword);
+                    }
+                });
+
+                // חישוב האחוז הכולל
+                const totalKeywords = jobKeywords.filter(keyword => keyword.length > 1).length;
+                const matchCountSet = matchedKeywordsSet.size;
+                const score = (matchCountSet / totalKeywords) * 100;
+
+                // הצגת התוצאה
+                const scoreElement = document.getElementById('score');
+                scoreElement.innerText = `אחוז התאמה: ${score.toFixed(2)}% (${matchCountSet} מתוך ${totalKeywords} מילות מפתח נמצאו)`;
+
+                // הצגת מילות המפתח שנמצאו
+                const matchedKeywordsElement = document.getElementById('matchedKeywords');
+                matchedKeywordsElement.innerText = `מילות המפתח שנמצאו: ${[...matchedKeywordsSet].join(', ')}`;
+
+                // הצגת תוצאת ההתאמה
+                document.getElementById('result').style.display = 'block';
+            } catch (error) {
+                alert("אירעה שגיאה בעת קריאת קובץ ה-PDF.");
+                console.error(error);
+            }
+        }
+    </script>
+</body>
+</html>
