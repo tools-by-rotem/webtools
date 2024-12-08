@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>כלי ציור אינטראקטיבי</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #ece9e6, #ffffff);
+            padding: 20px;
+        }
+        #toolbar {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 800px;
+        }
+        #toolbar input, #toolbar select, #toolbar button {
+            margin: 0 5px;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            background-color: #f1f1f1;
+        }
+        #toolbar button {
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            padding: 8px;
+        }
+        #toolbar button:hover {
+            background-color: #e0e0e0;
+        }
+        #toolbar button img {
+            width: 24px;
+            height: 24px;
+        }
+        .button-group {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        #canvas-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: white;
+            padding: 10px;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 800px;
+        }
+        canvas {
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 100%;
+            height: auto;
+        }
+        #colorDisplay {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #000000;
+            border: 2px solid #ddd;
+            cursor: pointer;
+            display: inline-block;
+            margin-left: 10px;
+            position: relative;
+        }
+        #colorPicker {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            display: none;
+            z-index: 1000;
+        }
+        #colorDisplay.active #colorPicker {
+            display: block;
+        }
+        #menu-toggle {
+            display: none;
+            cursor: pointer;
+            font-size: 24px;
+            margin-bottom: 10px;
+            background: none;
+            border: none;
+            padding: 5px;
+        }
+        @media (max-width: 768px) {
+        #menu-toggle {
+            display: block;
+        }
+        #toolbar {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+        }
+        #toolbar.show {
+            display: flex;
+        }
+        #toolbar input, #toolbar select {
+            width: 80%;
+            margin: 5px 0;
+        }
+        #toolbar button {
+            width: 40px;
+            height: 40px;
+            padding: 8px;
+            margin: 5px;
+        }
+        #toolbar label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+        #colorDisplay {
+            margin-left: 0;
+            margin-bottom: 10px;
+        }
+        #colorPicker {
+            position: static;
+            transform: none;
+            margin-top: 10px;
+        }
+        .button-group {
+            flex-direction: row;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 300px;
+            margin-top: 10px;
+        }
+    }
+    </style>
+</head>
+<body>
+    <button id="menu-toggle">☰</button>
+    <div id="toolbar">
+        <label for="colorPicker">
+            <div id="colorDisplay">
+                <input type="color" id="colorPicker" value="#000000">
+            </div>
+        </label>
+        <input type="range" id="brushSize" min="1" max="20" value="5">
+        <select id="brushShape">
+            <option value="round">מעוגל</option>
+            <option value="square">מרובע</option>
+        </select>
+        <input type="range" id="opacity" min="0.1" max="1" step="0.1" value="1">
+        <div class="button-group">
+            <button id="clearCanvas">
+                <img src="https://cdn-icons-png.flaticon.com/512/9742/9742093.png" alt="Clear" width="24" height="24">
+            </button>
+            <button id="undo">
+                <img src="https://cdn-icons-png.flaticon.com/512/2349/2349854.png" alt="Undo" width="24" height="24">
+            </button>
+            <button id="redo">
+                <img src="https://cdn-icons-png.flaticon.com/512/2349/2349829.png" alt="Redo" width="24" height="24">
+            </button>
+            <button id="save">
+                <img src="https://cdn-icons-png.flaticon.com/512/2874/2874091.png" alt="Save" width="24" height="24">
+            </button>
+        </div>
+    </div>
+
+    <div id="canvas-container">
+        <canvas id="canvas"></canvas>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const colorPicker = document.getElementById('colorPicker');
+        const colorDisplay = document.getElementById('colorDisplay');
+        const brushSize = document.getElementById('brushSize');
+        const brushShape = document.getElementById('brushShape');
+        const opacity = document.getElementById('opacity');
+        const clearCanvasBtn = document.getElementById('clearCanvas');
+        const undoBtn = document.getElementById('undo');
+        const redoBtn = document.getElementById('redo');
+        const saveBtn = document.getElementById('save');
+        const menuToggle = document.getElementById('menu-toggle');
+        const toolbar = document.getElementById('toolbar');
+
+        let painting = false;
+        let undoStack = [];
+        let redoStack = [];
+
+        function resizeCanvas() {
+            const containerWidth = document.getElementById('canvas-container').clientWidth;
+            const containerHeight = window.innerHeight * 0.6;
+            canvas.width = containerWidth - 20;
+            canvas.height = containerHeight;
+        }
+
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        function getMousePos(event) {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            return {
+                x: (event.clientX - rect.left) * scaleX,
+                y: (event.clientY - rect.top) * scaleY
+            };
+        }
+
+        function toggleColorPicker(e) {
+            e.stopPropagation();
+            if (window.innerWidth <= 768) {
+                colorPicker.click();
+            } else {
+                colorDisplay.classList.toggle('active');
+            }
+        }
+
+        colorDisplay.addEventListener('click', toggleColorPicker);
+
+        colorPicker.addEventListener('input', function() {
+            colorDisplay.style.backgroundColor = colorPicker.value;
+        });
+
+        colorPicker.addEventListener('change', function() {
+            colorDisplay.style.backgroundColor = colorPicker.value;
+            if (window.innerWidth > 768) {
+                colorDisplay.classList.remove('active');
+            }
+        });
+
+        document.addEventListener('click', function(e) {
+            if (e.target !== colorDisplay && e.target !== colorPicker) {
+                colorDisplay.classList.remove('active');
+            }
+        });
+
+        function startPosition(e) {
+            painting = true;
+            draw(e);
+            saveState();
+        }
+
+        function draw(e) {
+            if (!painting) return;
+            const pos = getMousePos(e);
+            ctx.lineWidth = brushSize.value;
+            ctx.lineCap = brushShape.value;
+            ctx.globalAlpha = opacity.value;
+            ctx.strokeStyle = colorPicker.value;
+
+            ctx.lineTo(pos.x, pos.y);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(pos.x, pos.y);
+        }
+
+        function endPosition() {
+            painting = false;
+            ctx.beginPath();
+        }
+
+        function saveState() {
+            undoStack.push(canvas.toDataURL());
+            if (undoStack.length > 10) undoStack.shift();
+            redoStack = [];
+        }
+
+        undoBtn.addEventListener('click', () => {
+            if (undoStack.length > 0) {
+                redoStack.push(canvas.toDataURL());
+                restoreState(undoStack.pop());
+            }
+        });
+
+        redoBtn.addEventListener('click', () => {
+            if (redoStack.length > 0) {
+                undoStack.push(canvas.toDataURL());
+                restoreState(redoStack.pop());
+            }
+        });
+
+        function restoreState(state) {
+            const img = new Image();
+            img.src = state;
+            img.onload = () => {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            };
+        }
+
+        clearCanvasBtn.addEventListener('click', () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            saveState();
+        });
+
+        saveBtn.addEventListener('click', () => {
+            const link = document.createElement('a');
+            link.download = 'my_drawing.png';
+            
+            const tempCanvas = document.createElement('canvas');
+            const tempCtx = tempCanvas.getContext('2d');
+            tempCanvas.width = canvas.width;
+            tempCanvas.height = canvas.height;
+            
+            tempCtx.fillStyle = '#ffffff';
+            tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+            
+            tempCtx.drawImage(canvas, 0, 0);
+            
+            link.href = tempCanvas.toDataURL();
+            link.click();
+        });
+
+        canvas.addEventListener('mousedown', startPosition);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', endPosition);
+        canvas.addEventListener('mouseleave', endPosition);
+
+        canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            startPosition(e.touches[0]);
+        });
+        canvas.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            draw(e.touches[0]);
+        });
+        canvas.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            endPosition();
+        });
+
+        menuToggle.addEventListener('click', () => {
+            toolbar.classList.toggle('show');
+        });
+    </script>
+</body>
+</html>
