@@ -63,23 +63,6 @@
             border-radius: 4px;
             display: none;
         }
-        #backToToolsBtn {
-            position: fixed;
-            bottom: 20px;  /* מרחק מהתחתית */
-            left: 50%;
-            transform: translateX(-50%); /* מיקום מרכזי */
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            width: auto;
-        }
-        #backToToolsBtn:hover {
-            background-color: #0056b3;
-        }
     </style>
 </head>
 <body>
@@ -101,9 +84,6 @@
 
         <div class="result" id="result"></div>
     </div>
-    
-   <button id="backToToolsBtn">חזרה לספריית הכלים</button>
-   
     <script>
         function calculateSearches() {
             const song1 = parseFloat(document.getElementById('song1').value) || 0;
