@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>כלי ליצירת אינפוגרפיקות</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            direction: rtl; /* כיוון קריאה */
+            text-align: right; /* טקסט מימין לשמאל */
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        form {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            width: 300px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        textarea {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            font-size: 16px;
+            height: 100px;
+        }
+        button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px 0;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        img {
+            max-width: 600px;
+            margin-top: 20px;
+        }
+        #embedCode {
+            margin-top: 20px;
+            display: none;
+            border: 1px solid #ccc;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 5px;
+        }
+        #embedButton, #copyButton {
+            display: none; /* הכפתור מוסתר בהתחלה */
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>כלי ליצירת אינפוגרפיקות</h1>
+    <form id="dataForm">
+        <label for="data">הזינו את הנתונים (אחד לשורה)</label>
+        <textarea id="data" required></textarea>
+        <button type="button" onclick="createChart('bar')">עמודות</button>
+        <button type="button" onclick="createChart('pie')">עוגה</button>
+        <button type="button" onclick="createTable()">טבלה</button>
+    </form>
+    
+    <div id="chartContainer"></div>
+    <div id="tableContainer" style="display:none;"></div>
+    
+    <button id="embedButton" type="button" onclick="showEmbedCode()">הטמעת התוצר</button>
+    <div id="embedCode"></div>
+    <button id="copyButton" type="button" onclick="copyEmbedCode()">העתקת קוד להטמעה</button>
+    
+    <script src="https://unpkg.com/compromise"></script>
+    <script>
+        function formatNumber(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        function parseInput(input) {
+            const doc = nlp(input);
+            const quantities = doc.numbers().out('array').map(Number);
+            const labels = doc.nouns().out('array');
+
+            return { labels, data: quantities }; // מחזירים את המספרים כמות שהם
+        }
+
+        function createChart(type) {
+            const inputData = document.getElementById('data').value;
+            const { labels, data } = parseInput(inputData);
+
+            if (labels.length === 0 || data.length === 0) {
+                alert("אנא הזינו נתונים תקינים.");
+                return;
+            }
+
+            const colors = [
+                'rgba(255, 99, 132, 0.5)', 
+                'rgba(54, 162, 235, 0.5)', 
+                'rgba(255, 206, 86, 0.5)', 
+                'rgba(75, 192, 192, 0.5)', 
+                'rgba(153, 102, 255, 0.5)', 
+                'rgba(255, 159, 64, 0.5)'
+            ];
+
+            const chartConfig = {
+                type: type,
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'נתונים',
+                        data: data,
+                        backgroundColor: type === 'pie' ? colors.slice(0, data.length) : colors.slice(0, labels.length),
+                    }]
+                }
+            };
+
+            const chartURL = `https://quickchart.io/chart?c=${encodeURIComponent(JSON.stringify(chartConfig))}`;
+            
+            document.getElementById('chartContainer').innerHTML = `<img src="${chartURL}" alt="Chart">`;
+            document.getElementById('tableContainer').style.display = 'none';
+            document.getElementById('embedButton').style.display = 'inline-block';
+        }
+
+        function createTable() {
+            const inputData = document.getElementById('data').value;
+            const { labels, data } = parseInput(inputData);
+            
+            if (labels.length === 0 || data.length === 0) {
+                alert("אנא הזן נתונים תקינים.");
+                return;
+            }
+
+            let tableHTML = '<table border="1" style="margin-top: 20px; border-collapse: collapse; width: 100%;"><tr><th>תווית</th><th>ערך</th></tr>';
+            for (let i = 0; i < labels.length; i++) {
+                tableHTML += `<tr><td>${labels[i]}</td><td>${formatNumber(data[i])}</td></tr>`;
+            }
+            tableHTML += '</table>';
+            
+            document.getElementById('tableContainer').innerHTML = tableHTML;
+            document.getElementById('tableContainer').style.display = 'block';
+            document.getElementById('chartContainer').innerHTML = '';
+            document.getElementById('embedButton').style.display = 'inline-block';
+        }
+
+        function showEmbedCode() {
+            const chartImage = document.querySelector('#chartContainer img');
+            if (!chartImage) {
+                alert("אין גרף להטמעה.");
+                return;
+            }
+
+            const chartURL = chartImage.src;
+            const embedHTML = `<img src="${chartURL}" alt="Embedded Chart">`;
+            const embedCodeContainer = document.getElementById('embedCode');
+            embedCodeContainer.innerText = embedHTML;
+            embedCodeContainer.style.display = 'block';
+            document.getElementById('copyButton').style.display = 'inline-block';
+        }
+
+        function copyEmbedCode() {
+            const embedCode = document.getElementById('embedCode').innerText;
+            if (!embedCode) {
+                alert("אין קוד להעתקה.");
+                return;
+            }
+
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = embedCode;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            alert("הקוד הועתק ומוכן להטמעה!");
+        }
+    </script>
+</body>
+</html>
