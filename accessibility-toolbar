@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>סרגל נגישות מתקדם</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            transition: background-color 0.3s ease;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* סרגל נגישות */
+        #accessibility-toolbar {
+            position: fixed;
+            top: 0;
+            right: -320px; /* מתחיל מחוץ למסך */
+            width: 300px;
+            height: 100%;
+            background-color: #343a40;
+            padding: 20px;
+            border-radius: 10px 0 0 10px;
+            z-index: 1000;
+            box-shadow: -2px 0 10px rgba(0, 0, 0, 0.3);
+            transition: right 0.3s ease;
+        }
+
+        /* כפתור פתיחה */
+        #accessibility-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #6c63ff;
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1001;
+            font-size: 24px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        #accessibility-toggle:hover {
+            background-color: #5753d1;
+            transform: scale(1.1);
+        }
+
+        /* עיצוב כפתורים */
+        #accessibility-toolbar button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: #6c63ff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        #accessibility-toolbar button:hover {
+            background-color: #5753d1;
+            transform: translateY(-2px);
+        }
+
+        /* עיצוב כותרות */
+        #accessibility-toolbar h2 {
+            color: white;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        /* ניגודיות גבוהה */
+        .high-contrast {
+            background-color: black;
+            color: white;
+        }
+
+        .high-contrast a {
+            color: yellow;
+        }
+
+        /* גווני אפור */
+        .grayscale {
+            filter: grayscale(100%);
+        }
+
+        /* הדגשת קישורים */
+        .highlight-links a {
+            background-color: yellow;
+            color: black;
+            padding: 2px 4px;
+        }
+
+        /* ריווח טקסט */
+        .text-spacing {
+            line-height: 2;
+        }
+
+        /* עיצוב התוכן */
+        .content {
+            text-align: center;
+        }
+
+        .content a {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #007bff;
+            text-decoration: underline;
+        }
+
+        .content a:hover {
+            text-decoration: underline;
+        }
+
+        /* עיצוב מודאל */
+        #modal {
+            display: none; /* לא מוצג כברירת מחדל */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        #modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            width: 300px;
+            max-height: 80vh; /* גובה מקסימלי */
+            overflow-y: auto; /* אפשרות לגלול */
+        }
+
+        #close-modal {
+            background-color: #dc3545;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <button id="accessibility-toggle" aria-label="פתח סרגל נגישות">⚙️</button>
+    
+    <div id="accessibility-toolbar" aria-hidden="true">
+        <h2>סרגל נגישות</h2>
+        <button id="increase-font">הגדל טקסט</button>
+        <button id="decrease-font">הקטן טקסט</button>
+        <button id="high-contrast">ניגודיות גבוהה</button>
+        <button id="grayscale">גווני אפור</button>
+        <button id="highlight-links">הדגש קישורים</button>
+        <button id="text-spacing">ריווח טקסט</button>
+        <button id="accessibility-statement">הצהרת נגישות</button>
+        <button id="reset-settings">איפוס הגדרות</button>
+    </div>
+
+    <div class="content">
+        <h1>ברוכים הבאים לאתר שלנו</h1>
+        <p>כאן תוכלו למצוא מידע חשוב ותכנים מעניינים במגוון נושאים.</p>
+        <a href="https://drive.google.com/file/d/1ufcOmgi-qeN2HY6SjdZ-lcBW_9U_MwX3/view">הורדת התוסף לאתרי Wordpress</a>
+    </div>
+
+    <!-- מודאל הצהרת נגישות -->
+    <div id="modal">
+        <div id="modal-content">
+            <h2>הצהרת נגישות</h2>
+            <p>
+                אנו מחויבים להעניק שירות שווה ונגיש לכל לקוחותינו. אנו פועלים בהתאם לחוק שוויון זכויות לאנשים עם מוגבלויות תשע"ג-2013 ולתקנותיו.
+                כחלק מאחריותנו החברתית, אנו משקיעים מאמצים מתמשכים לשיפור הנגישות באתר ובמשרד, כדי לאפשר לכל אדם ליהנות משירותינו באופן שווה.
+            </p>
+            <p>
+                אתר זה עומד בדרישות תקנות שוויון זכויות לאנשים עם מוגבלות (התאמות נגישות לשירות), התשע"ג-2013. התאמות הנגישות בוצעו עפ"י המלצות התקן
+                הישראלי (ת"י 5568) לנגישות תכנים באינטרנט ברמת AA ומסמך WCAG2.0 הבינלאומי.
+            </p>
+            <p>
+                מבנה סמנטי: האתר מספק מבנה סמנטי עבור טכנולוגיות מסייעות ותמיכה בדפוס השימוש המקובל להפעלה עם מקלדת בעזרת מקשי החיצים, Enter ו-Esc
+                ליציאה מתפריטים וחלונות.
+            </p>
+            <p>
+                התאמה לתצוגה בדפדפנים נפוצים: האתר מותאם לתצוגה בדפדפנים הנפוצים ולשימוש בטלפון הסלולרי.
+            </p>
+            <p>
+                תוכנת הקראת מסך: לשם קבלת חווית גלישה מיטבית עם תוכנת הקראת מסך, אנו ממליצים על שימוש בתוכנת NVDA העדכנית ביותר.
+            </p>
+            <p>
+                תוסף הנגישות: האתר נעזר בתוסף נגישות, המסייע בהנגשת קטעי טקסט, שינוי גודל אלמנטים, שינוי צבעים, הדגשת קישורים ועוד.
+            </p>
+            <p>
+                מסמכים וסרטוני וידאו: מסמכים או סרטוני וידאו שעלו לאתר לפני אוקטובר 2017 ייתכן שלא נגישים באופן מלא. במידה ונתקלתם במסמך כזה או
+                בסרטון, תוכלו לפנות למשרדנו ונדאג להנגיש לכם את המידע.
+            </p>
+            <p>
+                מסירת מידע בפורמט נגיש: המשרד מעמיד עבור לקוחותיו אפשרות לקבלת מידע בפורמטים נגישים ללא עלות, מיועדים עבור אנשים עם מוגבלות.
+                לפניות ומידע בנושא נגישות ניתן ליצור קשר עם נציגי המשרד.
+            </p>
+            <button id="close-modal">סגור</button>
+        </div>
+    </div>
+
+    <script>
+        // הפעלת כפתור הסרגל
+        const toggleButton = document.getElementById('accessibility-toggle');
+        const toolbar = document.getElementById('accessibility-toolbar');
+        let isToolbarOpen = false;
+
+        toggleButton.addEventListener('click', () => {
+            isToolbarOpen = !isToolbarOpen;
+            toolbar.style.right = isToolbarOpen ? '0' : '-320px'; // הצגת או החבאת הסרגל
+            toolbar.setAttribute('aria-hidden', !isToolbarOpen);
+        });
+
+        // הגדרת גודל טקסט
+        let currentFontSize = 16;
+
+        document.getElementById('increase-font').addEventListener('click', () => {
+            if (currentFontSize < 32) { // עד 200%
+                currentFontSize += 2; // הגדלה של 2 פיקסלים
+                document.body.style.fontSize = currentFontSize + 'px';
+            }
+        });
+
+        document.getElementById('decrease-font').addEventListener('click', () => {
+            if (currentFontSize > 12) { // מינימום 12%
+                currentFontSize -= 2; // הקטנה של 2 פיקסלים
+                document.body.style.fontSize = currentFontSize + 'px';
+            }
+        });
+
+        // ניגודיות גבוהה
+        document.getElementById('high-contrast').addEventListener('click', () => {
+            document.body.classList.toggle('high-contrast');
+        });
+
+        // גווני אפור
+        document.getElementById('grayscale').addEventListener('click', () => {
+            document.body.classList.toggle('grayscale');
+        });
+
+        // הדגשת קישורים
+        document.getElementById('highlight-links').addEventListener('click', () => {
+            document.body.classList.toggle('highlight-links');
+        });
+
+        // ריווח טקסט
+        document.getElementById('text-spacing').addEventListener('click', () => {
+            document.body.classList.toggle('text-spacing');
+        });
+
+        // הצהרת נגישות
+        document.getElementById('accessibility-statement').addEventListener('click', () => {
+            document.getElementById('modal').style.display = 'flex'; // הצגת מודאל
+        });
+
+        // סגירת מודאל
+        document.getElementById('close-modal').addEventListener('click', () => {
+            document.getElementById('modal').style.display = 'none'; // החבאת מודאל
+        });
+
+        // איפוס הגדרות
+        document.getElementById('reset-settings').addEventListener('click', () => {
+            currentFontSize = 16; // אפס את גודל הטקסט לברירת מחדל
+            document.body.style.fontSize = currentFontSize + 'px';
+            document.body.classList.remove('high-contrast', 'grayscale', 'highlight-links', 'text-spacing');
+        });
+    </script>
+</body>
+</html>
