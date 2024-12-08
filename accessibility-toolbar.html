@@ -158,7 +158,22 @@
             cursor: pointer;
             margin-top: 10px;
         }
-
+        #backToToolsBtn {
+            position: fixed;
+            bottom: 20px;  /* מרחק מהתחתית */
+            left: 50%;
+            transform: translateX(-50%); /* מיקום מרכזי */
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        #backToToolsBtn:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
@@ -219,6 +234,8 @@
             <button id="close-modal">סגור</button>
         </div>
     </div>
+
+    <button id="backToToolsBtn">חזרה לספריית הכלים</button>
 
     <script>
         // הפעלת כפתור הסרגל
@@ -284,6 +301,9 @@
             currentFontSize = 16; // אפס את גודל הטקסט לברירת מחדל
             document.body.style.fontSize = currentFontSize + 'px';
             document.body.classList.remove('high-contrast', 'grayscale', 'highlight-links', 'text-spacing');
+        });
+         document.getElementById("backToToolsBtn").addEventListener("click", function() {
+            window.location.href = "https://tools-by-rotem.github.io/home/"; 
         });
     </script>
 </body>
