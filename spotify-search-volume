@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>חישוב כמות חיפושים חודשית ב-Spotify</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #191414;
+            color: #FFFFFF;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            direction: rtl;
+        }
+        .container {
+            background-color: #282828;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            width: 300px;
+            text-align: right;
+        }
+        h1 {
+            color: #1DB954;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input {
+            width: calc(100% - 10px);
+            padding: 8px;
+            margin-bottom: 10px;
+            border: none;
+            border-radius: 4px;
+            font-size: 1em;
+            text-align: right;
+        }
+        button {
+            background-color: #1DB954;
+            color: #FFFFFF;
+            border: none;
+            padding: 10px;
+            font-size: 1em;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #14833B;
+        }
+        .result {
+            margin-top: 20px;
+            background-color: #333;
+            padding: 10px;
+            border-radius: 4px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>חישוב כמות חיפושים חודשית ב-Spotify</h1>
+        <label for="song1">כמות ההשמעות לשיר הראשון</label>
+        <input type="number" id="song1" placeholder="הזינו את כמות ההשמעות" required>
+
+        <label for="song2">כמות ההשמעות לשיר השני</label>
+        <input type="number" id="song2" placeholder="הזינו את כמות ההשמעות" required>
+
+        <label for="song3">כמות ההשמעות לשיר השלישי</label>
+        <input type="number" id="song3" placeholder="הזינו את כמות ההשמעות" required>
+
+        <label for="totalListens">כמות מאזינים חודשיים</label>
+        <input type="number" id="totalListens" placeholder="הזינו את כמות המאזינים" required>
+
+        <button onclick="calculateSearches()">חישוב כמות החיפושים החודשית</button>
+
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        function calculateSearches() {
+            const song1 = parseFloat(document.getElementById('song1').value) || 0;
+            const song2 = parseFloat(document.getElementById('song2').value) || 0;
+            const song3 = parseFloat(document.getElementById('song3').value) || 0;
+            const totalListens = parseFloat(document.getElementById('totalListens').value) || 0;
+
+            const averageTopSongs = (song1 + song2 + song3) / 3;
+            const alpha = 0.5;
+            const beta = 0.5;
+            const estimatedSearches = (alpha * averageTopSongs) + (beta * totalListens);
+
+            // חילוק התוצאה ב-1000
+            const searchesAfterDivision = estimatedSearches / 1000;
+
+            // עיגול התוצאה לאלף הקרוב
+            const roundedSearches = Math.round(searchesAfterDivision / 1000) * 1000;
+
+            // הוספת פסיקים לתוצאה
+            const formattedResult = roundedSearches.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'block';
+            resultDiv.innerText = `כמות החיפושים החודשית: ${formattedResult}`;
+        }
+    </script>
+</body>
+</html>
