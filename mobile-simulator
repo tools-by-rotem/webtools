@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>התאמת עמוד למובייל</title>
+    <style>
+        html, body {
+            font-family: Arial, sans-serif;
+            direction: rtl;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            overflow-x: hidden;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            border-radius: 5px 5px 0 0;
+            margin: 0;
+            background-color: #fff;
+            flex: 1;
+        }
+
+        .tab.active {
+            background-color: #ddd;
+            border-bottom: none;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .phone-frame {
+            width: 360px;
+            height: 640px;
+            border: 16px solid #333;
+            border-radius: 36px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            position: relative;
+            margin: 20px auto;
+            background-color: #000;
+            overflow: hidden;
+        }
+
+        .phone-frame::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            width: 60px;
+            height: 5px;
+            background-color: #333;
+            border-radius: 10px;
+            transform: translateX(-50%);
+        }
+
+        .phone-frame.iphone {
+            width: 375px;
+            height: 667px;
+            border-radius: 40px;
+        }
+
+        .phone-frame.android {
+            width: 360px;
+            height: 640px;
+            border-radius: 25px;
+        }
+
+        .device-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .device-frame {
+            background-color: #000;
+            border-radius: 40px;
+            padding: 10px;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.1);
+        }
+
+        .screen {
+            width: 375px;
+            height: 667px;
+            overflow: hidden;
+            border-radius: 30px;
+            background-color: white;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+
+        input[type="text"] {
+            padding: 8px;
+            margin: 10px 0;
+            width: 80%;
+            max-width: 400px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>התאמת עמוד למובייל</h1>
+    <div class="container">
+        <input type="text" id="urlInput" placeholder="הזינו כתובת url">
+        <button onclick="loadPage()">לבדיקת התאמה</button>
+
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('android')">אנדרואיד</div>
+            <div class="tab" onclick="switchTab('iphone')">אייפון</div>
+        </div>
+
+        <div id="androidTab" class="tab-content active">
+            <div class="phone-frame android">
+                <iframe id="testFrameAndroid"></iframe>
+            </div>
+        </div>
+
+        <div id="iphoneTab" class="tab-content">
+            <div class="device-container">
+                <div class="device-frame">
+                    <div class="screen">
+                        <iframe id="testFrameIphone"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function loadPage() {
+            const url = document.getElementById('urlInput').value;
+            const iframeAndroid = document.getElementById('testFrameAndroid');
+            const iframeIphone = document.getElementById('testFrameIphone');
+
+            // Set iframe source to the URL entered
+            iframeAndroid.src = url;
+            iframeIphone.src = url;
+
+            // Make iframes visible
+            iframeAndroid.style.display = 'block';
+            iframeIphone.style.display = 'block';
+        }
+
+        function switchTab(tab) {
+            const tabs = document.querySelectorAll('.tab-content');
+            const tabLinks = document.querySelectorAll('.tab');
+            
+            tabs.forEach(t => t.classList.remove('active'));
+            tabLinks.forEach(t => t.classList.remove('active'));
+            
+            document.getElementById(tab + 'Tab').classList.add('active');
+            document.querySelector(`.tab[onclick="switchTab('${tab}')"]`).classList.add('active');
+        }
+    </script>
+</body>
+</html>
