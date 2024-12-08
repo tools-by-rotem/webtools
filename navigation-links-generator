@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מחולל קישורי ניווט</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .input-group {
+            margin-bottom: 15px;
+            /* הסרת text-align מכאן */
+        }
+        .input-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+            text-align: right;
+        }
+        input[type="text"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            display: block;
+            margin: 0 auto;
+        }
+        button:hover {
+            background-color: #005fa3;
+        }
+        #map {
+            width: 100%;
+            height: 300px;
+            margin: 20px 0;
+            border: 1px solid #ccc;
+        }
+        .link-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .link-row {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            margin-bottom: 20px;
+        }
+        .link-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+            text-align: right;
+        }
+        .link-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .link-content input {
+            flex: 1;
+            padding: 5px;
+            margin-left: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .link-content button {
+            padding: 5px 10px;
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: inline-block;
+            margin: 0;
+        }
+        .link-content button:hover {
+            background-color: #005fa3;
+        }
+    </style>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>מחולל קישורי ניווט</h1>
+        <div class="input-group">
+            <div class="input-title">הזינו את הכתובת הרצויה</div>
+            <input type="text" id="addressInput" placeholder="הזינו כתובת">
+        </div>
+        <button onclick="generateLinks()">יצירת קישורים</button>
+        <div id="map"></div>
+        <div class="link-container" id="linkContainer"></div>
+    </div>
+
+    <script>
+        let map, marker;
+
+        // Initialize the map
+        function initMap() {
+            map = L.map('map').setView([32.090000, 34.770499], 13); // ברירת מחדל: תל אביב
+
+            // Add OpenStreetMap tiles
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+            }).addTo(map);
+        }
+
+        // Copy text to clipboard
+        function copyToClipboard(id) {
+            const input = document.getElementById(id);
+            input.select();
+            input.setSelectionRange(0, 99999); // For mobile devices
+            document.execCommand("copy");
+            alert("הקישור הועתק!");
+        }
+
+        // Generate navigation links
+        function generateLinks() {
+            const address = document.getElementById("addressInput").value;
+            if (!address) {
+                alert("אנא הזן כתובת!");
+                return;
+            }
+
+            // Use OpenStreetMap's Nominatim API for geocoding
+            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.length === 0) {
+                        alert("לא נמצאה כתובת זו. נסו שוב.");
+                        return;
+                    }
+
+                    const { lat, lon } = data[0];
+
+                    // Round coordinates to 6 decimal places
+                    const roundedLat = parseFloat(lat).toFixed(6);
+                    const roundedLon = parseFloat(lon).toFixed(6);
+
+                    // Center the map and place a marker
+                    map.setView([roundedLat, roundedLon], 15);
+                    if (marker) map.removeLayer(marker);
+                    marker = L.marker([roundedLat, roundedLon]).addTo(map);
+
+                    // Create links
+                    const wazeLink = `https://www.waze.com/ul?ll=${roundedLat},${roundedLon}&navigate=yes`;
+                    const googleMapsLink = `https://www.google.com/maps/search/?api=1&query=${roundedLat},${roundedLon}`;
+                    const appleMapsLink = `https://beta.maps.apple.com/?q=${roundedLat},${roundedLon}`;
+                    const bingMapsLink = `https://www.bing.com/maps?where1=${address}&pp=${roundedLat}~${roundedLon}~${encodeURIComponent(address)}`;
+
+                    document.getElementById("linkContainer").innerHTML = `
+                        <div class="link-row">
+                            <div class="link-title">קישור ל-Waze</div>
+                            <div class="link-content">
+                                <input type="text" id="wazeLink" value="${wazeLink}" readonly>
+                                <button onclick="copyToClipboard('wazeLink')">העתקה</button>
+                            </div>
+                        </div>
+                        <div class="link-row">
+                            <div class="link-title">קישור למפות Google</div>
+                            <div class="link-content">
+                                <input type="text" id="googleMapsLink" value="${googleMapsLink}" readonly>
+                                <button onclick="copyToClipboard('googleMapsLink')">העתקה</button>
+                            </div>
+                        </div>
+                        <div class="link-row">
+                            <div class="link-title">קישור למפות Apple</div>
+                            <div class="link-content">
+                                <input type="text" id="appleMapsLink" value="${appleMapsLink}" readonly>
+                                <button onclick="copyToClipboard('appleMapsLink')">העתקה</button>
+                            </div>
+                        </div>
+                        <div class="link-row">
+                            <div class="link-title">קישור למפות Bing</div>
+                            <div class="link-content">
+                                <input type="text" id="bingMapsLink" value="${bingMapsLink}" readonly>
+                                <button onclick="copyToClipboard('bingMapsLink')">העתקה</button>
+                            </div>
+                        </div>
+                    `;
+                })
+                .catch(error => {
+                    console.error(error);
+                    alert("אירעה שגיאה בעת חיפוש הכתובת. נסו שוב.");
+                });
+        }
+
+        // Initialize the map on load
+        window.onload = initMap;
+    </script>
+</body>
+</html>
