@@ -64,6 +64,22 @@
             color: #333;
             text-align: center;
         }
+        #backToToolsBtn {
+            position: fixed;
+            bottom: 20px;  /* מרחק מהתחתית */
+            left: 50%;
+            transform: translateX(-50%); /* מיקום מרכזי */
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        #backToToolsBtn:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
@@ -86,6 +102,9 @@
         </form>
         <div id="result"></div>
     </div>
+    
+    <button id="backToToolsBtn">חזרה לספריית הכלים</button>
+
     <script>
         document.getElementById('esvForm').addEventListener('submit', function(event) {
             event.preventDefault();
@@ -111,6 +130,9 @@
 
             // Display the result as Monthly ESV
             document.getElementById('result').innerText = `Monthly Estimated Search Volume (ESV): ${esv}`;
+        });
+         document.getElementById("backToToolsBtn").addEventListener("click", function() {
+            window.location.href = "https://tools-by-rotem.github.io/home/"; 
         });
     </script>
 </body>
