@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>כלי משולב להמרת פורמט וכיווץ משקל תמונה</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/compressorjs/1.1.1/compressor.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .container {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .input-group {
+            margin-bottom: 1rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #666;
+        }
+        input[type="file"] {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .format-buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 1rem;
+        }
+        .format-button {
+            padding: 10px;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: center;
+        }
+        .format-button.selected {
+            background-color: #4CAF50;
+            color: white;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1rem;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #result {
+            margin-top: 1rem;
+            text-align: center;
+        }
+ 	    #preview {
+    		max-width: 50%;
+    		margin-top: 1rem;
+    		display: none;
+    		margin-left: auto;
+    		margin-right: auto;
+        }
+        #downloadButton {
+            display: none;
+            margin-top: 1rem;
+        }
+        #loading {
+            display: none;
+            text-align: center;
+            margin-top: 1rem;
+        }
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>כלי משולב להמרת פורמט וכיווץ משקל תמונה</h1>
+        <div class="input-group">
+            <label for="imageInput">בחרו תמונה:</label>
+            <input type="file" id="imageInput" accept="image/*">
+        </div>
+        <div class="input-group">
+            <div class="format-buttons" id="formatButtons"></div>
+        </div>
+        <button id="convertButton">המרה וכווץ</button>
+        <div id="loading">
+            <div class="spinner"></div>
+            <p>מעבדים את התמונה...</p>
+        </div>
+        <div id="result"></div>
+        <img id="preview" alt="תצוגה מקדימה">
+        <button id="downloadButton">הורדת תמונה ממוטבת</button>
+    </div>
+
+    <script>
+        const formats = ['png', 'jpeg', 'webp', 'avif', 'gif', 'ico', 'heic', 'tiff', 'bmp'];
+        const formatButtons = document.getElementById('formatButtons');
+        let selectedFormat = 'jpeg';
+
+        formats.forEach(format => {
+            const button = document.createElement('div');
+            button.className = 'format-button';
+            button.textContent = format.toUpperCase();
+            button.onclick = () => {
+                document.querySelectorAll('.format-button').forEach(btn => btn.classList.remove('selected'));
+                button.classList.add('selected');
+                selectedFormat = format;
+            };
+            formatButtons.appendChild(button);
+        });
+
+        document.querySelector('.format-button').classList.add('selected');
+
+        document.getElementById('convertButton').addEventListener('click', function() {
+            const imageInput = document.getElementById('imageInput');
+            const resultDiv = document.getElementById('result');
+            const previewImg = document.getElementById('preview');
+            const downloadButton = document.getElementById('downloadButton');
+            const loadingDiv = document.getElementById('loading');
+
+            if (imageInput.files.length === 0) {
+                alert('אנא בחרו תמונה');
+                return;
+            }
+
+            loadingDiv.style.display = 'block';
+            resultDiv.innerHTML = '';
+            previewImg.style.display = 'none';
+            downloadButton.style.display = 'none';
+
+            const file = imageInput.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                new Compressor(file, {
+                    quality: 0.9,
+                    mimeType: `image/${selectedFormat}`,
+                    maxWidth: 1920,
+                    maxHeight: 1080,
+                    convertSize: 1000000,
+                    success(result) {
+                        loadingDiv.style.display = 'none';
+
+                        const url = URL.createObjectURL(result);
+                        previewImg.src = url;
+                        previewImg.style.display = 'block';
+
+                        downloadButton.style.display = 'block';
+                        downloadButton.onclick = () => {
+                            const link = document.createElement('a');
+                            link.href = url;
+                            link.download = `converted_image.${selectedFormat}`;
+                            link.click();
+                        };
+
+                        const originalSize = (file.size / 1024).toFixed(2);
+                        const newSize = (result.size / 1024).toFixed(2);
+                        const compressionRatio = ((1 - result.size / file.size) * 100).toFixed(2);
+
+                        resultDiv.innerHTML = `<p>גודל מקורי: ${originalSize} KB, גודל חדש: ${newSize} KB, יחס דחיסה: ${compressionRatio}%</p>`;
+                    },
+                    error(err) {
+                        loadingDiv.style.display = 'none';
+                        console.error(err.message);
+                        alert('אירעה שגיאה בעת המרת התמונה');
+                    },
+                });
+            };
+
+            reader.readAsDataURL(file);
+        });
+    </script>
+</body>
+</html>
