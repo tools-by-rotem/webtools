@@ -216,7 +216,7 @@
 
             isProcessing = true;
 
-            fetch(`https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(url)}&key=AIzaSyAgEEZsFf1qOjRIuqj5QHPbXzkhX4gET2g`)
+            fetch(`https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(url)}&key=null`)
                 .then(response => response.json())
                 .then(data => {
                     if (data && data.lighthouseResult && data.lighthouseResult.audits) {
