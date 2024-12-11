@@ -1,96 +1,379 @@
 <!DOCTYPE html>
-<html lang="en">
+<html dir="rtl" lang="he">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebTools</title>
+    <title>ספריית הכלים של רותם קנון</title>
     <style>
-        /* General styles */
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
             color: #333;
+            line-height: 1.6;
         }
 
-        /* Header */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
         header {
-            background: #333;
-            color: #fff;
-            padding: 1rem 0;
             text-align: center;
-        }
-        header h1 {
-            font-size: 2rem;
-            margin: 0;
+            margin-bottom: 3rem;
         }
 
-        /* Hero section */
-        .hero {
-            text-align: center;
-            padding: 4rem 2rem;
-            background: #f4f4f4;
-        }
-        .hero h2 {
-            font-size: 2.4rem;
+        h1 {
+            font-size: 2.5rem;
             margin-bottom: 1rem;
+            color: #2d3436;
         }
-        .hero p {
-            font-size: 1.2rem;
+
+        .filters {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
             margin-bottom: 2rem;
+            flex-wrap: wrap;
         }
-        .cta-button {
-            display: inline-block;
-            background: #333;
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 25px;
+            background-color: #fff;
+            color: #2d3436;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .filter-btn:hover {
+            background-color: #2d3436;
             color: #fff;
-            padding: 10px 20px;
+        }
+
+        .filter-btn.active {
+            background-color: #2d3436;
+            color: #fff;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .project-card {
+            background: #fff;
+            border-radius: 15px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 1rem;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .project-image {
+            width: 80%;
+            height: auto;
+            object-fit: contain;
+            max-height: 160px;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .project-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .project-title {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+            color: #2d3436;
+            text-align: center;
+        }
+
+        .project-description {
+            color: #636e72;
+            margin-bottom: 1rem;
+            flex-grow: 1;
+            text-align: center;
+        }
+
+        .project-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: auto;
+        }
+
+        .tag {
+            padding: 0.25rem 0.75rem;
+            background-color: #f1f2f6;
+            border-radius: 15px;
+            font-size: 0.875rem;
+            color: #2d3436;
+        }
+
+        .try-button {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            background-color: #0984e3;
+            color: white;
             text-decoration: none;
             border-radius: 5px;
-        }
-        .cta-button:hover {
-            background: #555;
-        }
-
-        /* About section */
-        .about {
-            padding: 2rem;
+            transition: background-color 0.3s ease;
             text-align: center;
         }
-        .about h2 {
-            margin-bottom: 1rem;
-        }
-        .about p {
-            font-size: 1rem;
-            color: #666;
+
+        .try-button:hover {
+            background-color: #0060a8;
         }
 
-        /* Footer */
-        footer {
-            text-align: center;
-            padding: 1rem 0;
-            background: #333;
-            color: #fff;
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .projects-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 1rem;
+            }
         }
     </style>
     <script src="https://cdn.enable.co.il/licenses/enable-L34385vlixga9kjh-1224-66195/init.js"></script>
 </head>
 <body>
-    <header>
-        <h1>WebTools</h1>
-    </header>
+    <div class="container">
+        <header>
+            <h1>ספריית הכלים של רותם קנון</h1>
+            <p>היי כאן רותם, ברוכים הבאים לספריית הכלים שלי. כאן תוכלו למצוא מגוון רחב של כלים שיעזרו לכם בפתרון בעיות, פשוטות ומורכבות יחדיו.  </p>
+        </header>
 
-    <main>
-        <section class="hero">
-            <h2> Webtools ברוכים הבאים לקטגוריית</h2>
-            <p>דרך עמוד זה תוכלו להגיע אל ספריית הכלים של רותם קנון</p>
-            <a href="https://tools-by-rotem.github.io/home/" class="cta-button">אל הספרייה</a>
-        </section>
+        <div class="filters">
+            <button class="filter-btn active" data-filter="all">הכל</button>
+            <button class="filter-btn" data-filter="search">כמויות חיפושים</button>
+            <button class="filter-btn" data-filter="preview">תצוגה מקדימה</button>
+            <button class="filter-btn" data-filter="optimization">אופטימיזציה</button>
+            <button class="filter-btn" data-filter="creation">יצירה ועיצוב</button>
+            <button class="filter-btn" data-filter="other">שונות</button>
+        </div>
 
-        <section id="about" class="about">
-            <h2>?Webtools מה זה בעצם</h2>
-            <p>הם כלים מבוססי דפדפן, זאת אומרת שאין צורך להוריד תוכנה למחשב כדי להשתמש Webtools בהם</p>
-        </section>
-    </main>
+        <div class="projects-grid" id="projectsGrid">
+            <!-- Project cards will be inserted here by JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        const projects = [
+            // אופטימיזציה
+            {
+                title: "תצוגה מקדימה לנראות בגוגל",
+                description: "צפייה מקדימה בתצוגת תוצאות החיפוש בגוגל",
+                category: "preview",
+                tags: ["תצוגה מקדימה"],
+                link: "https://tools-by-rotem.github.io/webtools/google-serp-preview",
+                image: "https://cdn-icons-png.flaticon.com/512/17496/17496304.png"
+            },
+            {
+                title: "בדיקת תאימות למכשירים ניידים",
+                description: "בדיקת רספונסיביות והתאמה למובייל",
+                category: "optimization",
+                tags: ["אופטימיזציה"],
+                link: "https://tools-by-rotem.github.io/webtools/mobile-simulator",
+                image: "https://cdn-icons-png.flaticon.com/512/2013/2013659.png"
+            },
+            {
+                title: "המרת פורמט וכיווץ משקל תמונה",
+                description: "אופטימיזציה והמרה של תמונות לפורמטים שונים",
+                category: "optimization",
+                tags: ["אופטימיזציה"],
+                link: "https://tools-by-rotem.github.io/webtools/image-minify-converter",
+                image: "https://cdn-icons-png.flaticon.com/512/3919/3919509.png"
+            },
+            {
+                title: "כמות חיפושים ב-SoundCloud",
+                description: "בדיקת כמות החיפושים ב-SoundCloud",
+                category: "search",
+                tags: ["כמויות חיפושים"],
+                link: "https://tools-by-rotem.github.io/webtools/soundcloud-search-volume",
+                image: "https://cdn-icons-png.flaticon.com/512/3256/3256023.png"
+            },
+            {
+                title: "כמות חיפושים ב-Spotify",
+                description: "בדיקת כמות החיפושים ב-Spotify",
+                category: "search",
+                tags: ["כמויות חיפושים"],
+                link: "https://tools-by-rotem.github.io/webtools/spotify-search-volume",
+                image: "https://cdn-icons-png.flaticon.com/512/3669/3669986.png"
+            },
+            {
+                title: "כמות חיפושים בגוגל",
+                description: "בדיקת נפח החיפושים החודשי בגוגל למילות מפתח",
+                category: "search",
+                tags: ["כמויות חיפושים"],
+                link: "https://tools-by-rotem.github.io/webtools/google-search-volume",
+                image: "https://cdn-icons-png.flaticon.com/512/300/300221.png"
+            },
+            {
+                title: "תצוגה מקדימה לפרסום לינקים בסושיאל",
+                description: "בדיקת נראות הלינקים ברשתות החברתיות השונות",
+                category: "preview",
+                tags: ["תצוגה מקדימה"],
+                link: "https://tools-by-rotem.github.io/webtools/social-link-preview",
+                image: "https://cdn-icons-png.flaticon.com/512/2065/2065157.png"
+            },
+            {
+                title: "הסרת רקע מתמונה",
+                description: "הסרת רקע אוטומטית מכל תמונה",
+                category: "creation",
+                tags: ["יצירה ועיצוב"],
+                link: "https://tools-by-rotem.github.io/webtools/background-remover",
+                image: "https://cdn-icons-png.flaticon.com/512/16649/16649210.png"
+            },
+            {
+                title: "יצירת אינפוגרפיקות",
+                description: "יצירת אינפוגרפיקות מרהיבות בקלות",
+                category: "creation",
+                tags: ["יצירה ועיצוב"],
+                link: "https://tools-by-rotem.github.io/webtools/infographics",
+                image: "https://cdn-icons-png.flaticon.com/512/8123/8123520.png"
+            },
+            {
+                title: "ציור אינטראקטיבי",
+                description: "כלי ציור מתקדם עם אפשרויות אינטראקטיביות",
+                category: "creation",
+                tags: ["יצירה ועיצוב"],
+                link: "https://tools-by-rotem.github.io/webtools/draw",
+                image: "https://cdn-icons-png.flaticon.com/512/3940/3940120.png"
+            },
+            {
+                title: "התאמת קורות חיים לסורקים אוטומטיים",
+                description: "אופטימיזציה של קורות חיים ל-ATS",
+                category: "other",
+                tags: ["שונות"],
+                link: "https://tools-by-rotem.github.io/webtools/resume-scanner",
+                image: "https://cdn-icons-png.flaticon.com/512/9948/9948580.png"
+            },
+            {
+                title: "מחולל סיסמאות חזקות",
+                description: "יצירת סיסמאות חזקות ומאובטחות",
+                category: "other",
+                tags: ["שונות"],
+                link: "https://tools-by-rotem.github.io/webtools/strong-password-generator",
+                image: "https://cdn-icons-png.flaticon.com/512/6195/6195699.png"
+            },
+            {
+                title: "בדיקת מהירות טעינה",
+                description: "בדיקת זמן טעינה של אתרים וקבלת המלצות לשיפור",
+                category: "optimization",
+                tags: ["אופטימיזציה"],
+                link: "https://tools-by-rotem.github.io/webtools/page-speed-test",
+                image: "https://cdn-icons-png.flaticon.com/512/7552/7552703.png"
+            },
+{
+                title: "תיקון הקלדה הפוכה",
+                description: "כלי להיפוך הקלדה מעברית לאנגלית ולהפך",
+                category: "other",
+                tags: ["שונות"],
+                link: "https://tools-by-rotem.github.io/webtools/reverse-typing-fix",
+                image: "https://cdn-icons-png.flaticon.com/512/2489/2489747.png"
+            },
+            {
+                title: "סרגל נגישות",
+                description: "סרגל נגישות מתקדם להטמעה באתר",
+                category: "other",
+                tags: ["שונות"],
+                link: "https://tools-by-rotem.github.io/webtools/accessibility-toolbar",
+                image: "https://cdn-icons-png.flaticon.com/512/4370/4370923.png"
+                
+            },
+            {
+                title: "זיהוי צבעי תמונה",
+                description: "זיהוי הצבעים מהם מורכבת תמונה",
+                category: "creation",
+                tags: ["יצירה ועיצוב"],
+                link: "https://tools-by-rotem.github.io/webtools/image-color-identifier",
+                image: "https://cdn-icons-png.flaticon.com/512/16388/16388702.png"
+            },
+{ 
+                title: "מחולל קישורי ניווט",
+                description: "יצירת קישורים לניווט בעזרת מפות",
+                category: "other",
+                tags: ["שונות"],
+                link: "https://tools-by-rotem.github.io/webtools/navigation-links-generator",
+                image: "https://cdn-icons-png.flaticon.com/512/7509/7509309.png"
+            }
+        ];
+
+        function createProjectCard(project) {
+            return `
+                <div class="project-card" data-category="${project.category}">
+                    <img src="${project.image}" alt="${project.title}" class="project-image">
+                    <div class="project-content">
+                        <h3 class="project-title">${project.title}</h3>
+                        <p class="project-description">${project.description}</p>
+                        <div class="project-tags">
+                            ${project.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                        </div>
+                        <a href="${project.link}" class="try-button" target="_blank">מעבר לכלי</a>
+                    </div>
+                </div>
+            `;
+        }
+
+        function filterProjects(category) {
+            const projectCards = document.querySelectorAll('.project-card');
+            projectCards.forEach(card => {
+                if (category === 'all' || card.dataset.category === category) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', () => {
+            const projectsGrid = document.getElementById('projectsGrid');
+            projectsGrid.innerHTML = projects.map(createProjectCard).join('');
+
+            // Filter buttons functionality
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Update active button
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    
+                    // Filter projects
+                    filterProjects(button.dataset.filter);
+                });
+            });
+        });
+    </script>
 </body>
 </html>
