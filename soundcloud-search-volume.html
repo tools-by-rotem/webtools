@@ -3,13 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monthly ESV Calculator For SoundCloud</title>
+    <title>חישוב כמות חיפושים חודשית ב-Soundcloud | Tools by Rotem</title>
+    <meta name="description" content="רוצים לדעת מהי כמות החיפושים החודשית של האמן האהוב עליכם ב-Soundcloud? הזינו את כמות ההשמעות של השירים הפופולריים ביותר של האמן וקבלו את כמות החיפושים בסאונדקלאוד >>">
+    <link rel="icon" type="image/x-icon" href="/webtools/site-favicon.ico">
+
     <style>
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
             margin: 0;
             padding: 20px;
+            direction: rtl;
+            
         }
 
         .container {
@@ -69,21 +74,21 @@
 </head>
 <body>
     <div class="container">
-        <h1>Monthly Estimated Search Volume (ESV) Calculator For SoundCloud</h1>
+        <h1>חישוב כמות חיפושים חודשית ב-Soundcloud</h1>
         <form id="esvForm">
-            <label for="plays1">Plays for Song 1:</label>
+            <label for="plays1">כמות השמעות לשיר הראשון</label>
             <input type="number" id="plays1" required>
 
-            <label for="plays2">Plays for Song 2:</label>
+            <label for="plays2">כמות השמעות לשיר השני</label>
             <input type="number" id="plays2" required>
 
-            <label for="plays3">Plays for Song 3:</label>
+            <label for="plays3">כמות השמעות לשיר השלישי</label>
             <input type="number" id="plays3" required>
 
-            <label for="followers">Number of Followers:</label>
+            <label for="followers">כמות עוקבים</label>
             <input type="number" id="followers" required>
 
-            <button type="submit">Calculate Monthly ESV</button>
+            <button type="submit">חישוב כמות החיפושים</button>
         </form>
         <div id="result"></div>
     </div>
@@ -111,7 +116,7 @@
             esv = Math.ceil(esv / 1000) * 1000;
 
             // Display the result as Monthly ESV
-            document.getElementById('result').innerText = `Monthly Estimated Search Volume (ESV): ${esv}`;
+            document.getElementById('result').innerText = `כמות חיפושים חודשית: ${esv}`;
         });
     </script>
 </body>
