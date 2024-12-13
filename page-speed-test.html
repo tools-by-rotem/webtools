@@ -171,7 +171,7 @@
         <input type="text" id="url" name="url" required>
         <button type="submit">לתחילת הבדיקה לחצו</button>
     </form>
-    <div id="countdown"><span></span></div> <!-- Place countdown below the form -->
+    <div id="countdown"><span></span></div>
     <div id="loading" class="loading">
         <div class="spinner"></div>
         <p>הבדיקה מתבצעת, אנא המתינו...</p>
@@ -212,38 +212,43 @@
             document.getElementById('loading').classList.add('active');
             document.getElementById('results').style.display = 'none';
             document.querySelector('.chart-container').style.display = 'none';
-            document.getElementById('countdown').style.display = 'none'; // Initially hidden
+            document.getElementById('countdown').style.display = 'none';
 
             isProcessing = true;
 
-            fetch(`https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(url)}&key=null`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data && data.lighthouseResult && data.lighthouseResult.audits) {
-                        displayResults(data);
-                        displayChart(data);
-                    } else {
-                        showError('לא התקבלו נתונים תקינים מהשירות.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    showError('אירעה שגיאה בעת קבלת הנתונים. אנא נסו שוב במועד מאוחר יותר.');
-                })
-                .finally(() => {
-                    document.getElementById('loading').classList.remove('active');
-                    document.getElementById('results').style.display = 'block';
-                    document.querySelector('.chart-container').style.display = 'block';
-                    document.getElementById('countdown').style.display = 'none'; // Hide countdown after fetching
-                    isProcessing = false;
-                });
+            fetch(`https://api.openstatus.dev/v1/rum?url=${encodeURIComponent(url)}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer os_3ZQJxT69Ny2scVdAmd63P5Dz'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.performance) {
+                    displayResults(data, url);
+                    displayChart(data);
+                } else {
+                    showError('לא התקבלו נתונים תקינים מהשירות.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showError('אירעה שגיאה בעת קבלת הנתונים. אנא נסו שוב במועד מאוחר יותר.');
+            })
+            .finally(() => {
+                document.getElementById('loading').classList.remove('active');
+                document.getElementById('results').style.display = 'block';
+                document.querySelector('.chart-container').style.display = 'block';
+                document.getElementById('countdown').style.display = 'none';
+                isProcessing = false;
+            });
         });
 
         function startCountdown(timeRemaining) {
             const countdownElement = document.getElementById('countdown');
             const countdownText = countdownElement.querySelector('span');
 
-            countdownElement.style.display = 'block'; // Show countdown
+            countdownElement.style.display = 'block';
 
             function updateCountdown() {
                 if (timeRemaining <= 0) {
@@ -260,33 +265,40 @@
             updateCountdown();
         }
 
-        function displayResults(data) {
+        function showError(message) {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = `<p style="color: red;">${message}</p>`;
+            resultsDiv.style.display = 'block';
+        }
+
+        function displayResults(data, url) {
             const resultsDiv = document.getElementById('results');
             resultsDiv.innerHTML = `
-                <h2>תוצאות עבור ${data.id}</h2>
-                <p><strong>Paint הראשון בתוכן:</strong> ${data.lighthouseResult.audits['first-contentful-paint']?.displayValue || 'לא זמין'}</p>
-                <p><strong>זמן אינטראקטיבי:</strong> ${data.lighthouseResult.audits['interactive']?.displayValue || 'לא זמין'}</p>
-                <p><strong>גודל עמוד כולל:</strong> ${formatBytes(data.lighthouseResult.audits['total-byte-weight']?.numericValue) || 'לא זמין'}</p>
-                <p><strong>זמן עד לראשון בייט (TTFB):</strong> ${data.lighthouseResult.audits['server-response-time']?.displayValue || 'לא זמין'}</p>
-                <p><strong>מספר הבקשות:</strong> ${data.lighthouseResult.audits['network-requests']?.details.items.length || 'לא זמין'}</p>
+                <h2>תוצאות עבור ${url}</h2>
+                <p><strong>זמן טעינה כולל:</strong> ${data.performance.loadingTime || 'לא זמין'} מ״ש</p>
+                <p><strong>זמן לראשון בייט:</strong> ${data.performance.ttfb || 'לא זמין'} מ״ש</p>
+                <p><strong>First Contentful Paint:</strong> ${data.performance.fcp || 'לא זמין'} מ״ש</p>
+                <p><strong>Largest Contentful Paint:</strong> ${data.performance.lcp || 'לא זמין'} מ״ש</p>
+                <p><strong>Interactive Time:</strong> ${data.performance.tti || 'לא זמין'} מ״ש</p>
             `;
         }
 
         function displayChart(data) {
             const ctx = document.getElementById('speedChart').getContext('2d');
-            const fcp = parseFloat(data.lighthouseResult.audits['first-contentful-paint']?.displayValue.replace('s', '')) || 0;
-            const tti = parseFloat(data.lighthouseResult.audits['interactive']?.displayValue.replace('s', '')) || 0;
-            const ttfb = parseFloat(data.lighthouseResult.audits['server-response-time']?.displayValue.replace('s', '')) || 0;
-            const requests = data.lighthouseResult.audits['network-requests']?.details.items.length || 0;
-            const pageSize = (data.lighthouseResult.audits['total-byte-weight']?.numericValue / 1024 / 1024) || 0; // Convert to MB
 
             new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: ['FCP (שניות)', 'TTI (שניות)', 'TTFB (שניות)', 'בקשות', 'גודל עמוד (MB)'],
+                    labels: ['זמן טעינה (מ״ש)', 'TTFB (מ״ש)', 'FCP (מ״ש)', 'LCP (מ״ש)', 'TTI (מ״ש)'],
                     datasets: [{
-                        label: 'מדדים',
-                        data: [fcp, tti, ttfb, requests, pageSize],
+                        label: 'מדדי ביצועים',
+                        data: [
+                            data.performance.loadingTime || 0, 
+                            data.performance.ttfb || 0, 
+                            data.performance.fcp || 0, 
+                            data.performance.lcp || 0, 
+                            data.performance.tti || 0
+                        ],
                         backgroundColor: [
                             'rgba(255, 99, 132, 0.2)',
                             'rgba(54, 162, 235, 0.2)',
@@ -307,20 +319,15 @@
                 options: {
                     scales: {
                         y: {
-                            beginAtZero: true
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'זמן (מ״ש)'
+                            }
                         }
                     }
                 }
             });
-        }
-
-        function formatBytes(bytes, decimals = 2) {
-            if (bytes === undefined || bytes === 0) return '0 Bytes';
-            const k = 1024;
-            const dm = decimals < 0 ? 0 : decimals;
-            const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
         }
     </script>
 </body>
