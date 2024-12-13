@@ -169,6 +169,10 @@
     <form id="speedTestForm">
         <label for="url">הכניסו כתובת URL:</label>
         <input type="text" id="url" name="url" required>
+
+        <label for="apiKey">הזינו את מפתח ה-Google API שלכם:</label>
+        <input type="text" id="apiKey" name="apiKey" required>
+
         <button type="submit">לתחילת הבדיקה לחצו</button>
     </form>
     <div id="countdown"><span></span></div> <!-- Place countdown below the form -->
@@ -195,6 +199,7 @@
             }
 
             const url = document.getElementById('url').value;
+            const apiKey = document.getElementById('apiKey').value; // קבלת מפתח ה-API
             const now = Date.now();
 
             // Check if enough time has passed since the last request
@@ -216,7 +221,7 @@
 
             isProcessing = true;
 
-            fetch(`https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(url)}&key=null`)
+            fetch(`https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(url)}&key=${encodeURIComponent(apiKey)}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data && data.lighthouseResult && data.lighthouseResult.audits) {
@@ -261,50 +266,41 @@
         }
 
         function displayResults(data) {
-            const resultsDiv = document.getElementById('results');
-            resultsDiv.innerHTML = `
-                <h2>תוצאות עבור ${data.id}</h2>
-                <p><strong>Paint הראשון בתוכן:</strong> ${data.lighthouseResult.audits['first-contentful-paint']?.displayValue || 'לא זמין'}</p>
-                <p><strong>זמן אינטראקטיבי:</strong> ${data.lighthouseResult.audits['interactive']?.displayValue || 'לא זמין'}</p>
-                <p><strong>גודל עמוד כולל:</strong> ${formatBytes(data.lighthouseResult.audits['total-byte-weight']?.numericValue) || 'לא זמין'}</p>
-                <p><strong>זמן עד לראשון בייט (TTFB):</strong> ${data.lighthouseResult.audits['server-response-time']?.displayValue || 'לא זמין'}</p>
-                <p><strong>מספר הבקשות:</strong> ${data.lighthouseResult.audits['network-requests']?.details.items.length || 'לא זמין'}</p>
+            // Display results here
+            const resultsElement = document.getElementById('results');
+            resultsElement.innerHTML = `
+                <h2>תוצאות הבדיקה</h2>
+                <p>Performance Score: ${data.lighthouseResult.categories.performance.score * 100}</p>
+                <p>First Contentful Paint: ${data.lighthouseResult.audits['first-contentful-paint'].displayValue}</p>
+                <p>Speed Index: ${data.lighthouseResult.audits['speed-index'].displayValue}</p>
+                <p>Time to Interactive: ${data.lighthouseResult.audits['interactive'].displayValue}</p>
+                <p>Total Blocking Time: ${data.lighthouseResult.audits['total-blocking-time'].displayValue}</p>
+                <p>Cumulative Layout Shift: ${data.lighthouseResult.audits['cumulative-layout-shift'].displayValue}</p>
             `;
         }
 
         function displayChart(data) {
             const ctx = document.getElementById('speedChart').getContext('2d');
-            const fcp = parseFloat(data.lighthouseResult.audits['first-contentful-paint']?.displayValue.replace('s', '')) || 0;
-            const tti = parseFloat(data.lighthouseResult.audits['interactive']?.displayValue.replace('s', '')) || 0;
-            const ttfb = parseFloat(data.lighthouseResult.audits['server-response-time']?.displayValue.replace('s', '')) || 0;
-            const requests = data.lighthouseResult.audits['network-requests']?.details.items.length || 0;
-            const pageSize = (data.lighthouseResult.audits['total-byte-weight']?.numericValue / 1024 / 1024) || 0; // Convert to MB
-
             new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: ['FCP (שניות)', 'TTI (שניות)', 'TTFB (שניות)', 'בקשות', 'גודל עמוד (MB)'],
+                    labels: ['First Contentful Paint', 'Speed Index', 'Time to Interactive', 'Total Blocking Time', 'Cumulative Layout Shift'],
                     datasets: [{
-                        label: 'מדדים',
-                        data: [fcp, tti, ttfb, requests, pageSize],
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 0.2)',
-                            'rgba(54, 162, 235, 0.2)',
-                            'rgba(255, 206, 86, 0.2)',
-                            'rgba(75, 192, 192, 0.2)',
-                            'rgba(153, 102, 255, 0.2)'
+                        label: 'Performance Metrics',
+                        data: [
+                            data.lighthouseResult.audits['first-contentful-paint'].numericValue,
+                            data.lighthouseResult.audits['speed-index'].numericValue,
+                            data.lighthouseResult.audits['interactive'].numericValue,
+                            data.lighthouseResult.audits['total-blocking-time'].numericValue,
+                            data.lighthouseResult.audits['cumulative-layout-shift'].numericValue
                         ],
-                        borderColor: [
-                            'rgba(255, 99, 132, 1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(255, 206, 86, 1)',
-                            'rgba(75, 192, 192, 1)',
-                            'rgba(153, 102, 255, 1)'
-                        ],
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
                         borderWidth: 1
                     }]
                 },
                 options: {
+                    responsive: true,
                     scales: {
                         y: {
                             beginAtZero: true
@@ -314,13 +310,12 @@
             });
         }
 
-        function formatBytes(bytes, decimals = 2) {
-            if (bytes === undefined || bytes === 0) return '0 Bytes';
-            const k = 1024;
-            const dm = decimals < 0 ? 0 : decimals;
-            const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+        function showError(message) {
+            const resultsElement = document.getElementById('results');
+            resultsElement.innerHTML = `
+                <h2>שגיאה</h2>
+                <p>${message}</p>
+            `;
         }
     </script>
 </body>
