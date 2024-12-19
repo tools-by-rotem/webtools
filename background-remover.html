@@ -234,43 +234,65 @@
     }
 
     @media (max-width: 768px) {
-    body{
-       position: relative;
-       overflow-x: hidden;
-    }
-      .footer-links {
-        flex-direction: column;
-        align-items: center;
-      }
+  footer {
+    padding: 30px 0;
+  }
 
-      .link-group {
-        width: 100%;
-        align-items: center;
-        text-align: center;
-        gap: 15px;
-        min-width: unset;
-        padding: 0 10px;
-      }
+  .footer-links {
+    flex-direction: column;
+    gap: 20px;
+    padding: 0 15px;
+  }
 
-      .link-group a {
-        width: 100%;
-        padding: 12px 0;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      }
+  .link-group {
+    width: 100%;
+    min-width: unset;
+    align-items: center;
+    text-align: center;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
 
-      .link-group a:last-child {
-        border-bottom: none;
-      }
+  .link-group:last-child {
+    border-bottom: none;
+  }
 
-      .social-links {
-        margin: 30px 0;
-      }
+  .link-group a {
+    width: auto;
+    padding: 10px;
+    margin: 0;
+    font-size: 14px;
+  }
 
-      .footer-bottom {
-        margin-top: 20px;
-        padding: 20px 15px;
-      }
-    }
+  .link-group a:hover {
+    transform: none;
+  }
+
+  .social-links {
+    margin: 20px 0;
+    gap: 15px;
+  }
+
+  .social-link {
+    width: 40px;
+    height: 40px;
+  }
+
+  .social-link img {
+    width: 20px;
+    height: 20px;
+  }
+
+  .footer-bottom {
+    margin-top: 20px;
+    padding: 15px;
+  }
+
+  .footer-bottom p {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+}
     </style>
   <script src="https://cdn.enable.co.il/licenses/enable-L34385vlixga9kjh-1224-66195/init.js"></script>
 </head>
