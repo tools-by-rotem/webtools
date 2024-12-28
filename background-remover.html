@@ -98,26 +98,62 @@
         #resetBtn:hover {
             background-color: #c82333;
         }
-        .article-container {
-            direction: rtl;
-            max-width: 70%;
-            width: 70%;
-            margin: 30px auto;
-            padding: 15px;
-            background-color: #f9f9f9;
-            border-radius: 15px;
+        footer {
+    background-color: #302f2c;
+    padding: 20px;
+    color: #fff;
+    width: 100%;
+    margin-top: auto;
+    box-sizing: border-box;
+    }
+
+    .footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 150px;
+    justify-content: center;
+    width: 100%;
+    }
+    .link-group {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+    .link-group a {
+      text-decoration: none;
+      color: #fff;
+      font-size: 14px;
+      transition: color 0.3s ease;
+    }
+    .link-group a:hover {
+      color: #ff9800;
+    }
+    .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
         }
-        .article-container h2 {
-            color: #333;
-            text-align: right;
-            margin-bottom: 20px;
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #fff;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: background-color 0.3s ease;
         }
-        .article-container h3 {
-           text-align: right;
-            color: #007bff;
+
+        .social-link:hover {
+            background-color: #0984e3;
         }
-        .article-container ul, .article-container ol {
-            padding-right: 20px;
+
+        .social-link img {
+            width: 20px;
+            height: 20px;
         }
     </style>
     <script src="https://cdn.enable.co.il/licenses/enable-L34385vlixga9kjh-1224-66195/init.js"></script>
@@ -183,6 +219,46 @@
 <p><span style="font-weight: 400;">אם אתם מחפשים כלי להסרת רקע מתמונה שהוא גם חינמי, גם קל לשימוש וגם מספק תוצאות איכותיות, אין צורך להמשיך לחפש. הכלי שלי מספק את כל מה שאתם צריכים כדי להסיר רקעים מתמונות בצורה מקצועית וללא מאמץ.</span></p>
 <p><span style="font-weight: 400;">למה אתם מחכים? השתמשו בכלי להסרת רקע מתמונה עוד היום ותיהנו מתוצאות יוצאות דופן!</span><span style="font-weight: 400;"><br /></span><span style="font-weight: 400;">מעוניינים לראות מה עוד יש לי להציע? עברו אל </span><a href="https://tools-by-rotem.github.io/webtools/"><strong>ספריית הכלים</strong></a><span style="font-weight: 400;"> ובחנו כלים נוספים.</span></p>
     </div>
+    <footer>
+    <div class="footer-links">
+      <div class="link-group">
+        <a href="https://tools-by-rotem.github.io/webtools/google-serp-preview">תצוגה מקדימה בגוגל</a>
+        <a href="https://tools-by-rotem.github.io/webtools/mobile-simulator">רספונסיביות אתרים למכשירים ניידים</a>
+        <a href="https://tools-by-rotem.github.io/webtools/image-minify-converter">המרת פורמט וכיווץ משקל תמונה</a>
+        <a href="https://tools-by-rotem.github.io/webtools/google-search-volume">חישוב כמות חיפושים בגוגל</a>
+      </div>
+      <div class="link-group">
+        <a href="https://tools-by-rotem.github.io/webtools/spotify-search-volume">חישוב כמות חיפושים בספוטיפיי</a>
+        <a href="https://tools-by-rotem.github.io/webtools/soundcloud-search-volume">חישוב כמות חיפושים בסאונדקלאוד</a>
+        <a href="https://tools-by-rotem.github.io/webtools/social-link-preview">תצוגה מקדימה לרשתות חברתיות</a>
+        <a href="https://tools-by-rotem.github.io/webtools/background-remover">הסרת רקע מתמונה</a>
+      </div>
+      <div class="link-group">
+        <a href="https://tools-by-rotem.github.io/webtools/infographics">מחולל אינפוגרפיקות לאתרים ומצגות</a>
+        <a href="https://tools-by-rotem.github.io/webtools/draw">צייר אונליין</a>
+        <a href="https://tools-by-rotem.github.io/webtools/resume-scanner">התאמת קורות חיים לסורקים אוטומטיים</a>
+        <a href="https://tools-by-rotem.github.io/webtools/strong-password-generator">מחולל סיסמאות קשות לפיצוח</a>
+      </div>
+      <div class="link-group">
+        <a href="https://tools-by-rotem.github.io/webtools/page-speed-test">בדיקת מהירות אתר</a>
+        <a href="https://tools-by-rotem.github.io/webtools/reverse-typing-fix">תיקון ג'יבריש בהקלדה</a>
+        <a href="https://tools-by-rotem.github.io/webtools/accessibility-toolbar">סרגל נגישות</a>
+        <a href="https://tools-by-rotem.github.io/webtools/image-color-identifier">מזהה צבעים בתמונה</a>
+        <a href="https://tools-by-rotem.github.io/webtools/">מחולל קישורי ניווט</a>
+      </div>
+      <br>
+      <div class="social-links">
+                <a href="https://www.linkedin.com/in/rotem-kanon" target="_blank" class="social-link">
+                    <img src="https://cdn-icons-png.flaticon.com/512/145/145807.png" alt="Linkedin">
+                </a>
+                <a href="https://github.com/tools-by-rotem" target="_blank" class="social-link">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111432.png" alt="Github">
+                </a>
+      </div>
+      <p>&copy; 2024 | <a href="https://tools-by-rotem.github.io/webtools/">ספריית הכלים של רותם קנון</a> | כל הזכויות שמורות </p>
+
+    </div>
+  </footer>
 
     <script>
         const inputFile = document.getElementById("inputFile");
