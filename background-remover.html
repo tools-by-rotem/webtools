@@ -237,20 +237,178 @@
         }
 
         @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-            
-            .footer-section {
-                flex: 100%;
-                text-align: center;
-            }
-            
-            .footer-content {
-                flex-direction: column;
-                align-items: center;
-            }
+    body {
+        margin-top: 100px; /* Reduced top margin for mobile */
+        padding: 10px;
+    }
+
+    .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+            margin-top: 30px;
         }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        input[type="file"] {
+            display: none;
+        }
+        .file-label {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .file-label:hover {
+            background-color: #0056b3;
+        }
+        #removeBgBtn {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        #removeBgBtn:hover {
+            background-color: #218838;
+        }
+        #outputImage, #previewImage {
+            display: none;
+            margin: 20px auto;
+            max-width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        #loading {
+            display: none;
+            margin-top: 10px;
+        }
+        #downloadBtn, #resetBtn {
+            display: none;
+            margin: 20px auto;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        #downloadBtn {
+            background-color: #ffc107;
+            color: white;
+        }
+        #downloadBtn:hover {
+            background-color: #e0a800;
+        }
+        #resetBtn {
+            background-color: #dc3545;
+            color: white;
+        }
+        #resetBtn:hover {
+            background-color: #c82333;
+        }
+
+    .article-container {
+        padding: 15px;
+        margin: 15px 10px;
+        border-radius: 10px;
+    }
+
+    .article-container h2 {
+        font-size: 20px;
+        margin-bottom: 15px;
+    }
+
+    .article-container h3 {
+        font-size: 18px;
+        margin: 15px 0 10px;
+    }
+
+    .article-container p {
+        font-size: 16px;
+        line-height: 1.5;
+        margin-bottom: 10px;
+    }
+
+    /* Header adjustments */
+    .main-header {
+        height: auto;
+    }
+
+    .nav-container {
+        padding: 10px;
+    }
+
+    .logo img {
+        height: 45px; /* Smaller logo for mobile */
+    }
+
+    /* Footer adjustments */
+    .footer-content {
+        grid-template-columns: 1fr;
+        padding: 15px;
+        gap: 1.5rem;
+    }
+
+    .footer-section {
+        text-align: center;
+        padding: 0 15px;
+    }
+
+    .footer-section h4 {
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
+
+    .footer-section a {
+        padding: 8px 0;
+        font-size: 16px;
+    }
+
+    .social-links {
+        margin: 1.5rem 0;
+    }
+
+    .social-link img {
+        width: 25px;
+        height: 25px;
+    }
+
+    .footer-bottom {
+        margin-top: 1.5rem;
+        padding: 1rem 15px;
+        font-size: 14px;
+    }
+
+    /* Additional spacing and sizing improvements */
+    #loading {
+        margin: 15px 0;
+        font-size: 16px;
+    }
+
+    button {
+        min-height: 44px; /* Better touch targets */
+    }
+
+    .article-container ul,
+    .article-container ol {
+        padding-right: 15px;
+        margin: 10px 0;
+    }
+}
     </style>
     <script src="https://cdn.enable.co.il/licenses/enable-L34385vlixga9kjh-1224-66195/init.js"></script>
 </head>
