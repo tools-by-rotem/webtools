@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time To Go Home - הגיע הזמן ללכת הביתה</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f9;
+            overflow: hidden;
+        }
+        .container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 90%;
+            max-width: 300px;
+            position: relative;
+            z-index: 10;
+        }
+        input {
+            margin: 10px 0;
+            padding: 10px;
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin-top: 10px;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #timer {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333;
+        }
+        #confetti {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 5;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="confetti"></div>
+    <div class="container">
+        <h1>עוד כמה זמן מסיימים לעבוד?</h1>
+        <label for="start-time">שעת התחלה:</label>
+        <input type="time" id="start-time">
+
+        <label for="work-hours">משך העבודה:</label>
+        <input type="time" id="work-hours" step="60">
+
+        <button onclick="calculateEndTime()">חישוב שעת סיום</button>
+        <div id="result"></div>
+
+        <button onclick="startTimer()">הפעלת טיימר</button>
+        <div id="timer"></div>
+    </div>
+
+    <script>
+        function calculateEndTime() {
+            const startTimeInput = document.getElementById('start-time').value;
+            const workHoursInput = document.getElementById('work-hours').value;
+
+            if (!startTimeInput || !workHoursInput) {
+                alert('יש להזין שעת התחלה ומשך העבודה.');
+                return;
+            }
+
+            const [startHours, startMinutes] = startTimeInput.split(':').map(Number);
+            const [workHours, workMinutes] = workHoursInput.split(':').map(Number);
+
+            const startDate = new Date();
+            startDate.setHours(startHours, startMinutes, 0, 0);
+
+            const endDate = new Date(startDate.getTime() + (workHours * 60 * 60 * 1000) + (workMinutes * 60 * 1000));
+            const endTime = endDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+            document.getElementById('result').innerText = `שעת סיום: ${endTime}`;
+            document.getElementById('result').setAttribute('data-end-date', endDate.toISOString());
+        }
+
+        let timerInterval;
+
+        function startTimer() {
+            const resultText = document.getElementById('result').innerText;
+            const endDateISOString = document.getElementById('result').getAttribute('data-end-date');
+
+            if (!resultText.includes('שעת סיום') || !endDateISOString) {
+                alert('יש לחשב את שעת הסיום תחילה.');
+                return;
+            }
+
+            const endDate = new Date(endDateISOString);
+            const now = new Date();
+
+            if (endDate <= now) {
+                alert('אתם עדיין בעבודה? שעת הסיום כבר עברה!');
+                return;
+            }
+
+            clearInterval(timerInterval);
+
+            timerInterval = setInterval(() => {
+                const currentTime = new Date();
+                const remainingTime = endDate - currentTime;
+
+                if (remainingTime <= 0) {
+                    clearInterval(timerInterval);
+                    document.getElementById('timer').innerText = 'סיימת את יום העבודה!';
+                    triggerConfetti();
+                    return;
+                }
+
+                const hours = Math.floor(remainingTime / (1000 * 60 * 60));
+                const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
+
+                document.getElementById('timer').innerText = `זמן שנותר: ${hours} שעות, ${minutes} דקות ו-${seconds} שניות`;
+            }, 1000);
+        }
+
+        function triggerConfetti() {
+            const confettiElement = document.getElementById('confetti');
+            confettiElement.innerHTML = '<iframe src="https://lottie.host/embed/4c6cb732-ad9f-4b74-9e8e-331ae6161f79/3M2u0tywRO.lottie" style="width: 100%; height: 100%; border: none; pointer-events: none;"></iframe>';
+        }
+    </script>
+</body>
+</html>
