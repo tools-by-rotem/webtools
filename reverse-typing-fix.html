@@ -83,6 +83,31 @@
         button:focus {
             outline: none;
         }
+        
+        .chrome-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background-color: white;
+            border: 1px solid #dadce0;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            color: #202124;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .chrome-button:hover {
+            background-color: #f8f9fa;
+            transform: scale(1.05);
+        }
+
+        .chrome-icon {
+            width: 20px;
+            height: 20px;
+        }
 
         @media (max-width: 768px) {
             textarea {
@@ -110,6 +135,10 @@
     </div>
 
     <button onclick="convertToHebrew()">המרה מאנגלית לעברית</button>
+    <a href="https://chromewebstore.google.com/detail/vice-versa-fixing-bilingu/cblggbpalaaljmmjlecbchppbpeaohaa" class="chrome-button" target="_blank">
+        <img class="chrome-icon" src="https://cdn-icons-png.flaticon.com/512/6125/6125000.png" alt="Chrome logo">
+        הוספת הכלי כתוסף כרום
+        </a>
     <button onclick="convertToEnglish()">המרה מעברית לאנגלית</button>
 
     <div class="field">
@@ -126,7 +155,7 @@
             ";": "ף", "l": "ך", "k": "ל", "j": "ח", "h": "י",
             "g": "ע", "f": "כ", "d": "ג", "s": "ד", "a": "ש",
             "m": "צ", "n": "מ", "b": "נ",
-            "v": "ה", "c": "ב", "x": "ס", "z": "ז"
+            "v": "ה", "c": "ב", "x": "ס", "z": "ז", ",": "ת"
         };
 
         const hebToEng = Object.fromEntries(Object.entries(engToHeb).map(([key, value]) => [value, key]));
