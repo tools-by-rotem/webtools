@@ -82,6 +82,8 @@
         <button onclick="startTimer()">הפעלת טיימר</button>
         <div id="timer"></div>
     </div>
+    
+    <audio id="end-sound" src="https://cdn.pixabay.com/audio/2022/03/24/audio_1fc24998ad.mp3"></audio>
 
     <script>
         function calculateEndTime() {
@@ -135,6 +137,7 @@
                     clearInterval(timerInterval);
                     document.getElementById('timer').innerText = 'סיימת את יום העבודה!';
                     triggerConfetti();
+                    playSound();
                     return;
                 }
 
@@ -149,6 +152,11 @@
         function triggerConfetti() {
             const confettiElement = document.getElementById('confetti');
             confettiElement.innerHTML = '<iframe src="https://lottie.host/embed/4c6cb732-ad9f-4b74-9e8e-331ae6161f79/3M2u0tywRO.lottie" style="width: 100%; height: 100%; border: none; pointer-events: none;"></iframe>';
+        }
+        
+         function playSound() {
+            const audio = document.getElementById('end-sound');
+            audio.play();
         }
     </script>
 </body>
