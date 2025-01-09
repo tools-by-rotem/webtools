@@ -8,38 +8,155 @@
     <link rel="canonical" href="https://tools-by-rotem.github.io/webtools/accessibility-toolbar"/>
     <link rel="icon" type="image/x-icon" href="/webtools/site-favicon.ico">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+
         body {
-            font-family: Arial, sans-serif;
             font-size: 16px;
             margin: 0;
             padding: 0;
             background-color: #f4f4f4;
-            transition: background-color 0.3s ease;
-            height: 100vh;
+            transition: all 0.3s ease;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: #333;
+        }
+
+        body.high-contrast {
+            background-color: #000;
+            color: #fff;
+        }
+
+        body.high-contrast .main-content {
+            background-color: #000;
+        }
+
+        body.high-contrast a {
+            color: #ffff00;
+        }
+
+        body.high-contrast .content {
+            background-color: #000;
+            color: #fff;
+        }
+
+        body.high-contrast #accessibility-toolbar button {
+            background-color: #fff;
+            color: #000;
+        }
+
+        body.grayscale {
+            filter: grayscale(100%);
+            -webkit-filter: grayscale(100%);
+        }
+
+        body.highlight-links a {
+            background-color: #ffff00;
+            color: #000;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+
+        body.text-spacing {
+            letter-spacing: 0.12em;
+            word-spacing: 0.16em;
+            line-height: 1.8;
+        }
+
+        body.text-spacing p {
+            margin-bottom: 1.5em;
+        }
+
+        .main-header {
+            background-color: #2d3436;
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
-        /* סרגל נגישות */
+        .logo img {
+            height: 60px;
+            width: auto;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .content {
+            text-align: center;
+            padding: 2rem;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .content h1 {
+            margin-bottom: 1rem;
+        }
+
+        .content p {
+            margin-bottom: 2rem;
+        }
+
+        .content a {
+            color: #6c63ff;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border: 2px solid #6c63ff;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .content a:hover {
+            background-color: #6c63ff;
+            color: #fff;
+        }
+
         #accessibility-toolbar {
             position: fixed;
             top: 0;
-            right: -320px; /* מתחיל מחוץ למסך */
+            right: -320px;
             width: 300px;
             height: 100%;
             background-color: #343a40;
             padding: 20px;
             border-radius: 10px 0 0 10px;
-            z-index: 1000;
+            z-index: 1001;
             box-shadow: -2px 0 10px rgba(0, 0, 0, 0.3);
             transition: right 0.3s ease;
         }
 
-        /* כפתור פתיחה */
+        #accessibility-toolbar h2 {
+            color: white;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
         #accessibility-toggle {
             position: fixed;
-            top: 20px;
+            top: 90px;
             right: 20px;
             background-color: #6c63ff;
             color: white;
@@ -48,9 +165,9 @@
             border-radius: 50%;
             cursor: pointer;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            z-index: 1001;
+            z-index: 1002;
             font-size: 24px;
-            transition: background-color 0.3s, transform 0.3s;
+            transition: all 0.3s ease;
         }
 
         #accessibility-toggle:hover {
@@ -58,7 +175,6 @@
             transform: scale(1.1);
         }
 
-        /* עיצוב כפתורים */
         #accessibility-toolbar button {
             display: block;
             width: 100%;
@@ -69,7 +185,7 @@
             border-radius: 5px;
             margin-bottom: 10px;
             cursor: pointer;
-            transition: background-color 0.3s, transform 0.3s;
+            transition: all 0.3s ease;
         }
 
         #accessibility-toolbar button:hover {
@@ -77,60 +193,8 @@
             transform: translateY(-2px);
         }
 
-        /* עיצוב כותרות */
-        #accessibility-toolbar h2 {
-            color: white;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-
-        /* ניגודיות גבוהה */
-        .high-contrast {
-            background-color: black;
-            color: white;
-        }
-
-        .high-contrast a {
-            color: yellow;
-        }
-
-        /* גווני אפור */
-        .grayscale {
-            filter: grayscale(100%);
-        }
-
-        /* הדגשת קישורים */
-        .highlight-links a {
-            background-color: yellow;
-            color: black;
-            padding: 2px 4px;
-        }
-
-        /* ריווח טקסט */
-        .text-spacing {
-            line-height: 2;
-        }
-
-        /* עיצוב התוכן */
-        .content {
-            text-align: center;
-        }
-
-        .content a {
-            display: inline-block;
-            margin-top: 20px;
-            text-decoration: none;
-            color: #007bff;
-            text-decoration: underline;
-        }
-
-        .content a:hover {
-            text-decoration: underline;
-        }
-
-        /* עיצוב מודאל */
         #modal {
-            display: none; /* לא מוצג כברירת מחדל */
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
@@ -147,23 +211,143 @@
             padding: 20px;
             border-radius: 10px;
             text-align: center;
-            width: 300px;
-            max-height: 80vh; /* גובה מקסימלי */
-            overflow-y: auto; /* אפשרות לגלול */
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
         }
 
         #close-modal {
             background-color: #dc3545;
             color: white;
-            padding: 10px;
+            padding: 10px 20px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            margin-top: 10px;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        #close-modal:hover {
+            background-color: #c82333;
+        }
+
+        .main-footer {
+            background-color: #2d3436;
+            color: white;
+            padding: 3rem 0 1.5rem;
+            margin-top: 4rem;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .footer-section h3 {
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a {
+            color: #ddd;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: #6c63ff;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-right: -4px;
+        }
+
+        .social-icons img {
+            width: 24px;
+            height: 24px;
+            transition: opacity 0.3s ease;
+        }
+
+        .social-icons img:hover {
+            opacity: 0.8;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #444;
+        }
+
+        @media (max-width: 768px) {
+            .header-container {
+                padding: 0 1rem;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+
+            .content a {
+                display: inline-block;
+                width: 100%;
+                text-align: center;
+                font-size: 14px;
+                padding: 0.8rem;
+            }
+
+            .footer-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .footer-section {
+                align-items: center;
+            }
+
+            #accessibility-toggle {
+                top: 80px;
+                right: 10px;
+            }
+
+            #modal-content {
+                width: 95%;
+                margin: 10px;
+            }
         }
     </style>
 </head>
 <body>
+    <header class="main-header">
+        <div class="header-container">
+            <a href="https://tools-by-rotem.github.io/webtools/" class="logo">
+                <img src="https://tools-by-rotem.github.io/webtools/site-logo.png" alt="רותם קנון לוגו">
+            </a>
+        </div>
+    </header>
 
     <button id="accessibility-toggle" aria-label="פתח סרגל נגישות">⚙️</button>
     
@@ -179,13 +363,15 @@
         <button id="reset-settings">איפוס הגדרות</button>
     </div>
 
-    <div class="content">
-        <h1>ברוכים הבאים לאתר שלנו</h1>
-        <p>כאן תוכלו למצוא מידע חשוב ותכנים מעניינים במגוון נושאים.</p>
-        <a href="https://drive.google.com/file/d/1ufcOmgi-qeN2HY6SjdZ-lcBW_9U_MwX3/view">הורדת התוסף לאתרי Wordpress</a>
-    </div>
+    <main class="main-content">
+        <div class="content">
+            <h1>ברוכים הבאים לאתר שלנו</h1>
+            <p>כאן תוכלו למצוא מידע חשוב ותכנים מעניינים במגוון נושאים.</p>
+            <a href="https://drive.google.com/file/d/1ufcOmgi-qeN2HY6SjdZ-lcBW_9U_MwX3/view">הורדת התוסף לאתרי Wordpress</a>
+        </div>
+    </main>
 
-    <!-- מודאל הצהרת נגישות -->
+    <!-- Modal for Accessibility Statement -->
     <div id="modal">
         <div id="modal-content">
             <h2>הצהרת נגישות</h2>
@@ -221,6 +407,73 @@
             <button id="close-modal">סגור</button>
         </div>
     </div>
+
+    <footer class="main-footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>רשתות חברתיות</h3>
+                <div class="social-icons">
+                    <a href="https://www.linkedin.com/in/rotem-kanon" target="_blank">
+                        <img src="https://cdn-icons-png.flaticon.com/512/145/145807.png" alt="LinkedIn">
+                    </a>
+                    <a href="https://github.com/tools-by-rotem" target="_blank">
+                        <img src="https://cdn-icons-png.flaticon.com/512/2111/2111432.png" alt="GitHub">
+                    </a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>כמויות חיפושים</h3>
+                <ul>
+                    <li><a href="/webtools/google-search-volume">כמות חיפושים בגוגל</a></li>
+                    <li><a href="/webtools/spotify-search-volume">כמות חיפושים בספוטיפיי</a></li>
+                    <li><a href="/webtools/soundcloud-search-volume">כמות חיפושים בסאונדקלאוד </a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>תצוגה מקדימה</h3>
+                <ul>
+                    <li><a href="/webtools/google-serp-preview">תצוגה מקדימה לנראות בגוגל</a></li>
+                    <li><a href="/webtools/social-link-preview">תצוגה מקדימה לרשתות חברתיות</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>כמויות חיפושים</h3>
+                <ul>
+                    <li><a href="/webtools/google-search-volume">כמות חיפושים בגוגל</a></li>
+                    <li><a href="/webtools/spotify-search-volume">כמות חיפושים בספוטיפיי</a></li>
+                    <li><a href="/webtools/soundcloud-search-volume">כמות חיפושים בסאונדקלאוד </a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>תצוגה מקדימה</h3>
+                <ul>
+                    <li><a href="/webtools/google-serp-preview">תצוגה מקדימה לנראות בגוגל</a></li>
+                    <li><a href="/webtools/social-link-preview">תצוגה מקדימה לרשתות חברתיות</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>אופטימיזציה</h3>
+                <ul>
+                    <li><a href="/webtools/page-speed-test">בדיקת מהירות טעינה</a></li>
+                    <li><a href="/webtools/mobile-simulator">בדיקת תאימות למכשירים ניידים</a></li>
+                    <li><a href="/webtools/image-minify-converter">המרת פורמט וכיווץ משקל תמונה</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>יצירה ועיצוב</h3>
+                <ul>
+                    <li><a href="/webtools/background-remover">הסרת רקע מתמונה</a></li>
+                    <li><a href="/webtools/draw">ציור אינטראקטיבי</a></li>
+                    <li><a href="/webtools/image-color-identifier">זיהוי צבעי תמונה</a></li>
+                    <li><a href="/webtools/infographics">יצירת אינפוגרפיקות</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 כל הזכויות שמורות לרותם קנון</p>
+        </div>
+    </footer>
+
     <script>
         // הפעלת כפתור הסרגל
         const toggleButton = document.getElementById('accessibility-toggle');
