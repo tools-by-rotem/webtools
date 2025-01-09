@@ -1,24 +1,64 @@
 <!DOCTYPE html>
-<html lang="he">
+<html dir="rtl" lang="he">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex,nofollow">
     <title>הסרת רקע מתמונה - הפרדת עצם מרכזי מתמונה | Tools by Rotem</title>
-    <meta name="description" content="הסרת רקע מתמונה בקלות - כלי מתקדם להפרדת עצם מרכזי מרקע תמונה, לשימוש אישי או מקצועי. אידיאלי לעריכת תמונות, עיצוב גרפי, חנויות אונליין ועוד. לשימוש בכלי לחצו >>>">
+    <meta name="description" content="הסרת רקע מתמונה בקלות - כלי מתקדם להפרדת עצם מרכזי מרקע תמונה, לשימוש אישי או מקצועי. אידיאלי לעריכת תמונות, עיצוב גרפי, חנויות אונליין ועוד.">
     <link rel="icon" type="image/x-icon" href="/webtools/site-favicon.ico">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+
         body {
             font-family: 'Roboto', sans-serif;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            margin: 0;
+            min-height: 100vh;
             direction: rtl;
-            background: #f0f0f0;
+            background: #f5f5f5;
             overflow-x: hidden;
             width: 100%;
-            max-width: 100%;
         }
+
+        /* Header Styles */
+        .main-header {
+            background-color: #2d3436;
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 60px;
+            width: auto;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            width: 100%;
+            max-width: 100%;
+            padding: 30px 20px;
+        }
+
         .container {
             background-color: white;
             padding: 30px;
@@ -27,16 +67,20 @@
             text-align: center;
             max-width: 400px;
             width: 100%;
-            margin-top: 30px;
+            margin: 30px auto;
         }
-        h1 {
-            font-size: 24px;
-            margin-bottom: 20px;
-            color: #333;
+
+        .article-container {
+            max-width: 70%;
+            margin: 30px auto;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 15px;
         }
-        input[type="file"] {
-            display: none;
-        }
+
+        /* Original Tool Styles */
+        h1 { font-size: 24px; margin-bottom: 20px; color: #333; }
+        input[type="file"] { display: none; }
         .file-label {
             display: inline-block;
             padding: 10px 20px;
@@ -46,9 +90,7 @@
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
-        .file-label:hover {
-            background-color: #0056b3;
-        }
+        .file-label:hover { background-color: #0056b3; }
         #removeBgBtn {
             display: block;
             margin: 20px auto;
@@ -60,19 +102,13 @@
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
-        #removeBgBtn:hover {
-            background-color: #218838;
-        }
+        #removeBgBtn:hover { background-color: #218838; }
         #outputImage, #previewImage {
             display: none;
             margin: 20px auto;
             max-width: 100%;
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-        #loading {
-            display: none;
-            margin-top: 10px;
         }
         #downloadBtn, #resetBtn {
             display: none;
@@ -83,105 +119,261 @@
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
-        #downloadBtn {
-            background-color: #ffc107;
+        #downloadBtn { background-color: #ffc107; color: white; }
+        #downloadBtn:hover { background-color: #e0a800; }
+        #resetBtn { background-color: #dc3545; color: white; }
+        #resetBtn:hover { background-color: #c82333; }
+
+        .main-footer {
+            background-color: #2d3436;
             color: white;
+            padding: 3rem 0 1.5rem;
+            margin-top: 4rem;
         }
-        #downloadBtn:hover {
-            background-color: #e0a800;
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
         }
-        #resetBtn {
-            background-color: #dc3545;
+
+        .footer-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .footer-section h3 {
             color: white;
+            margin-bottom: 1rem;
         }
-        #resetBtn:hover {
-            background-color: #c82333;
+
+        .footer-section ul {
+            list-style: none;
         }
-        .article-container {
-            direction: rtl;
-            max-width: 70%;
-            width: 70%;
-            margin: 30px auto;
-            padding: 15px;
-            background-color: #f9f9f9;
-            border-radius: 15px;
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
         }
-        .article-container h2 {
-            color: #333;
-            text-align: right;
-            margin-bottom: 20px;
+
+        .footer-section a {
+            color: #ddd;
+            text-decoration: none;
+            transition: color 0.3s ease;
         }
-        .article-container h3 {
-           text-align: right;
-            color: #007bff;
+
+        .footer-section a:hover {
+            color: #0984e3;
         }
-        .article-container ul, .article-container ol {
-            padding-right: 20px;
+
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-right: -4px;
+        }
+
+        .social-icons img {
+            width: 24px;
+            height: 24px;
+            transition: opacity 0.3s ease;
+        }
+
+        .social-icons a:hover img {
+            opacity: 0.8;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #444;
+        }
+
+        @media (max-width: 768px) {
+            .header-container {
+                padding: 0 1rem;
+            }
+
+            .article-container {
+                max-width: 90%;
+                margin: 20px auto;
+            }
+
+            .container {
+                margin: 20px auto;
+            }
+
+            .footer-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .footer-section {
+                align-items: center;
+            }
+
+            .logo img {
+                height: 50px;
+            }
         }
     </style>
-    <script src="https://cdn.enable.co.il/licenses/enable-L34385vlixga9kjh-1224-66195/init.js"></script>
 </head>
 <body>
-    <div class="container">
-        <h1>הסרת רקע מתמונה</h1>
-        <label class="file-label" for="inputFile">בחרו תמונה</label>
-        <input type="file" id="inputFile" accept="image/*">
-        <img id="previewImage" alt="תצוגה מקדימה" />
-        <button id="removeBgBtn">הסרת רקע</button>
-        <img id="outputImage" alt="כאן תופיע התוצאה" />
-        <button id="downloadBtn">הורדת תמונה ללא רקע</button>
-        <button id="resetBtn">הסרת רקע מתמונה נוספת</button>
-        <p id="loading">מעבד את התמונה...</p>
-    </div>
+    <header class="main-header">
+        <div class="header-container">
+            <a href="https://tools-by-rotem.github.io/webtools/" class="logo">
+                <img src="https://tools-by-rotem.github.io/webtools/site-logo.png" alt="רותם קנון לוגו">
+            </a>
+        </div>
+    </header>
 
-    <div class="article-container">
- <h2><strong>איך להשתמש בכלי להסרת רקע מתמונה?</strong></h2>
-<h3><strong>1. העלו את התמונה</strong></h3>
-<p><span style="font-weight: 400;">כדי להתחיל, פשוט לחצו על כפתור "בחרו תמונה" והעלו תמונה מהמחשב שלכם או מהטלפון.</span></p>
-<h3><strong>2. תנו לכלי לעבוד</strong></h3>
-<p><span style="font-weight: 400;">לאחר שהעליתם את התמונה, לחצו על כפתור "הסרת רקע" והכלי יתחיל בתהליך הסרת הרקע מהתמונה. תוך מספר שניות בלבד תתקבל התוצאה.</span></p>
-<h3><strong>3. הורידו את התמונה ללא הרקע</strong></h3>
-<p><span style="font-weight: 400;">בסיום התהליך, תוכלו להוריד את התמונה ולשלב אותה בכל פרויקט או עיצוב שתבחרו.</span></p>
-<p>&nbsp;</p>
-<h2><strong>איך הכלי להסרת רקע מתמונה עובד?</strong></h2>
-<p><span style="font-weight: 400;">אם אתם מחפשים דרך פשוטה ומהירה להסיר רקע מתמונה, הגעתם למקום הנכון. הכלי שלי להסרת רקע מתמונה מציע פתרון קליל ומדויק להפליא שמתאים גם למתחילים וגם למקצוענים. כל שעליכם לעשות הוא להעלות את התמונה, ותוך שניות ספורות תקבלו תוצאה מרשימה עם רקע שקוף לחלוטין.</span></p>
-<p><span style="font-weight: 400;">הכלי עובד בטכנולוגיה מתקדמת המבוססת על למידת מכונה, שמאפשרת לזהות את האובייקטים בתמונה ולהפריד אותם מהרקע באופן מדויק. בין אם מדובר בתמונה של אדם, חפץ או מוצר שיווקי, הכלי מבצע את העבודה בצורה מושלמת תוך שמירה על פרטים חשובים כמו קצוות השיער או קווי המתאר של האובייקט.</span></p>
-<p>&nbsp;</p>
-<h2><strong>יתרונות הכלי להסרת רקע מתמונה</strong></h2>
-<h3><strong>חינמי לחלוטין</strong></h3>
-<p><span style="font-weight: 400;">הכלי זמין לשימוש בחינם, כך שתוכלו להסיר רקעים מתמונות ללא צורך ברכישת תוכנה יקרה או הרשמה למנוי חודשי. זהו פתרון מושלם עבור אנשים פרטיים, יזמים קטנים ומעצבים גרפיים.</span></p>
-<h3><strong>קל לשימוש</strong></h3>
-<p><span style="font-weight: 400;">אין צורך בידע מוקדם בעריכת תמונות. הממשק הפשוט והאינטואיטיבי הופך את התהליך למהיר ונוח. תוך שלושה שלבים פשוטים בלבד תוכלו לקבל את התמונה שלכם ללא הרקע.</span></p>
-<h3><strong>תמיכה במספר פורמטי תמונה</strong></h3>
-<p><span style="font-weight: 400;">הכלי תומך בפורמטים שונים, כך שתוכלו להעלות תמונות בפורמטים הפופולריים ביותר כמו JPEG, PNG, WebP ועוד. התמונה ניתנת להורדה בפורמט PNG, במידה ותרצו להמיר את פורמט התמונה לפורמט אחר, תוכלו להשתמש </span><a href="https://tools-by-rotem.github.io/webtools/image-minify-converter"><strong>בכלי להמרת פורמט וכיווץ משקל תמונה</strong></a><span style="font-weight: 400;">.</span></p>
-<h3><strong>תוצאות איכותיות ומדויקות</strong></h3>
-<p><span style="font-weight: 400;">באמצעות טכנולוגיה מתקדמת, הכלי שומר על רמת דיוק גבוהה במיוחד, כולל פרטים עדינים כמו שיער, צללים וקווי מתאר קטנים. כך תוכלו להיות בטוחים שהתוצאה הסופית תיראה מקצועית.</span></p>
-<h3><strong>מתאים לכל מטרה</strong></h3>
-<p><span style="font-weight: 400;">בין אם אתם מעצבים גרפיים שזקוקים לתמונות למטרות שיווקיות ובין אם אתם סתם רוצים ליצור תמונות יצירתיות, הכלי שלי מתאים לכולם. הוא אידיאלי עבור עיצוב פוסטים ברשתות החברתיות, יצירת לוגואים, הכנת מצגות ועוד.</span></p>
-<p>&nbsp;</p>
-<h2><strong>למה לבחור דווקא בכלי הזה?</strong></h2>
-<p><span style="font-weight: 400;">ישנם כלים רבים להסרת רקע מתמונה, אך הכלי שלי מציע שילוב מנצח של פשטות, איכות ותוצאה מהירה. הכלי מותאם בדיוק לצרכים שלכם, בין אם מדובר בפרויקטים מקצועיים או בצרכים אישיים. בנוסף, הוא זמין לשימוש מכל מכשיר &ndash; מחשב, טאבלט או טלפון נייד.</span></p>
-<p>&nbsp;</p>
-<h2><strong>שימושים פופולריים בכלי</strong></h2>
-<h3><strong>עיצוב פוסטים לרשתות חברתיות</strong></h3>
-<p><span style="font-weight: 400;">צרו תמונות עם רקע שקוף שתוכלו לשלב בקלות בפוסטים שלכם. הכלי מאפשר להבליט את האובייקטים החשובים בתמונה ולשפר את האסתטיקה הכללית.</span></p>
-<h3><strong>יצירת חומרים שיווקיים</strong></h3>
-<p><span style="font-weight: 400;">בין אם אתם עובדים על פלייר, באנר או פרסומת דיגיטלית, הכלי יאפשר לכם להסיר רקעים בקלות ולהתמקד במוצר או בשירות שאתם מציעים.</span></p>
-<h3><strong>עריכת תמונות אישיות</strong></h3>
-<p><span style="font-weight: 400;">רוצים להסיר את הרקע מהתמונות שלכם לצורך יצירת אלבומים, הדפסות מיוחדות או מתנות מקוריות? הכלי שלי הוא הבחירה המושלמת לכך.</span></p>
-<p>&nbsp;</p>
-<h2><strong>טיפים לקבלת תוצאה מיטבית</strong></h2>
-<h3><strong>שמרו על איכות התמונה המקורית</strong></h3>
-<p><span style="font-weight: 400;">כדי לקבל תוצאות טובות יותר, השתמשו בתמונות ברזולוציה גבוהה.</span></p>
-<h3><strong>התאימו את הרקע החדש לצרכים שלכם</strong></h3>
-<p><span style="font-weight: 400;">לאחר ההסרה, תוכלו להוסיף רקע חדש מותאם אישית בהתאם לפרויקט שלכם.</span></p>
-<h3><strong>נסו תמונות שונות</strong></h3>
-<p><span style="font-weight: 400;">הכלי מתאים לסוגי תמונות מגוונים, אז אל תהססו להתנסות עם תמונות שונות כדי לבדוק את הביצועים.</span></p>
-<p>&nbsp;</p>
-<h2><strong>לסיכום</strong></h2>
-<p><span style="font-weight: 400;">אם אתם מחפשים כלי להסרת רקע מתמונה שהוא גם חינמי, גם קל לשימוש וגם מספק תוצאות איכותיות, אין צורך להמשיך לחפש. הכלי שלי מספק את כל מה שאתם צריכים כדי להסיר רקעים מתמונות בצורה מקצועית וללא מאמץ.</span></p>
-<p><span style="font-weight: 400;">למה אתם מחכים? השתמשו בכלי להסרת רקע מתמונה עוד היום ותיהנו מתוצאות יוצאות דופן!</span><span style="font-weight: 400;"><br /></span><span style="font-weight: 400;">מעוניינים לראות מה עוד יש לי להציע? עברו אל </span><a href="https://tools-by-rotem.github.io/webtools/"><strong>ספריית הכלים</strong></a><span style="font-weight: 400;"> ובחנו כלים נוספים.</span></p>
-    </div>
+    <main class="main-content">
+        <div class="container">
+            <h1>הסרת רקע מתמונה</h1>
+            <label class="file-label" for="inputFile">בחרו תמונה</label>
+            <input type="file" id="inputFile" accept="image/*">
+            <img id="previewImage" alt="תצוגה מקדימה" />
+            <button id="removeBgBtn">הסרת רקע</button>
+            <img id="outputImage" alt="כאן תופיע התוצאה" />
+            <button id="downloadBtn">הורדת תמונה ללא רקע</button>
+            <button id="resetBtn">הסרת רקע מתמונה נוספת</button>
+            <p id="loading" style="display: none;">מעבד את התמונה...</p>
+        </div>
+
+        <div class="article-container">
+            <h2><strong>איך להשתמש בכלי להסרת רקע מתמונה?</strong></h2>
+            <p>&nbsp;</p>
+            <h3><strong>1. העלו את התמונה</strong></h3>
+            <p><span style="font-weight: 400;">כדי להתחיל, פשוט לחצו על כפתור "בחרו תמונה" והעלו תמונה מהמחשב שלכם או מהטלפון.</span></p>
+            <p>&nbsp;</p>
+            <h3><strong>2. תנו לכלי לעבוד</strong></h3>
+            <p><span style="font-weight: 400;">לאחר שהעליתם את התמונה, לחצו על כפתור "הסרת רקע" והכלי יתחיל בתהליך הסרת הרקע מהתמונה. תוך מספר שניות בלבד תתקבל התוצאה.</span></p>
+            <p>&nbsp;</p>
+            <h3><strong>3. הורידו את התמונה ללא הרקע</strong></h3>
+            <p><span style="font-weight: 400;">בסיום התהליך, תוכלו להוריד את התמונה ולשלב אותה בכל פרויקט או עיצוב שתבחרו.</span></p>
+            <p>&nbsp;</p>
+            <h2><strong>איך הכלי להסרת רקע מתמונה עובד?</strong></h2>
+            <p><span style="font-weight: 400;">אם אתם מחפשים דרך פשוטה ומהירה להסיר רקע מתמונה, הגעתם למקום הנכון. הכלי שלי להסרת רקע מתמונה מציע פתרון קליל ומדויק להפליא שמתאים גם למתחילים וגם למקצוענים. כל שעליכם לעשות הוא להעלות את התמונה, ותוך שניות ספורות תקבלו תוצאה מרשימה עם רקע שקוף לחלוטין.</span></p>
+            <p>&nbsp;</p>
+            <p><span style="font-weight: 400;">הכלי עובד בטכנולוגיה מתקדמת המבוססת על למידת מכונה, שמאפשרת לזהות את האובייקטים בתמונה ולהפריד אותם מהרקע באופן מדויק. בין אם מדובר בתמונה של אדם, חפץ או מוצר שיווקי, הכלי מבצע את העבודה בצורה מושלמת תוך שמירה על פרטים חשובים כמו קצוות השיער או קווי המתאר של האובייקט.</span></p>
+            <p>&nbsp;</p>
+            <h2><strong>יתרונות הכלי להסרת רקע מתמונה</strong></h2>
+            <p>&nbsp;</p>
+            <h3><strong>חינמי לחלוטין</strong></h3>
+            <p><span style="font-weight: 400;">הכלי זמין לשימוש בחינם, כך שתוכלו להסיר רקעים מתמונות ללא צורך ברכישת תוכנה יקרה או הרשמה למנוי חודשי. זהו פתרון מושלם עבור אנשים פרטיים, יזמים קטנים ומעצבים גרפיים.</span></p>
+            <p>&nbsp;</p>
+            <h3><strong>קל לשימוש</strong></h3>
+            <p><span style="font-weight: 400;">אין צורך בידע מוקדם בעריכת תמונות. הממשק הפשוט והאינטואיטיבי הופך את התהליך למהיר ונוח. תוך שלושה שלבים פשוטים בלבד תוכלו לקבל את התמונה שלכם ללא הרקע.</span></p>
+            <p>&nbsp;</p>
+            <h3><strong>תמיכה במספר פורמטי תמונה</strong></h3>
+            <p><span style="font-weight: 400;">הכלי תומך בפורמטים שונים, כך שתוכלו להעלות תמונות בפורמטים הפופולריים ביותר כמו JPEG, PNG, WebP ועוד. התמונה ניתנת להורדה בפורמט PNG, במידה ותרצו להמיר את פורמט התמונה לפורמט אחר, תוכלו להשתמש </span><a href="https://tools-by-rotem.github.io/webtools/image-minify-converter"><strong>בכלי להמרת פורמט וכיווץ משקל תמונה</strong></a><span style="font-weight: 400;">.</span></p>
+            <p>&nbsp;</p>
+            <h3><strong>תוצאות איכותיות ומדויקות</strong></h3>
+            <p><span style="font-weight: 400;">באמצעות טכנולוגיה מתקדמת, הכלי שומר על רמת דיוק גבוהה במיוחד, כולל פרטים עדינים כמו שיער, צללים וקווי מתאר קטנים. כך תוכלו להיות בטוחים שהתוצאה הסופית תיראה מקצועית.</span></p>
+            <p>&nbsp;</p>
+            <h3><strong>מתאים לכל מטרה</strong></h3>
+            <p><span style="font-weight: 400;">בין אם אתם מעצבים גרפיים שזקוקים לתמונות למטרות שיווקיות ובין אם אתם סתם רוצים ליצור תמונות יצירתיות, הכלי שלי מתאים לכולם. הוא אידיאלי עבור עיצוב פוסטים ברשתות החברתיות, יצירת לוגואים, הכנת מצגות ועוד.</span></p>
+            <p>&nbsp;</p>
+            <h2><strong>למה לבחור דווקא בכלי הזה?</strong></h2>
+            <p><span style="font-weight: 400;">ישנם כלים רבים להסרת רקע מתמונה, אך הכלי שלי מציע שילוב מנצח של פשטות, איכות ותוצאה מהירה. הכלי מותאם בדיוק לצרכים שלכם, בין אם מדובר בפרויקטים מקצועיים או בצרכים אישיים. בנוסף, הוא זמין לשימוש מכל מכשיר &ndash; מחשב, טאבלט או טלפון נייד.</span></p>
+            <p>&nbsp;</p>
+            <h2><strong>שימושים פופולריים בכלי</strong></h2>
+            <p>&nbsp;</p>
+            <h3><strong>עיצוב פוסטים לרשתות חברתיות</strong></h3>
+            <p><span style="font-weight: 400;">צרו תמונות עם רקע שקוף שתוכלו לשלב בקלות בפוסטים שלכם. הכלי מאפשר להבליט את האובייקטים החשובים בתמונה ולשפר את האסתטיקה הכללית.</span></p>
+            <p>&nbsp;</p>
+            <h3><strong>יצירת חומרים שיווקיים</strong></h3>
+            <p><span style="font-weight: 400;">בין אם אתם עובדים על פלייר, באנר או פרסומת דיגיטלית, הכלי יאפשר לכם להסיר רקעים בקלות ולהתמקד במוצר או בשירות שאתם מציעים.</span></p>
+            <p>&nbsp;</p>
+            <h3><strong>עריכת תמונות אישיות</strong></h3>
+            <p><span style="font-weight: 400;">רוצים להסיר את הרקע מהתמונות שלכם לצורך יצירת אלבומים, הדפסות מיוחדות או מתנות מקוריות? הכלי שלי הוא הבחירה המושלמת לכך.</span></p>
+            <p>&nbsp;</p>
+            <h2><strong>טיפים לקבלת תוצאה מיטבית</strong></h2>
+            <p>&nbsp;</p>
+            <h3><strong>שמרו על איכות התמונה המקורית</strong></h3>
+            <p><span style="font-weight: 400;">כדי לקבל תוצאות טובות יותר, השתמשו בתמונות ברזולוציה גבוהה.</span></p>
+            <p>&nbsp;</p>
+            <h3><strong>התאימו את הרקע החדש לצרכים שלכם</strong></h3>
+            <p><span style="font-weight: 400;">לאחר ההסרה, תוכלו להוסיף רקע חדש מותאם אישית בהתאם לפרויקט שלכם.</span></p>
+            <p>&nbsp;</p>
+            <h3><strong>נסו תמונות שונות</strong></h3>
+            <p><span style="font-weight: 400;">הכלי מתאים לסוגי תמונות מגוונים, אז אל תהססו להתנסות עם תמונות שונות כדי לבדוק את הביצועים.</span></p>
+            <p>&nbsp;</p>
+            <h2><strong>לסיכום</strong></h2>
+            <p><span style="font-weight: 400;">אם אתם מחפשים כלי להסרת רקע מתמונה שהוא גם חינמי, גם קל לשימוש וגם מספק תוצאות איכותיות, אין צורך להמשיך לחפש. הכלי שלי מספק את כל מה שאתם צריכים כדי להסיר רקעים מתמונות בצורה מקצועית וללא מאמץ.</span></p>
+            <p>&nbsp;</p>
+            <p><span style="font-weight: 400;">למה אתם מחכים? השתמשו בכלי להסרת רקע מתמונה עוד היום ותיהנו מתוצאות יוצאות דופן!</span><span style="font-weight: 400;"><br /></span><span style="font-weight: 400;">מעוניינים לראות מה עוד יש לי להציע? עברו אל </span><a href="https://tools-by-rotem.github.io/webtools/"><strong>ספריית הכלים</strong></a><span style="font-weight: 400;"> ובחנו כלים נוספים.</span></p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="footer-container">
+          <div class="footer-section">
+            <h3>רשתות חברתיות</h3>
+             <div class="social-icons">
+             <a href="https://www.linkedin.com/in/rotem-kanon" target="_blank">
+               <img src="https://cdn-icons-png.flaticon.com/512/145/145807.png" alt="LinkedIn">
+             </a>
+             <a href="https://github.com/tools-by-rotem" target="_blank">
+               <img src="https://cdn-icons-png.flaticon.com/512/2111/2111432.png" alt="GitHub">
+             </a>
+           </div>
+        </div>
+            <div class="footer-section">
+                <h3>כמויות חיפושים</h3>
+                <ul>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/google-search-volume">כמות חיפושים בגוגל</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/spotify-search-volume">כמות חיפושים בספוטיפיי</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/soundcloud-search-volume">כמות חיפושים בסאונדקלאוד </a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>תצוגה מקדימה</h3>
+                <ul>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/google-serp-preview">תצוגה מקדימה לנראות בגוגל</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/social-link-preview">תצוגה מקדימה לרשתות חברתיות</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>אופטימיזציה</h3>
+                <ul>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/page-speed-test">בדיקת מהירות טעינה</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/mobile-simulator">בדיקת תאימות למכשירים ניידים</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/image-minify-converter">המרת פורמט וכיווץ משקל תמונה</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>יצירה ועיצוב</h3>
+                <ul>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/background-remover">הסרת רקע מתמונה</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/draw">ציור אינטראקטיבי</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/image-color-identifier">זיהוי צבעי תמונה</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/infographics">יצירת אינפוגרפיקות</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>שונות</h3>
+                <ul>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/accessibility-toolbar">סרגל נגישות</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/navigation-links-generator">מחולל קישורי ניווט</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/reverse-typing-fix">תיקון הקלדה הפוכה</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/strong-password-generator">מחולל סיסמאות חזקות</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/time-to-go-home">הגיע הזמן ללכת הביתה</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/resume-scanner">התאמת קורות חיים לסורקים אוטומטיים</a></li>
+                </ul>
+            </div>
+            
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 כל הזכויות שמורות לרותם קנון</p>
+        </div>
+    </footer>
 
     <script>
         const inputFile = document.getElementById("inputFile");
@@ -204,7 +396,6 @@
 
         document.getElementById("removeBgBtn").addEventListener("click", async function() {
             const file = inputFile.files[0];
-
             if (!file) {
                 alert("אנא בחרו תמונה.");
                 return;
@@ -218,7 +409,7 @@
             const formData = new FormData();
             formData.append("image_file", file);
 
-            const apiKey = "L8ybRK2f4daKp17Pfo7eSQzr";  // Replace with your API key
+            const apiKey = "L8ybRK2f4daKp17Pfo7eSQzr";
             const response = await fetch("https://api.remove.bg/v1.0/removebg", {
                 method: "POST",
                 headers: {
@@ -252,11 +443,10 @@
         });
 
         resetBtn.addEventListener("click", function() {
-            // איפוס כל התצוגות
             previewImage.style.display = "none";
             outputImage.style.display = "none";
             downloadBtn.style.display = "none";
-            inputFile.value = "";  // איפוס שדה הקלט של קובץ
+            inputFile.value = "";
             resetBtn.style.display = "none";
         });
     </script>
