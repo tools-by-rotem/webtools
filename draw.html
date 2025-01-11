@@ -5,66 +5,64 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>צייר אונליין - כלי אינטרקטיבי לציור בדפדפן | Tools by Rotem</title>
     <meta name="description" content="צייר אונליין - כלי אינטראקטיבי לציור ישירות בדפדפן. אפשרויות ציור מתקדמות, ממשק ידידותי למשתמש, צבעים מגוונים ויצירתיות ללא גבולות. התחילו לצייר עכשיו >>>">
+    <link rel="canonical" href="https://tools-by-rotem.github.io/webtools/draw" />
     <link rel="icon" type="image/x-icon" href="/webtools/site-favicon.ico">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: system-ui, -apple-system, sans-serif;
         }
+
         body {
-            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            min-height: 100vh;
-            background: linear-gradient(135deg, #ece9e6, #ffffff);
-            padding: 20px;
         }
-        #toolbar {
+
+        /* Header Styles */
+        .main-header {
+            background-color: #2d3436;
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
             display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px;
-            background-color: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-            width: 100%;
-            max-width: 800px;
-        }
-        #toolbar input, #toolbar select, #toolbar button {
-            margin: 0 5px;
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid #ddd;
-            background-color: #f1f1f1;
-        }
-        #toolbar button {
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            display: flex;
-            align-items: center;
             justify-content: center;
-            width: 40px;
-            height: 40px;
-            padding: 8px;
+            align-items: center;
         }
-        #toolbar button:hover {
-            background-color: #e0e0e0;
+
+        .logo img {
+            height: 60px;
+            width: auto;
         }
-        #toolbar button img {
-            width: 24px;
-            height: 24px;
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            margin-top: 2rem;
+            padding: 0 20px;
         }
-        .button-group {
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            gap: 10px;
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #2d3436;
         }
+
+        /* Canvas Container */
         #canvas-container {
             display: flex;
             justify-content: center;
@@ -75,127 +73,393 @@
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
             width: 100%;
             max-width: 800px;
+            margin: 0 auto;
         }
+
         canvas {
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             max-width: 100%;
             height: auto;
         }
+
+        /* Toolbar Styles */
+        #toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 15px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 0 auto 20px;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .toolbar-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        #toolbar input[type="range"] {
+            width: 100px;
+            margin: 0;
+        }
+
+        #toolbar select {
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            background-color: #f1f1f1;
+            margin: 0;
+        }
+
+        .color-picker-container {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            position: relative;
+        }
+
         #colorDisplay {
             width: 30px;
             height: 30px;
             border-radius: 50%;
-            background-color: #000000;
             border: 2px solid #ddd;
             cursor: pointer;
-            display: inline-block;
-            margin-left: 10px;
-            position: relative;
+            background-color: #000000;
         }
+
         #colorPicker {
+            opacity: 0;
             position: absolute;
-            top: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            display: none;
-            z-index: 1000;
-        }
-        #colorDisplay.active #colorPicker {
-            display: block;
-        }
-        #menu-toggle {
-            display: none;
+            width: 30px;
+            height: 30px;
             cursor: pointer;
-            font-size: 24px;
-            margin-bottom: 10px;
-            background: none;
-            border: none;
-            padding: 5px;
         }
-        @media (max-width: 768px) {
-        #menu-toggle {
-            display: block;
-        }
-        #toolbar {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-        }
-        #toolbar.show {
+
+        .button-group {
             display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
         }
-        #toolbar input, #toolbar select {
-            width: 80%;
-            margin: 5px 0;
-        }
-        #toolbar button {
+
+        .button-group button {
             width: 40px;
             height: 40px;
             padding: 8px;
-            margin: 5px;
-        }
-        #toolbar label {
+            border: none;
+            border-radius: 8px;
+            background-color: #f1f1f1;
+            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 100%;
+            transition: background-color 0.3s ease;
         }
-        #colorDisplay {
-            margin-left: 0;
-            margin-bottom: 10px;
+
+        .button-group button:hover {
+            background-color: #e0e0e0;
         }
-        #colorPicker {
-            position: static;
-            transform: none;
-            margin-top: 10px;
+
+        .button-group button img {
+            width: 24px;
+            height: 24px;
         }
-        .button-group {
-            flex-direction: row;
-            justify-content: space-between;
-            width: 100%;
-            max-width: 300px;
-            margin-top: 10px;
+
+        /* Footer Styles */
+        .main-footer {
+            background-color: #2d3436;
+            color: white;
+            padding: 3rem 0 1.5rem;
+            margin-top: 4rem;
         }
-    }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .footer-section h3 {
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a {
+            color: #ddd;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: #0984e3;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-right: -4px;
+        }
+
+        .social-icons img {
+            width: 24px;
+            height: 24px;
+            transition: opacity 0.3s ease;
+            margin-right: -4px;
+        }
+
+        .social-icons a:hover img {
+            opacity: 0.8;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #444;
+        }
+
+        .article-content {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .article-content h2 {
+            color: #2d3436;
+            margin: 1.5rem 0 1rem;
+        }
+
+        .article-content ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 1rem 0;
+        }
+
+        .article-content li {
+            margin: 0.5rem 0;
+            padding-right: 1.5rem;
+            position: relative;
+        }
+
+        .article-content li::before {
+            content: "•";
+            position: absolute;
+            right: 0;
+            color: #0984e3;
+        }
+
+        .article-content p {
+            margin: 1rem 0;
+            line-height: 1.8;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-container {
+                padding: 0 1rem;
+            }
+
+            #toolbar {
+                padding: 10px;
+                gap: 15px;
+            }
+
+            .toolbar-group {
+                width: 100%;
+                justify-content: center;
+            }
+
+            #toolbar input[type="range"] {
+                width: 100%;
+                max-width: 200px;
+            }
+
+            .button-group {
+                width: 100%;
+                justify-content: center;
+                gap: 10px;
+            }
+
+            .button-group button {
+                width: calc(50% - 5px);
+                max-width: 120px;
+                height: 40px;
+            }
+
+            .footer-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .footer-section {
+                align-items: center;
+            }
+        }
     </style>
     <script src="https://cdn.enable.co.il/licenses/enable-L34385vlixga9kjh-1224-66195/init.js"></script>
 </head>
 <body>
-    <button id="menu-toggle">☰</button>
-    <div id="toolbar">
-        <label for="colorPicker">
-            <div id="colorDisplay">
-                <input type="color" id="colorPicker" value="#000000">
-            </div>
-        </label>
-        <input type="range" id="brushSize" min="1" max="20" value="5">
-        <select id="brushShape">
-            <option value="round">מעוגל</option>
-            <option value="square">מרובע</option>
-        </select>
-        <input type="range" id="opacity" min="0.1" max="1" step="0.1" value="1">
-        <div class="button-group">
-            <button id="clearCanvas">
-                <img src="https://cdn-icons-png.flaticon.com/512/9742/9742093.png" alt="Clear" width="24" height="24">
-            </button>
-            <button id="undo">
-                <img src="https://cdn-icons-png.flaticon.com/512/2349/2349854.png" alt="Undo" width="24" height="24">
-            </button>
-            <button id="redo">
-                <img src="https://cdn-icons-png.flaticon.com/512/2349/2349829.png" alt="Redo" width="24" height="24">
-            </button>
-            <button id="save">
-                <img src="https://cdn-icons-png.flaticon.com/512/2874/2874091.png" alt="Save" width="24" height="24">
-            </button>
+    <header class="main-header">
+        <div class="header-container">
+            <a href="https://tools-by-rotem.github.io/webtools/" class="logo">
+                <img src="https://tools-by-rotem.github.io/webtools/site-logo.png" alt="רותם קנון לוגו">
+            </a>
         </div>
-    </div>
+    </header>
 
-    <div id="canvas-container">
-        <canvas id="canvas"></canvas>
-    </div>
+    <main class="main-content">
+        <h1 class="page-title">צייר אונליין - כלי אינטרקטיבי לציור</h1>
+        
+        <div id="toolbar">
+            <div class="toolbar-group">
+                <div class="color-picker-container">
+                    <div id="colorDisplay"></div>
+                    <input type="color" id="colorPicker" value="#000000">
+                </div>
+                <input type="range" id="brushSize" min="1" max="20" value="5" title="גודל המברשת">
+            </div>
+            
+            <div class="toolbar-group">
+                <select id="brushShape">
+                    <option value="round">מעוגל</option>
+                    <option value="square">מרובע</option>
+                </select>
+                <input type="range" id="opacity" min="0.1" max="1" step="0.1" value="1" title="שקיפות">
+            </div>
+            
+            <div class="button-group">
+                <button id="clearCanvas" title="נקה הכל">
+                    <img src="https://cdn-icons-png.flaticon.com/512/9742/9742093.png" alt="Clear">
+                </button>
+                <button id="undo" title="בטל">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2349/2349854.png" alt="Undo">
+                </button>
+                <button id="redo" title="בצע שוב">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2349/2349829.png" alt="Redo">
+                </button>
+                <button id="save" title="שמור">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2874/2874091.png" alt="Save">
+                </button>
+            </div>
+        </div>
 
-    <script>
+        <div id="canvas-container">
+            <canvas id="canvas"></canvas>
+        </div>
+        <article class="article-content">
+            <h2>איך להשתמש בכלי ציור בדפדפן</h2>
+            <p>צייר אונליין הוא כלי פשוט ומהנה לציור בצורה חופשית ופשוטה. כדי להתחיל:</p>
+            <ul>
+            <li><strong>התחילו ליצור</strong>: לחצו וגררו את העכבר או השתמשו באצבע אם אתם עובד עם מסך מגע.</li>
+                <li><strong>התאימו את הציור</strong>: שנו צבעים, עובי קווים או בחרו בכלים נוספים לפי הצורך.</li>
+                <li><strong>שמרו או שתפו</strong>: כשהציור מוכן, תוכלו לשמור אותו במכשיר שלכם או לשתף אותו עם אחרים.</li>
+            </ul>
+
+            <h2>למה לצייר בדפדפן?</h2>
+            <p>ציור בדפדפן הוא חוויה נגישה, קלה ומותאמת לכולם – מציירים מתחילים ועד מקצוענים. הכלי לא דורש התקנה, כך שתוכלו להתחיל לצייר תוך שניות, מכל מקום שבו יש חיבור לאינטרנט. בנוסף, הכלי כוללות ממשק ידידותי למשתמש, כך שגם אם זו הפעם הראשונה שלכם – תרגישו בנוח.</p>
+
+            <h2>למי מתאים ציור אונליין?</h2>
+            <p>כלי הציור בדפדפן מתאים למגוון רחב של אנשים ומצבים. ילדים יכולים ליהנות מציור חופשי ומהנה, הורים ומורים יכולים להשתמש בו למטרות לימודיות, ואנשי מקצוע כמו מעצבים גרפיים יכולים להשתמש בו ליצירת סקיצות מהירות. אפילו בפגישות עבודה, אפשר להיעזר בו כדי להמחיש רעיונות בצורה ויזואלית וברורה.</p>
+
+            <h2>איזה אפשרויות עיצוביות תמצאו בכלי צייר אונליין?</h2> <p>כלי הציור אונליין מציע מגוון אפשרויות, כמו בחירת צבעים, שינוי עובי הקו, מחיקת טעויות בקלות ושמירת התוצאה הסופית. במידה ותרצו לשמור את הציור בפורמט שונה, תוכלו להשתמש <a href="https://tools-by-rotem.github.io/webtools/image-minify-converter"><b>בכלי להמרת פורמט התמונה</b></a>.</p>
+
+            <h2>למה כדאי לנסות ציור אונליין?</h2>
+            <p>ציור בדפדפן מאפשר לכם להתחבר לצד היצירתי שלכם בקלות ובמהירות. בין אם אתם רוצים לצייר להנאה, להפיק סקיצה מקצועית, או להעביר מסר בצורה ויזואלית – הכלי הזה זמין בכל רגע. תנו לדמיון שלכם לפרוץ גבולות והתחילו ליצור כבר עכשיו!</p>
+        </article>
+    </main>
+
+    <footer class="main-footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>רשתות חברתיות</h3>
+                <div class="social-icons">
+                    <a href="https://www.linkedin.com/in/rotem-kanon" target="_blank">
+                        <img src="https://cdn-icons-png.flaticon.com/512/145/145807.png" alt="LinkedIn">
+                    </a>
+                    <a href="https://github.com/tools-by-rotem" target="_blank">
+                        <img src="https://cdn-icons-png.flaticon.com/512/2111/2111432.png" alt="GitHub">
+                    </a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>כמויות חיפושים</h3>
+                <ul>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/google-search-volume">כמות חיפושים בגוגל</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/spotify-search-volume">כמות חיפושים בספוטיפיי</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/soundcloud-search-volume">כמות חיפושים בסאונדקלאוד </a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>תצוגה מקדימה</h3>
+                <ul>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/google-serp-preview">תצוגה מקדימה לנראות בגוגל</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/social-link-preview">תצוגה מקדימה לרשתות חברתיות</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>אופטימיזציה</h3>
+                <ul>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/page-speed-test">בדיקת מהירות טעינה</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/mobile-simulator">בדיקת תאימות למכשירים ניידים</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/image-minify-converter">המרת פורמט וכיווץ משקל תמונה</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>יצירה ועיצוב</h3>
+                <ul>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/background-remover">הסרת רקע מתמונה</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/draw">ציור אינטראקטיבי</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/image-color-identifier">זיהוי צבעי תמונה</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/infographics">יצירת אינפוגרפיקות</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>שונות</h3>
+                <ul>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/accessibility-toolbar">סרגל נגישות</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/navigation-links-generator">מחולל קישורי ניווט</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/reverse-typing-fix">תיקון הקלדה הפוכה</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/strong-password-generator">מחולל סיסמאות חזקות</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/time-to-go-home">הגיע הזמן ללכת הביתה</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/resume-scanner">התאמת קורות חיים לסורקים אוטומטיים</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 כל הזכויות שמורות לרותם קנון</p>
+        </div>
+    </footer>
+
+        <script>
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
         const colorPicker = document.getElementById('colorPicker');
