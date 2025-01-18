@@ -133,6 +133,60 @@
             font-size: 16px;
             cursor: pointer;
         }
+
+        @media (max-width: 768px) {
+            button {
+                width: 100%;
+                font-size: 14px;
+                padding: 12px;
+                box-sizing: border-box;
+            }
+
+            input[type="text"] {
+                width: 100%;
+                font-size: 14px;
+                padding: 12px;
+                margin: 10px 0;
+                box-sizing: border-box;
+            }
+
+            .tabs {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .tab {
+                width: 100%;
+                font-size: 14px;
+                padding: 12px 0;
+                text-align: center;
+                margin: 5px 0;
+                box-sizing: border-box;
+                cursor: pointer;
+            }
+
+            .tab.active {
+                background-color: #ddd;
+                border-bottom: none;
+            }
+
+            .phone-frame {
+                width: auto;
+                height: auto;
+                max-width: 400px;
+                margin: 20px auto;
+            }
+
+            .phone-frame.iphone, .phone-frame.android {
+                width: auto;
+                border-radius: 25px;
+            }
+
+            iframe {
+                width: 100%;
+                height: 100%;
+            }
+        }
     </style>
     <script src="https://cdn.enable.co.il/licenses/enable-L34385vlixga9kjh-1224-66195/init.js"></script>
 </head>
@@ -170,13 +224,8 @@
             const iframeAndroid = document.getElementById('testFrameAndroid');
             const iframeIphone = document.getElementById('testFrameIphone');
 
-            // Set iframe source to the URL entered
             iframeAndroid.src = url;
             iframeIphone.src = url;
-
-            // Make iframes visible
-            iframeAndroid.style.display = 'block';
-            iframeIphone.style.display = 'block';
         }
 
         function switchTab(tab) {
