@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Time To Go Home - הגיע הזמן ללכת הביתה | Tools by Rotem</title>
+    <title>הגיע הזמן ללכת הביתה - כלי לאיזון עבודה-בית | Tools by Rotem</title>
     <meta name="description" content="מתקשים לאזן בין עבודה לחיים אישיים? הכלי הבא הוא בשבילכם! הזינו את שעת הכניסה לעבודה, את כמות שעות העבודה והכלי יתריע לכם ברגע שהגיע הזמן ללכת הביתה >>>">
     <link rel="canonical" href="https://tools-by-rotem.github.io/webtools/time-to-go-home" />
     <link rel="icon" type="image/x-icon" href="/webtools/site-favicon.ico">
@@ -11,15 +11,46 @@
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+            padding: 20px;
             background-color: #f4f4f9;
-            overflow: hidden;
+            min-height: 100vh;
         }
-        .container {
+
+        /* Typography Weights */
+        .font-light {
+            font-weight: 300;
+        }
+        
+        .font-regular {
+            font-weight: 400;
+        }
+        
+        .font-medium {
+            font-weight: 500;
+        }
+        
+        .font-semibold {
+            font-weight: 600;
+        }
+        
+        .font-bold {
+            font-weight: 700;
+        }
+
+        .text-primary {
+            color: #1a1a1a;
+        }
+
+        .text-secondary {
+            color: #555;
+        }
+
+        .text-emphasis {
+            color: #007BFF;
+        }
+
+        /* Tool Container Styles */
+        .tool-container {
             background: #fff;
             padding: 20px;
             border-radius: 8px;
@@ -27,9 +58,11 @@
             text-align: center;
             width: 90%;
             max-width: 300px;
+            margin: 2rem auto;
             position: relative;
             z-index: 10;
         }
+
         input {
             margin: 10px 0;
             padding: 10px;
@@ -39,6 +72,7 @@
             font-size: 16px;
             box-sizing: border-box;
         }
+
         button {
             background-color: #007BFF;
             color: white;
@@ -50,16 +84,19 @@
             cursor: pointer;
             width: 100%;
         }
+
         button:hover {
             background-color: #0056b3;
         }
+
         #timer {
             margin-top: 20px;
             font-size: 18px;
             color: #333;
         }
+
         #confetti {
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
@@ -67,27 +104,162 @@
             z-index: 9999;
             pointer-events: none;
         }
+
+        /* Article Container Styles */
+        .article-container {
+            background: #fff;
+            padding: 2rem;
+            margin: 2rem auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            width: 90%;
+            line-height: 1.6;
+        }
+
+        /* Typography */
+        .article-container h1 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .article-container h2 {
+            font-size: 1.5rem;
+            margin: 2rem 0 1rem;
+        }
+
+        .article-container p {
+            margin-bottom: 1rem;
+        }
+
+        .article-container ul,
+        .article-container ol {
+            padding-right: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .article-container li {
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .tool-container,
+            .article-container {
+                padding: 1.5rem;
+                margin: 1rem auto;
+                width: 90%;
+            }
+
+            .article-container h1 {
+                font-size: 1.75rem;
+            }
+
+            .article-container h2 {
+                font-size: 1.35rem;
+            }
+        }
     </style>
 </head>
 <body>
     <div id="confetti"></div>
-    <div class="container">
-        <h1>עוד כמה זמן <br> מסיימים לעבוד?</h1>
-        <label for="start-time">שעת התחלה:</label>
+    
+    <!-- Tool Container -->
+    <div class="tool-container">
+        <h1 class="font-bold">
+            <span class="text-primary">עוד כמה זמן</span><br>
+            <span class="text-emphasis">מסיימים לעבוד?</span>
+        </h1>
+        
+        <label for="start-time" class="font-medium">שעת התחלה:</label>
         <input type="time" id="start-time">
 
-        <label for="work-hours">משך העבודה:</label>
+        <label for="work-hours" class="font-medium">משך העבודה:</label>
         <input type="time" id="work-hours" step="60">
 
         <button onclick="calculateEndTime()">חישוב שעת סיום</button>
-        <div id="result"></div>
+        <div id="result" class="font-medium"></div>
 
         <button onclick="startTimer()">הפעלת טיימר</button>
-        <div id="timer"></div>
+        <div id="timer" class="font-medium"></div>
     </div>
-    
+
+    <!-- Article Container -->
+    <div class="article-container">
+        <h2 class="font-bold text-primary">איך להשתמש בכלי איזון עבודה-בית</h2>
+        <ol>
+            <li>
+                <span class="font-semibold">הזנת שעת התחלה</span>
+                <span class="font-regular text-secondary"> – הזינו את שעת הכניסה שלכם לעבודה בשדה המתאים. שעת התחלה מדויקת מאפשרת לכלי לחשב בצורה נכונה את שעת הסיום שלכם. </span>
+            </li>
+            <li>
+                <span class="font-semibold">הגדרת משך העבודה</span>
+                <span class="font-regular text-secondary"> – קבעו כמה שעות אתם מתכננים לעבוד באותו יום. ניתן להתאים את משך העבודה לפי הצרכים שלכם, בין אם זה יום עבודה מלא או יום עבודה מקוצר.</span>
+            </li>
+            <li>
+                <span class="font-semibold">חישוב שעת סיום</span>
+                <span class="font-regular text-secondary"> – לחצו על הכפתור "חישוב שעת סיום", והכלי יציג לכם את השעה המדויקת שבה עליכם לסיים את יום העבודה. כך, תוכלו לתכנן את היום שלכם בצורה יעילה ולוודא שלא תעבדו מעבר למה שתכננתם.</span>
+            </li>
+            <li>
+                <span class="font-semibold">הפעלת טיימר</span>
+                <span class="font-regular text-secondary"> – תוכלו להפעיל טיימר שסופר לאחור את הזמן הנותר עד לסיום העבודה. בנוסף, הכלי כולל התרעה חגיגית וסיום עם קונפטי וצליל שמזכיר לכם שהגיע הזמן לכבות את המחשב וליהנות משאר היום.</span>
+            </li>
+        </ol>
+
+        <h2 class="font-bold text-primary">החשיבות של איזון עבודה-בית</h2>
+        <p class="font-regular text-secondary">
+            <span>בין אם אתם עובדים מהמשרד או מהבית, מציאת איזון בין החיים האישיים לבין העבודההחיים המודרניים מציבים בפנינו אתגרי איזון רבים, בעיקר בעידן הדיגיטלי שבו העבודה נגישה לנו בכל זמן ומקום. הגבולות בין העבודה לחיים האישיים מתחילים להיטשטש, במיוחד כאשר עובדים מהבית. חוסר איזון מתמשך עשוי להוביל לשחיקה, ירידה בפרודוקטיביות ואף להשפיע על הבריאות הפיזית והנפשית שלנו. הדבר נכון במיוחד כאשר אנו מתעלמים מהצרכים האישיים שלנו ומקדישים את כל הזמן לעבודה. לעומת זאת, שמירה על איזון נכון יכולה להוביל ליתרונות רבים ומשמעותיים: </span>
+        </p>
+
+        <h3 class="font-bold text-primary">שיפור הבריאות הנפשית</h3>
+            <p>
+                <span class="font-regular text-secondary">זמן אישי מאפשר לנו לנוח ולהתאושש, מה שמשפר את תחושת הרווחה שלנו לאורך זמן. כאשר אנו מאוזנים, יש לנו יותר אנרגיה להתמודד עם אתגרי החיים.</span>
+            </p>
+    <h3 class="font-bold text-primary">עלייה בפרודוקטיביות</h3>
+              <p>
+	   <span class="font-regular text-secondary">עובדים שמרגישים מאוזנים מסוגלים להתמקד טוב יותר במשימות העבודה שלהם ולהשיג תוצאות טובות יותר בזמן קצר יותר. זהו ניגוד מוחלט לאמונה ששעות עבודה ארוכות יותר תמיד מובילות להצלחה.</span>
+              </p>
+    <h3 class="font-bold text-primary">מערכות יחסים טובות יותר</h3>
+              <p>
+	   <span class="font-regular text-secondary">כאשר אנו מקדישים זמן איכות למשפחה ולחברים, אנו תורמים גם לאושר האישי שלנו וגם לחיזוק הקשרים החברתיים שממלאים אותנו באנרגיה חיובית.</span>
+              </p>
+
+ <h2 class="font-bold text-primary">טיפים לאיזון בין עבודה לבית</h2>
+        <ol>
+            <h3 class="font-bold text-primary">קביעת גבולות ברורים</h3>
+            <p>
+                <span class="font-regular text-secondary">הגדירו מראש את שעות העבודה ושעות המנוחה שלכם. נסו להימנע מעבודה מעבר לשעות שהקצבתם לעצמכם, גם אם יש פיתוי להמשיך. הציבו גבולות גם עבור התקשורת המקצועית, כגון הודעות ודוא"ל מחוץ לשעות העבודה.</span>
+            </p>
+    <h3 class="font-bold text-primary">תכנון זמן אפקטיבי</h3>
+              <p>
+	   <span class="font-regular text-secondary">השתמשו בכלים לניהול זמן כמו יומנים, אפליקציות תכנון או אפילו רשימות פשוטות. תעדוף משימות יסייע לכם לסיים את הדברים החשובים בזמן ולמנוע דחיינות, מה שיאפשר לכם לסיים את העבודה בשעה שתכננתם.</span>
+              </p>
+    <h3 class="font-bold text-primary">הקפדה על הפסקות</h3>
+              <p>
+	   <span class="font-regular text-secondary">במהלך יום העבודה, קחו הפסקות קצרות כדי להתרענן ולשמור על ריכוז. אפילו הפסקה של חמש דקות להליכה קצרה או שתיית מים יכולה לשפר את מצב הרוח שלכם ואת הריכוז בעבודה.</span>
+              </p>
+<h3 class="font-bold text-primary">מקום עבודה מוגדר</h3>
+              <p>
+	   <span class="font-regular text-secondary">אם אתם עובדים מהבית, צרו חלל עבודה נפרד שבו תוכלו להתרכז. בסיום היום, עזבו את חלל העבודה כך שתוכלו "לסגור את המשרד" ולהרגיש שהיום הסתיים.</span>
+              </p>
+<h3 class="font-bold text-primary">השקעה בתחביבים</h3>
+              <p>
+	   <span class="font-regular text-secondary">הקדישו זמן לפעילויות שממלאות אתכם באנרגיה ושמחה מחוץ לעבודה. זה יכול לכלול ספורט, קריאה, יצירה או כל דבר אחר שמסב לכם אושר.</span>
+              </p>
+<h2 class="font-bold text-primary">סיכום</h2>
+            <p>
+                <span class="font-regular text-secondary">איזון עבודה-בית אינו רק שאיפה, אלא חלק מהותי מחיים מאושרים ובריאים. על ידי שימוש בכלי שפיתחנו, תוכלו לקבל תזכורות שחשוב להקדיש זמן לעצמכם ולמשפחתכם. בנוסף, הקפדה על הרגלים בריאים ושימוש נכון בזמן שלכם תוביל לשיפור כולל באיכות החיים שלכם. נסו את הכלי עוד היום, והתחילו את המסע שלכם לעבר חיים מאוזנים ומשמעותיים יותר. לא משנה כמה אתם עסוקים – מגיע לכם ליהנות מכל העולמות. </span>
+            </p>
+    </div>
+
+    <!-- Audio Element -->
     <audio id="end-sound" src="https://cdn.pixabay.com/audio/2022/03/24/audio_1fc24998ad.mp3"></audio>
 
+    <!-- JavaScript -->
     <script>
         function calculateEndTime() {
             const startTimeInput = document.getElementById('start-time').value;
@@ -157,7 +329,7 @@
             confettiElement.innerHTML = '<iframe src="https://lottie.host/embed/4c6cb732-ad9f-4b74-9e8e-331ae6161f79/3M2u0tywRO.lottie" style="width: 100%; height: 100%; border: none; pointer-events: none;"></iframe>';
         }
         
-         function playSound() {
+        function playSound() {
             const audio = document.getElementById('end-sound');
             audio.play();
         }
