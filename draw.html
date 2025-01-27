@@ -6,7 +6,7 @@
     <title>צייר אונליין - כלי אינטרקטיבי לציור בדפדפן | Tools by Rotem</title>
     <meta name="description" content="צייר אונליין - כלי אינטראקטיבי לציור ישירות בדפדפן. אפשרויות ציור מתקדמות, ממשק ידידותי למשתמש, צבעים מגוונים ויצירתיות ללא גבולות. התחילו לצייר עכשיו >>>">
     <link rel="canonical" href="https://tools-by-rotem.github.io/webtools/draw" />
-    <link rel="icon" type="image/x-icon" href="/webtools/site-favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="webtools/site-favicon.ico">
     <style>
         * {
             margin: 0;
@@ -460,166 +460,192 @@
     </footer>
 
         <script>
-        const canvas = document.getElementById('canvas');
-        const ctx = canvas.getContext('2d');
-        const colorPicker = document.getElementById('colorPicker');
-        const colorDisplay = document.getElementById('colorDisplay');
-        const brushSize = document.getElementById('brushSize');
-        const brushShape = document.getElementById('brushShape');
-        const opacity = document.getElementById('opacity');
-        const clearCanvasBtn = document.getElementById('clearCanvas');
-        const undoBtn = document.getElementById('undo');
-        const redoBtn = document.getElementById('redo');
-        const saveBtn = document.getElementById('save');
-        const menuToggle = document.getElementById('menu-toggle');
-        const toolbar = document.getElementById('toolbar');
+        function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
 
-        let painting = false;
-        let undoStack = [];
-        let redoStack = [];
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+const colorPicker = document.getElementById('colorPicker');
+const colorDisplay = document.getElementById('colorDisplay');
+const brushSize = document.getElementById('brushSize');
+const brushShape = document.getElementById('brushShape');
+const opacity = document.getElementById('opacity');
+const clearCanvasBtn = document.getElementById('clearCanvas');
+const undoBtn = document.getElementById('undo');
+const redoBtn = document.getElementById('redo');
+const saveBtn = document.getElementById('save');
 
-        function resizeCanvas() {
-            const containerWidth = document.getElementById('canvas-container').clientWidth;
-            const containerHeight = window.innerHeight * 0.6;
-            canvas.width = containerWidth - 20;
-            canvas.height = containerHeight;
-        }
+let painting = false;
+let undoStack = [];
+let redoStack = [];
 
-        resizeCanvas();
-        window.addEventListener('resize', resizeCanvas);
+function resizeCanvas() {
+    const containerWidth = document.getElementById('canvas-container').clientWidth;
+    const containerHeight = 300; // גובה קבוע
+    
+    // שמירת התוכן הנוכחי
+    const tempCanvas = document.createElement('canvas');
+    const tempCtx = tempCanvas.getContext('2d');
+    tempCanvas.width = canvas.width;
+    tempCanvas.height = canvas.height;
+    tempCtx.drawImage(canvas, 0, 0);
+    
+    // שינוי גודל הקנבס
+    canvas.width = containerWidth - 20;
+    canvas.height = containerHeight;
+    
+    // שחזור התוכן
+    ctx.drawImage(tempCanvas, 0, 0);
+}
 
-        function getMousePos(event) {
-            const rect = canvas.getBoundingClientRect();
-            const scaleX = canvas.width / rect.width;
-            const scaleY = canvas.height / rect.height;
-            return {
-                x: (event.clientX - rect.left) * scaleX,
-                y: (event.clientY - rect.top) * scaleY
-            };
-        }
+// אתחול ראשוני והגדרת האזנה לשינוי גודל עם debounce
+resizeCanvas();
+const debouncedResize = debounce(resizeCanvas, 250);
+window.addEventListener('resize', debouncedResize);
 
-        function toggleColorPicker(e) {
-            e.stopPropagation();
-            if (window.innerWidth <= 768) {
-                colorPicker.click();
-            } else {
-                colorDisplay.classList.toggle('active');
-            }
-        }
+function getMousePos(event) {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    return {
+        x: (event.clientX - rect.left) * scaleX,
+        y: (event.clientY - rect.top) * scaleY
+    };
+}
 
-        colorDisplay.addEventListener('click', toggleColorPicker);
+function toggleColorPicker(e) {
+    e.stopPropagation();
+    if (window.innerWidth <= 768) {
+        colorPicker.click();
+    } else {
+        colorDisplay.classList.toggle('active');
+    }
+}
 
-        colorPicker.addEventListener('input', function() {
-            colorDisplay.style.backgroundColor = colorPicker.value;
-        });
+colorDisplay.addEventListener('click', toggleColorPicker);
 
-        colorPicker.addEventListener('change', function() {
-            colorDisplay.style.backgroundColor = colorPicker.value;
-            if (window.innerWidth > 768) {
-                colorDisplay.classList.remove('active');
-            }
-        });
+colorPicker.addEventListener('input', function() {
+    colorDisplay.style.backgroundColor = colorPicker.value;
+});
 
-        document.addEventListener('click', function(e) {
-            if (e.target !== colorDisplay && e.target !== colorPicker) {
-                colorDisplay.classList.remove('active');
-            }
-        });
+colorPicker.addEventListener('change', function() {
+    colorDisplay.style.backgroundColor = colorPicker.value;
+    if (window.innerWidth > 768) {
+        colorDisplay.classList.remove('active');
+    }
+});
 
-        function startPosition(e) {
-            painting = true;
-            draw(e);
-            saveState();
-        }
+document.addEventListener('click', function(e) {
+    if (e.target !== colorDisplay && e.target !== colorPicker) {
+        colorDisplay.classList.remove('active');
+    }
+});
 
-        function draw(e) {
-            if (!painting) return;
-            const pos = getMousePos(e);
-            ctx.lineWidth = brushSize.value;
-            ctx.lineCap = brushShape.value;
-            ctx.globalAlpha = opacity.value;
-            ctx.strokeStyle = colorPicker.value;
+function startPosition(e) {
+    painting = true;
+    draw(e);
+    saveState();
+}
 
-            ctx.lineTo(pos.x, pos.y);
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.moveTo(pos.x, pos.y);
-        }
+function draw(e) {
+    if (!painting) return;
+    const pos = getMousePos(e);
+    ctx.lineWidth = brushSize.value;
+    ctx.lineCap = brushShape.value;
+    ctx.globalAlpha = opacity.value;
+    ctx.strokeStyle = colorPicker.value;
 
-        function endPosition() {
-            painting = false;
-            ctx.beginPath();
-        }
+    ctx.lineTo(pos.x, pos.y);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(pos.x, pos.y);
+}
 
-        function saveState() {
-            undoStack.push(canvas.toDataURL());
-            if (undoStack.length > 10) undoStack.shift();
-            redoStack = [];
-        }
+function endPosition() {
+    painting = false;
+    ctx.beginPath();
+}
 
-        undoBtn.addEventListener('click', () => {
-            if (undoStack.length > 0) {
-                redoStack.push(canvas.toDataURL());
-                restoreState(undoStack.pop());
-            }
-        });
+function saveState() {
+    undoStack.push(canvas.toDataURL());
+    if (undoStack.length > 10) undoStack.shift();
+    redoStack = [];
+}
 
-        redoBtn.addEventListener('click', () => {
-            if (redoStack.length > 0) {
-                undoStack.push(canvas.toDataURL());
-                restoreState(redoStack.pop());
-            }
-        });
+function restoreState(state) {
+    const img = new Image();
+    img.src = state;
+    img.onload = () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    };
+}
 
-        function restoreState(state) {
-            const img = new Image();
-            img.src = state;
-            img.onload = () => {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-            };
-        }
+undoBtn.addEventListener('click', () => {
+    if (undoStack.length > 0) {
+        redoStack.push(canvas.toDataURL());
+        restoreState(undoStack.pop());
+    }
+});
 
-        clearCanvasBtn.addEventListener('click', () => {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            saveState();
-        });
+redoBtn.addEventListener('click', () => {
+    if (redoStack.length > 0) {
+        undoStack.push(canvas.toDataURL());
+        restoreState(redoStack.pop());
+    }
+});
 
-        saveBtn.addEventListener('click', () => {
-            const link = document.createElement('a');
-            link.download = 'my_drawing.png';
-            
-            const tempCanvas = document.createElement('canvas');
-            const tempCtx = tempCanvas.getContext('2d');
-            tempCanvas.width = canvas.width;
-            tempCanvas.height = canvas.height;
-            
-            tempCtx.fillStyle = '#ffffff';
-            tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
-            
-            tempCtx.drawImage(canvas, 0, 0);
-            
-            link.href = tempCanvas.toDataURL();
-            link.click();
-        });
+clearCanvasBtn.addEventListener('click', () => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    saveState();
+});
 
-        canvas.addEventListener('mousedown', startPosition);
-        canvas.addEventListener('mousemove', draw);
-        canvas.addEventListener('mouseup', endPosition);
-        canvas.addEventListener('mouseleave', endPosition);
+saveBtn.addEventListener('click', () => {
+    const link = document.createElement('a');
+    link.download = 'my_drawing.png';
+    
+    const tempCanvas = document.createElement('canvas');
+    const tempCtx = tempCanvas.getContext('2d');
+    tempCanvas.width = canvas.width;
+    tempCanvas.height = canvas.height;
+    
+    tempCtx.fillStyle = '#ffffff';
+    tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+    
+    tempCtx.drawImage(canvas, 0, 0);
+    
+    link.href = tempCanvas.toDataURL();
+    link.click();
+});
 
-        canvas.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            startPosition(e.touches[0]);
-        });
-        canvas.addEventListener('touchmove', (e) => {
-            e.preventDefault();
-            draw(e.touches[0]);
-        });
-        canvas.addEventListener('touchend', (e) => {
-            e.preventDefault();
-            endPosition();
-        });
+// Event Listeners למחשב
+canvas.addEventListener('mousedown', startPosition);
+canvas.addEventListener('mousemove', draw);
+canvas.addEventListener('mouseup', endPosition);
+canvas.addEventListener('mouseleave', endPosition);
+
+// Event Listeners למובייל
+canvas.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    startPosition(e.touches[0]);
+});
+canvas.addEventListener('touchmove', (e) => {
+    e.preventDefault();
+    draw(e.touches[0]);
+});
+canvas.addEventListener('touchend', (e) => {
+    e.preventDefault();
+    endPosition();
+});
 
         menuToggle.addEventListener('click', () => {
             toolbar.classList.toggle('show');
