@@ -18,6 +18,31 @@
             overflow-x: hidden;
         }
 
+ .main-header {
+            background-color: #2d3436;
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 60px;
+            width: auto;
+        }
+
+
         .container {
             max-width: 600px;
             margin: auto;
@@ -134,6 +159,98 @@
             cursor: pointer;
         }
 
+        .article-section {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: white;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .article-section h2 {
+            color: #2d3436;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            text-align: right;
+        }
+
+        .article-section p {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+            text-align: right;
+        }
+
+          .main-footer {
+            background-color: #2d3436;
+            color: white;
+            padding: 3rem 0 1.5rem;
+            margin-top: 4rem;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section {
+            flex-direction: column;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .footer-section h3 {
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a {
+            color: #ddd;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: #0984e3;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-right: -4px;
+        }
+
+        .social-icons img {
+            width: 24px;
+            height: 24px;
+            transition: opacity 0.3s ease;
+            margin-right: -4px;
+        }
+
+        .social-icons a:hover img {
+            opacity: 0.8;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #444;
+        }
+
         @media (max-width: 768px) {
             button {
                 width: 100%;
@@ -186,12 +303,58 @@
                 width: 100%;
                 height: 100%;
             }
+
+            .article-section {
+                padding: 1rem;
+                width: 95%;
+            }
+            
+            .footer-container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.5rem;
+        padding: 1rem;
+    }
+
+    .footer-section {
+        width: 100%;
+        align-items: flex-start;
+    }
+
+    .footer-section h3 {
+        margin-bottom: 0.5rem;
+        text-align: center;
+    }
+
+    .footer-section ul {
+        text-align: center;
+        padding-right: 0;
+    }
+
+    .footer-section ul li {
+        margin-bottom: 0.5rem;
+        text-align: center;
+    }
+
+    .social-icons {
+        justify-content: center;
+        margin-right: 0;
+    }
         }
     </style>
     <script src="https://cdn.enable.co.il/licenses/enable-L34385vlixga9kjh-1224-66195/init.js"></script>
 </head>
 <body>
+<header class="main-header">
+        <div class="header-container">
+            <a href="https://tools-by-rotem.github.io/webtools/" class="logo">
+                <img src="https://tools-by-rotem.github.io/webtools/site-logo.png" alt="רותם קנון לוגו">
+            </a>
+        </div>
+    </header>
+
     <h1>התאמת עמוד למובייל</h1>
+
     <div class="container">
         <input type="text" id="urlInput" placeholder="הזינו כתובת url">
         <button onclick="loadPage()">לבדיקת התאמה</button>
@@ -217,6 +380,96 @@
             </div>
         </div>
     </div>
+
+    <div class="article-section">
+        <h2>האינטרנט עובר לנייד – מי בכלל גולש מהמחשב?</h2>
+
+        <p>פעם, כשהיינו רוצים לבדוק משהו באינטרנט, היינו צריכים לשבת מול מחשב, לחכות שהוא יידלק (זוכרים את הרעש של המודם?) ואז להתחבר. היום? כולם גולשים מהטלפון – בנסיעה באוטובוס, באמצע העבודה (לא נגלה לבוס), או כשסתם בא לנו לבדוק משהו מהר. למעשה, יותר משני שליש מהגלישה באינטרנט נעשית דרך המובייל! אז אם יש לכם אתר, כדאי מאוד שהוא ייראה טוב ויעבוד חלק גם בטלפון.</p>
+
+        <h2>למה אתרים שלא מותאמים למובייל מפסידים גולשים?</h2>
+
+        <p>דמיינו שאתם נכנסים לאתר מהטלפון שלכם והוא נראה כמו גרסה מוקטנת של אתר מחשב – אותיות פצפונות, צריך לעשות זום אין כדי לקרוא, הכפתורים קטנים מדי ללחיצה… בקיצור, סיוט. רוב האנשים פשוט יוותרו ויעברו לאתר אחר. מחקרים מראים שגולשים עוזבים אתרים לא מותאמים תוך שניות בודדות! אם האתר שלכם לא נראה טוב בנייד, אתם מפסידים המון מבקרים ואולי גם לקוחות פוטנציאליים.</p>
+
+        <h2>איך רספונסיביות למובייל משפרת את חוויית המשתמש?</h2>
+
+        <p>אתר מותאם למובייל מכיל טקסטים קריאים בלי צורך בזום, הכפתורים בגודל נוח ללחיצה והניווט פשוט ואינטואיטיבי. מעבר לזה, אתרים מותאמים נטענים מהר יותר – והרי אף אחד לא אוהב לחכות יותר משתי שניות לטעינת עמוד. אם האתר שלכם עובד חלק, נוח לשימוש ולא גורם למשתמשים לתסכול – הם יישארו בו יותר זמן, ייהנו מהתוכן ואולי אפילו יחזרו שוב!</p>
+
+        <h2>גוגל מעדיפה אתרים מותאמים</h2>
+
+        <p>חשבתם פעם למה חלק מהאתרים <a href="https://tools-by-rotem.github.io/webtools/google-serp-preview" style="color: #0984e3 !important; text-decoration: underline !important;"><strong style="color: inherit;">מופיעים בראש החיפושים בגוגל</strong></a> ואחרים מתחבאים בדפים האחוריים שאף אחד לא טורח להגיע אליהם? גוגל מדרגת אתרים לפי אלפי פרמטרים, חוויית השימוש והתאמה למובייל הם מהקריטריונים הכח חשובים. אם האתר שלכם לא מותאם לנייד, גוגל תוריד לכם נקודות וזה אומר פחות חשיפה ופחות מבקרים.</p>
+
+        <h2>איך אפשר לבדוק אם האתר מותאם למובייל?</h2>
+
+        <p>לא בטוחים אם האתר שלכם רספונסיבי לתצוגת מובייל? אפשר לבדוק את זה בכמה דרכים:</p>
+        <p>- להשתמש בסימולטור שלי שמדמה מסכים של מכשירי אייפון ואנדרואיד.</p>
+        <p>- לפתוח את האתר פיזית בטלפון שלכם ולראות איך הוא נראה – זו בינינו הבדיקה הכי פשוטה.</p>
+
+        <h2>התאמה למובייל – חובה ולא מותרות</h2>
+
+        <p>בקיצור, אם יש לכם אתר, התאמה לנייד היא לא משהו שאפשר לוותר עליו. זה קריטי גם לחוויית המשתמש, גם לקידום בגוגל וגם להצלחה של האתר שלך. היום, מי שלא מתחשב במובייל פשוט נשאר מאחור. אז אם עדיין לא דאגתם לזה – עכשיו זה הזמן!</p>
+    </div>
+<footer class="main-footer">
+        <div class="footer-container">
+          <div class="footer-section">
+            <h3>רשתות חברתיות</h3>
+             <div class="social-icons">
+             <a href="https://www.linkedin.com/in/rotem-kanon" target="_blank">
+               <img src="https://cdn-icons-png.flaticon.com/512/145/145807.png" alt="LinkedIn">
+             </a>
+             <a href="https://github.com/tools-by-rotem" target="_blank">
+               <img src="https://cdn-icons-png.flaticon.com/512/2111/2111432.png" alt="GitHub">
+             </a>
+           </div>
+        </div>
+            <div class="footer-section">
+                <h3>כמויות חיפושים</h3>
+                <ul>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/google-search-volume">כמות חיפושים בגוגל</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/spotify-search-volume">כמות חיפושים בספוטיפיי</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/soundcloud-search-volume">כמות חיפושים בסאונדקלאוד </a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>תצוגה מקדימה</h3>
+                <ul>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/google-serp-preview">תצוגה מקדימה לנראות בגוגל</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/social-link-preview">תצוגה מקדימה לרשתות חברתיות</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>אופטימיזציה</h3>
+                <ul>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/page-speed-test">בדיקת מהירות טעינה</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/mobile-simulator">בדיקת תאימות למכשירים ניידים</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/image-minify-converter">המרת פורמט וכיווץ משקל תמונה</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>יצירה ועיצוב</h3>
+                <ul>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/background-remover">הסרת רקע מתמונה</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/draw">ציור אינטראקטיבי</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/image-color-identifier">זיהוי צבעי תמונה</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/infographics">יצירת אינפוגרפיקות</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>שונות</h3>
+                <ul>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/accessibility-toolbar">סרגל נגישות</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/navigation-links-generator">מחולל קישורי ניווט</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/reverse-typing-fix">תיקון הקלדה הפוכה</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/strong-password-generator">מחולל סיסמאות חזקות</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/time-to-go-home">הגיע הזמן ללכת הביתה</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/resume-scanner">התאמת קורות חיים לסורקים אוטומטיים</a></li>
+                </ul>
+            </div>
+            
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 כל הזכויות שמורות לרותם קנון</p>
+        </div>
+    </footer>
 
     <script>
         function loadPage() {
