@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>בדיקת נגישות לאתרי אינטרנט - בחינה מקיפה | Tools by Rotem</title>
+    <meta name="description" content="בדיקת נגישות לאתרי אינטרנט שתאפשר לכם לבחון את התאמת האתר לבעלי מוגבלויות. הכלי מכיל הסברים על תיקון בעיות ומאפשר הורדת דו"ח מסכם כ-PDF. שפרו את האתר לכלל הגולשים >>">
+    <link rel="canonical" href="https://tools-by-rotem.github.io/webtools/accessibility-checker" />
+    <link rel="icon" type="image/x-icon" href="/webtools/site-favicon.ico">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 80%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #007BFF;
+        }
+
+        button {
+            padding: 12px 24px;
+            background: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 10px 5px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover {
+            background: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .loading {
+            display: none;
+            margin: 20px auto;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #007BFF;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .report-item {
+            display: flex;
+            align-items: start;
+            margin: 15px 0;
+            padding: 20px;
+            border-radius: 8px;
+            background: #f8f9fa;
+            text-align: right;
+            transition: all 0.3s ease;
+        }
+
+        .report-item:hover {
+            transform: translateX(-5px);
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .report-item.success {
+            background: #d4edda;
+            border-right: 4px solid #28a745;
+        }
+
+        .report-item.error {
+            background: #f8d7da;
+            border-right: 4px solid #dc3545;
+        }
+
+        .icon {
+            font-size: 24px;
+            margin-left: 15px;
+            min-width: 30px;
+            text-align: center;
+        }
+
+        .content {
+            flex-grow: 1;
+        }
+
+        .fix-suggestion {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 10px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 4px;
+        }
+
+        .score-container {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5em;
+            font-weight: bold;
+            color: white;
+            position: relative;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .print-container {
+            direction: rtl;
+            text-align: right;
+            margin: 20px;
+            display: none;
+            padding: 20px;
+            background: white;
+        }
+
+        @media print {
+            .no-print { display: none; }
+            .print-only { display: block; }
+        }
+
+        #report {
+            padding: 0;
+            margin-top: 20px;
+        }
+
+        .buttons-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        #downloadBtn {
+            background: #28a745;
+        }
+
+        #downloadBtn:hover {
+            background: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container no-print">
+        <h1>בדיקת נגישות לאתר אינטרנט</h1>
+        <input type="text" id="url" placeholder="הזינו כתובת URL לבדיקה">
+        <div class="buttons-container">
+            <button onclick="fetchAndCheckPage()">בדיקת נגישות</button>
+            <button onclick="generatePDF()" id="downloadBtn" style="display: none;">הורדת דו"ח נגישות</button>
+        </div>
+        <div class="loading" id="loading"></div>
+        <div id="scoreContainer"></div>
+        <div id="report"></div>
+    </div>
+
+    <div id="printContainer" class="print-container">
+        <h1>דו"ח נגישות</h1>
+        <div id="printScore"></div>
+        <div id="printReport"></div>
+    </div>
+
+    <script>
+const accessibilityChecks = {
+    headings: {
+        check: (doc) => !!doc.querySelector("h1"),
+        message: "כותרת ראשית (H1)",
+        success: "נמצאה כותרת ראשית בדף - זה מצוין! כותרת H1 עוזרת לקוראי מסך להבין את הנושא המרכזי של העמוד",
+        fix: "הוסיפו תגית <h1> בראש העמוד עם כותרת משמעותית המתארת את נושא המרכזי של העמוד"
+    },
+    headingHierarchy: {
+        check: (doc) => {
+            const headings = [...doc.querySelectorAll("h1, h2, h3, h4, h5, h6")];
+            if (headings.length === 0) return false;
+            
+            let prevLevel = 0;
+            for (const heading of headings) {
+                const currentLevel = parseInt(heading.tagName[1]);
+                if (currentLevel - prevLevel > 1) return false;
+                prevLevel = currentLevel;
+            }
+            return true;
+        },
+        message: "היררכיית כותרות תקינה",
+        success: "היררכיית הכותרות בדף מסודרת נכון - אין דילוג בין רמות הכותרות (למשל מ-h1 ל-h3)",
+        fix: "וודאו שהכותרות מסודרות בסדר היררכי הגיוני, ללא דילוג בין רמות. למשל: h1, אחריו h2, ורק אז h3"
+    },
+    imgAlt: {
+        check: (doc) => ![...doc.querySelectorAll("img")].some(img => !img.alt),
+        message: "תגיות ALT לתמונות",
+        success: "כל התמונות בדף מכילות תיאור חלופי - מצוין! זה מאפשר לאנשים עם לקויות ראייה להבין את תוכן התמונות",
+        fix: "הוסיפו תיאור alt משמעותי לכל התמונות באתר המתאר את תוכן התמונה"
+    },
+    linksTitle: {
+        check: (doc) => ![...doc.querySelectorAll("a")].some(link => 
+            link.textContent.toLowerCase().includes('לחץ כאן') || 
+            link.textContent.toLowerCase().includes('click here')
+        ),
+        message: "קישורים עם משמעות",
+        success: "הקישורים בדף מכילים טקסט משמעותי במקום ביטויים כלליים כמו 'לחץ כאן'",
+        fix: "החליפו ביטויים כמו 'לחץ כאן' בטקסט שמתאר את יעד הקישור"
+    },
+    contrast: {
+        check: (doc) => {
+            const style = window.getComputedStyle(doc.body);
+            return style.color !== style.backgroundColor;
+        },
+        message: "ניגודיות צבעים",
+        success: "נמצאה ניגודיות צבעים טובה בין הטקסט לרקע - זה מקל על הקריאות עבור כל המשתמשים",
+        fix: "וודאו יחס ניגודיות של לפחות 4.5:1 בין טקסט לרקע"
+    },
+    labels: {
+        check: (doc) => ![...doc.querySelectorAll("input, textarea, select")].some(input => !input.labels?.length),
+        message: "תוויות לשדות טופס",
+        success: "כל שדות הטופס מכילים תוויות - זה עוזר למשתמשים להבין מה נדרש בכל שדה",
+        fix: "הוסיפו תווית <label> לכל שדה טופס עם תיאור ברור של השדה"
+    },
+    landmarks: {
+        check: (doc) => !!doc.querySelector("nav, main, header, footer"),
+        message: "אזורים מוגדרים בדף",
+        success: "נמצאו תגיות סמנטיות לאזורים מוגדרים בדף - זה עוזר לניווט באמצעות קורא מסך",
+        fix: "הוסיפו תגיות סמנטיות כמו nav, main, header, footer לאזורים המתאימים בדף"
+    },
+    language: {
+        check: (doc) => !!doc.documentElement.lang,
+        message: "הגדרת שפה",
+        success: "השפה מוגדרת נכון בדף - זה עוזר לקוראי מסך לבטא את הטקסט נכון",
+        fix: "הוסיפו מאפיין lang לתגית html עם קוד השפה המתאים"
+    },
+    tabIndex: {
+        check: (doc) => ![...doc.querySelectorAll("[tabindex]")].some(el => el.tabIndex < 0),
+        message: "סדר ניווט מקלדת",
+        success: "סדר הניווט במקלדת תקין - זה מאפשר ניווט נוח באמצעות מקש Tab",
+        fix: "הימנעו משימוש בערכי tabindex שליליים והשתמשו במבנה HTML לוגי"
+    },
+    ariaLabels: {
+        check: (doc) => {
+            const elements = doc.querySelectorAll('[aria-label], [aria-labelledby], [aria-describedby]');
+            return elements.length > 0;
+        },
+        message: "תיאורי ARIA",
+        success: "נמצאו תיאורי ARIA בדף - זה מספק מידע נוסף למשתמשי קוראי מסך",
+        fix: "הוסיפו תיאורי aria מתאימים לאלמנטים שדורשים הסבר נוסף עבור קוראי מסך"
+    },
+    skipLink: {
+        check: (doc) => {
+            const links = [...doc.querySelectorAll('a')];
+            return links.some(link => 
+                link.textContent.toLowerCase().includes('דלג') || 
+                link.textContent.toLowerCase().includes('skip')
+            );
+        },
+        message: "קישור דילוג על ניווט",
+        success: "נמצא קישור לדילוג על אזור הניווט - זה עוזר למשתמשי מקלדת להגיע מהר לתוכן המרכזי",
+        fix: "הוסיפו קישור 'דילוג לתוכן הראשי' בתחילת העמוד שיאפשר דילוג על אזור הניווט"
+    },
+    tableHeaders: {
+        check: (doc) => {
+            const tables = doc.querySelectorAll('table');
+            return ![...tables].some(table => !table.querySelector('th'));
+        },
+        message: "כותרות לטבלאות",
+        success: "כל הטבלאות מכילות כותרות - זה עוזר להבין את המבנה והתוכן של הטבלה",
+        fix: "במידה ומופיעה בעמוד טבלה, הוסיפו תגיות <th> לכותרות העמודות והשורות בכל טבלה"
+    }
+};
+
+async function fetchAndCheckPage() {
+    const url = document.getElementById("url").value;
+    const report = document.getElementById("report");
+    const loading = document.getElementById("loading");
+    const downloadBtn = document.getElementById("downloadBtn");
+
+    if (!url) {
+        alert("אנא הזן כתובת URL");
+        return;
+    }
+
+    report.innerHTML = "";
+    loading.style.display = "block";
+    downloadBtn.style.display = "none";
+
+    try {
+        const proxyUrl = 'https://api.allorigins.win/get?url=';
+        const response = await fetch(proxyUrl + encodeURIComponent(url));
+        if (!response.ok) throw new Error("שגיאה בטעינת העמוד");
+        const data = await response.json();
+        const text = data.contents;
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(text, "text/html");
+        runAccessibilityCheck(doc);
+        downloadBtn.style.display = "block";
+    } catch (error) {
+        report.innerHTML = `<div class="report-item error">
+            <span class="icon">❌</span>
+            <div class="content">לא ניתן לטעון את הדף</div>
+        </div>`;
+    } finally {
+        loading.style.display = "none";
+    }
+}
+
+function runAccessibilityCheck(doc) {
+    const report = document.getElementById("report");
+    let score = 100;
+    const results = [];
+    const totalChecks = Object.keys(accessibilityChecks).length;
+    const pointsPerCheck = 100 / totalChecks;
+
+    for (const [key, check] of Object.entries(accessibilityChecks)) {
+        const passed = check.check(doc);
+        if (!passed) score -= pointsPerCheck;
+
+        results.push({
+            passed,
+            message: check.message,
+            explanation: passed ? check.success : check.fix
+        });
+    }
+
+    results.forEach(result => {
+        const itemHtml = `
+            <div class="report-item ${result.passed ? 'success' : 'error'}">
+                <span class="icon">${result.passed ? '✅' : '❌'}</span>
+                <div class="content">
+                    <div>${result.message}</div>
+                    <div class="fix-suggestion">
+                        ${result.passed ? '💡' : '🔧'} ${result.explanation}
+                    </div>
+                </div>
+            </div>
+        `;
+        report.innerHTML += itemHtml;
+    });
+
+    const scoreContainer = document.getElementById("scoreContainer");
+    const scoreBgColor = score >= 80 ? '#28a745' : score >= 60 ? '#ffc107' : '#dc3545';
+    
+    scoreContainer.innerHTML = `
+        <div class="score-container">
+            <div class="score-circle" style="background-color: ${scoreBgColor}">
+                ${Math.round(score)}
+            </div>
+        </div>
+    `;
+}
+
+async function generatePDF() {
+    const printContainer = document.getElementById('printContainer');
+    const scoreElement = document.querySelector('.score-circle');
+    const reportElement = document.getElementById('report');
+    
+    document.getElementById('printScore').innerHTML = `
+        <h2>ציון נגישות: ${scoreElement.textContent}</h2>
+    `;
+    
+    const printReport = document.getElementById('printReport');
+    printReport.innerHTML = '';
+    
+    const items = reportElement.querySelectorAll('.report-item');
+    items.forEach(item => {
+        const isPassed = item.classList.contains('success');
+        const message = item.querySelector('.content').firstElementChild.textContent;
+        const fix = item.querySelector('.fix-suggestion')?.textContent || '';
+        
+        const newItem = document.createElement('div');
+        newItem.style.marginBottom = '15px';
+        newItem.innerHTML = `
+            <div style="font-weight: bold;">${isPassed ? '✓' : '✗'} ${message}</div>
+            ${fix ? `<div style="color: #666; margin-top: 5px;">${fix}</div>` : ''}
+        `;
+        printReport.appendChild(newItem);
+    });
+    
+    printContainer.style.display = 'block';
+    
+    try {
+        const canvas = await html2canvas(printContainer, {
+            scale: 2,
+            useCORS: true,
+            logging: false,
+            windowWidth: 800
+        });
+        
+        const imgData = canvas.toDataURL('image/png');
+        
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF({
+            orientation: 'portrait',
+            unit: 'mm',
+            format: 'a4'
+        });
+        
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+        
+        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+        pdf.save('דוח-נגישות.pdf');
+    } catch (error) {
+        console.error('Error generating PDF:', error);
+        alert('אירעה שגיאה ביצירת ה-PDF');
+    } finally {
+        printContainer.style.display = 'none';
+    }
+}
+    </script>
+</body>
+</html>
