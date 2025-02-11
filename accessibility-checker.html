@@ -340,7 +340,7 @@ async function fetchAndCheckPage() {
     } catch (error) {
         report.innerHTML = `<div class="report-item error">
             <span class="icon">❌</span>
-            <div class="content">לא ניתן לטעון את הדף</div>
+            <div class="content">הכלי אינו פעיל כרגע, נסו שנית במועד מאוחר יותר</div>
         </div>`;
     } finally {
         loading.style.display = "none";
