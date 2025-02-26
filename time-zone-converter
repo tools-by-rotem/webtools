@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ממיר זמן גלובלי - בדקו מה השעה במדינה אחרת | Tools by Rotem</title>
+    <meta name="description" content="רוצים לדעת מה השעה עכשיו במדינה אחרת? מטיילים בחו"ל ורוצים לדעת מה השעה בישראל? ממיר הזמן הגלובלי יעזור לכם לגלות מה השעה בכל מדינה שתבחרו. למציאת השעה לחצו">
+    <link rel="canonical" href="https://tools-by-rotem.github.io/webtools/time-zone-converter" />
+    <link rel="icon" type="image/x-icon" href="/webtools/site-favicon.ico">
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #f8f9fa;
+            --text-color: #2c3e50;
+            --border-radius: 12px;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            direction: rtl;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            color: var(--text-color);
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            max-width: 400px;
+            margin: 10px auto;
+            position: relative;
+            backdrop-filter: blur(10px);
+        }
+        h2 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+        label {
+            display: block;
+            text-align: right;
+            margin: 12px 0 6px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+        select, input {
+            width: 100%;
+            padding: 12px;
+            margin: 6px 0;
+            border: 2px solid #e1e8ed;
+            border-radius: var(--border-radius);
+            font-size: 1em;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+            background: var(--secondary-color);
+        }
+        select:focus, input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+        }
+        button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            width: 100%;
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+        }
+        button:hover {
+            background: #357abd;
+            transform: translateY(-2px);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        .autocomplete-suggestions {
+            border: 2px solid #e1e8ed;
+            background: white;
+            max-height: 200px;
+            overflow-y: auto;
+            position: absolute;
+            width: 80%;
+            z-index: 1000;
+            text-align: right;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+        .autocomplete-suggestion {
+            padding: 12px 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .autocomplete-suggestion:hover {
+            background: var(--secondary-color);
+            color: var(--primary-color);
+        }
+        #resultTime {
+            font-size: 2em;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 15px 0;
+            padding: 15px;
+            background: var(--secondary-color);
+            border-radius: var(--border-radius);
+            box-shadow: inset var(--shadow);
+        }
+        .time-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: var(--secondary-color);
+            border-radius: var(--border-radius);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        #currentTime {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 10px 0;
+        }
+        #inputScreen, #resultScreen {
+            transition: all 0.3s ease;
+        }
+        #resultScreen {
+            display: none;
+        }
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+                margin: 10px;
+            }
+            h2 {
+                font-size: 1.5em;
+                margin-bottom: 15px;
+            }
+            #resultTime, #currentTime {
+                font-size: 1.5em;
+            }
+            .time-section {
+                margin: 15px 0;
+                padding: 12px;
+            }
+        }
+    </style>
+ <script src="https://cdn.enable.co.il/licenses/enable-L34385vlixga9kjh-1224-66195/init.js"></script>
+</head>
+<body>
+    <div class="container" id="inputScreen">
+        <h2>ממיר זמן בינלאומי</h2>
+        
+        <div class="time-section">
+            <label>השעה שלי היא:</label>
+            <div id="currentTime">--:--</div>
+        </div>
+
+        <div class="time-section">
+            <label>בחר מדינת יעד:</label>
+            <input type="text" id="targetSearch" placeholder="הקלד שם מדינה..." oninput="showSuggestions('targetSearch', 'targetSuggestions')">
+            <div id="targetSuggestions" class="autocomplete-suggestions"></div>
+
+            <div id="targetUsStateContainer" style="display: none;">
+                <label>בחר מדינה בתוך ארה"ב:</label>
+                <select id="targetUsStateSelect"></select>
+            </div>
+        </div>
+
+        <button onclick="convertTime()">המר שעה</button>
+    </div>
+
+    <div class="container" id="resultScreen">
+        <h2 id="resultLabel">השעה במדינת היעד:</h2>
+        <div id="resultTime" class="time-section">--:--</div>
+        <button onclick="showInputScreen()">בדיקת שעה במדינה נוספת</button>
+    </div>
+
+    <script>
+        const countryToTimezone = {
+            "ישראל": "Asia/Jerusalem",
+            "ארצות הברית": "America/New_York",
+            "קנדה": "America/Toronto",
+            "מקסיקו": "America/Mexico_City",
+            "ברזיל": "America/Sao_Paulo",
+            "ארגנטינה": "America/Argentina/Buenos_Aires",
+            "בריטניה": "Europe/London",
+            "צרפת": "Europe/Paris",
+            "גרמניה": "Europe/Berlin",
+            "ספרד": "Europe/Madrid",
+            "איטליה": "Europe/Rome",
+            "רוסיה": "Europe/Moscow",
+            "אוקראינה": "Europe/Kiev",
+            "פולין": "Europe/Warsaw",
+            "הולנד": "Europe/Amsterdam",
+            "בלגיה": "Europe/Brussels",
+            "שוודיה": "Europe/Stockholm",
+            "שווייץ": "Europe/Zurich",
+            "אוסטריה": "Europe/Vienna",
+            "נורבגיה": "Europe/Oslo",
+            "דנמרק": "Europe/Copenhagen",
+            "פורטוגל": "Europe/Lisbon",
+            "הונגריה": "Europe/Budapest",
+            "צ'כיה": "Europe/Prague",
+            "יוון": "Europe/Athens",
+            "טורקיה": "Europe/Istanbul",
+            "מצרים": "Africa/Cairo",
+            "מרוקו": "Africa/Casablanca",
+            "תוניסיה": "Africa/Tunis",
+            "אלג'יריה": "Africa/Algiers",
+            "דרום אפריקה": "Africa/Johannesburg",
+            "ניגריה": "Africa/Lagos",
+            "קניה": "Africa/Nairobi",
+            "אתיופיה": "Africa/Addis_Ababa",
+            "גאנה": "Africa/Accra",
+            "הודו": "Asia/Kolkata",
+            "סין": "Asia/Shanghai",
+            "יפן": "Asia/Tokyo",
+            "קוריאה הדרומית": "Asia/Seoul",
+            "אינדונזיה": "Asia/Jakarta",
+            "מלזיה": "Asia/Kuala_Lumpur",
+            "פיליפינים": "Asia/Manila",
+            "תאילנד": "Asia/Bangkok",
+            "וייטנאם": "Asia/Ho_Chi_Minh",
+            "פקיסטן": "Asia/Karachi",
+            "בנגלדש": "Asia/Dhaka",
+            "סרי לנקה": "Asia/Colombo",
+            "נפאל": "Asia/Kathmandu",
+            "אוסטרליה": "Australia/Sydney",
+            "ניו זילנד": "Pacific/Auckland",
+            "פיג'י": "Pacific/Fiji",
+            "פפואה גינאה החדשה": "Pacific/Port_Moresby",
+            "איראן": "Asia/Tehran",
+            "עיראק": "Asia/Baghdad",
+            "ערב הסעודית": "Asia/Riyadh",
+            "איחוד האמירויות": "Asia/Dubai",
+            "קטאר": "Asia/Qatar",
+            "כווית": "Asia/Kuwait",
+            "אוזבקיסטן": "Asia/Tashkent",
+            "קזחסטן": "Asia/Almaty",
+            "אפגניסטן": "Asia/Kabul",
+            "מונגוליה": "Asia/Ulaanbaatar",
+            "אזרבייג'ן": "Asia/Baku",
+            "גאורגיה": "Asia/Tbilisi",
+            "ארמניה": "Asia/Yerevan",
+            "סינגפור": "Asia/Singapore",
+            "הונג קונג": "Asia/Hong_Kong",
+            "טאיוואן": "Asia/Taipei",
+            "בלארוס": "Europe/Minsk",
+            "סרביה": "Europe/Belgrade",
+            "רומניה": "Europe/Bucharest",
+            "בולגריה": "Europe/Sofia",
+            "קרואטיה": "Europe/Zagreb",
+            "סלובקיה": "Europe/Bratislava",
+            "סלובניה": "Europe/Ljubljana",
+            "אירלנד": "Europe/Dublin",
+            "פינלנד": "Europe/Helsinki",
+            "לטביה": "Europe/Riga",
+            "ליטא": "Europe/Vilnius",
+            "אסטוניה": "Europe/Tallinn",
+            "מלטה": "Europe/Malta",
+            "קפריסין": "Asia/Nicosia",
+            "בוסניה והרצגובינה": "Europe/Sarajevo",
+            "מקדוניה הצפונית": "Europe/Skopje",
+            "מולדובה": "Europe/Chisinau",
+            "קובה": "America/Havana",
+            "הרפובליקה הדומיניקנית": "America/Santo_Domingo",
+            "הונדורס": "America/Tegucigalpa",
+            "גואטמלה": "America/Guatemala",
+            "קוסטה ריקה": "America/Costa_Rica",
+            "ונצואלה": "America/Caracas",
+            "צ'ילה": "America/Santiago",
+            "אקוודור": "America/Guayaquil",
+            "פרו": "America/Lima",
+            "בוליביה": "America/La_Paz",
+            "פרגוואי": "America/Asuncion",
+            "אורוגוואי": "America/Montevideo",
+            "קולומביה": "America/Bogota",
+            "פנמה": "America/Panama",
+            "בליז": "America/Belize",
+            "איסלנד": "Atlantic/Reykjavik",
+            "מאוריטניה": "Africa/Nouakchott",
+            "מדגסקר": "Indian/Antananarivo",
+            "סיישל": "Indian/Mahe"
+        };
+
+        const usStates = {
+            "אלבמה": "America/Chicago",
+            "אלסקה": "America/Anchorage",
+            "אריזונה": "America/Phoenix",
+            "ארקנסו": "America/Chicago",
+            "קליפורניה": "America/Los_Angeles",
+            "קולורדו": "America/Denver",
+            "קונטיקט": "America/New_York",
+            "דלאוור": "America/New_York",
+            "פלורידה": "America/New_York",
+            "ג'ורג'יה": "America/New_York",
+            "הוואי": "Pacific/Honolulu",
+            "איידהו": "America/Boise",
+            "אילינוי": "America/Chicago",
+            "אינדיאנה": "America/Indiana/Indianapolis",
+            "איווה": "America/Chicago",
+            "קנזס": "America/Chicago",
+            "קנטאקי": "America/New_York",
+            "לואיזיאנה": "America/Chicago",
+            "מיין": "America/New_York",
+            "מרילנד": "America/New_York",
+            "מסצ'וסטס": "America/New_York",
+            "מישיגן": "America/Detroit",
+            "מינסוטה": "America/Chicago",
+            "מיסיסיפי": "America/Chicago",
+            "מיזורי": "America/Chicago",
+            "מונטנה": "America/Denver",
+            "נברסקה": "America/Chicago",
+            "נבאדה": "America/Los_Angeles",
+            "ניו המפשייר": "America/New_York",
+            "ניו ג'רזי": "America/New_York",
+            "ניו מקסיקו": "America/Denver",
+            "ניו יורק": "America/New_York",
+            "צפון קרוליינה": "America/New_York",
+            "צפון דקוטה": "America/Chicago",
+            "אוהיו": "America/New_York",
+            "אוקלהומה": "America/Chicago",
+            "אורגון": "America/Los_Angeles",
+            "פנסילבניה": "America/New_York",
+            "רוד איילנד": "America/New_York",
+            "דרום קרוליינה": "America/New_York",
+            "דרום דקוטה": "America/Chicago",
+            "טנסי": "America/Chicago",
+            "טקסס": "America/Chicago",
+            "יוטה": "America/Denver",
+            "ורמונט": "America/New_York",
+            "וירג'יניה": "America/New_York",
+            "וושינגטון": "America/Los_Angeles",
+            "מערב וירג'יניה": "America/New_York",
+            "ויסקונסין": "America/Chicago",
+            "וויומינג": "America/Denver"
+        };
+
+        function updateCurrentTime() {
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            document.getElementById('currentTime').innerText = `${hours}:${minutes}`;
+        }
+
+        updateCurrentTime();
+        
+        setInterval(updateCurrentTime, 60000);
+
+        function showSuggestions(inputId, suggestionsId) {
+            const input = document.getElementById(inputId).value.trim();
+            const suggestionsDiv = document.getElementById(suggestionsId);
+            suggestionsDiv.innerHTML = "";
+
+            if (input.length === 0) return;
+
+            const filteredCountries = Object.keys(countryToTimezone).filter(country =>
+                country.startsWith(input)
+            );
+
+            filteredCountries.forEach(country => {
+                const div = document.createElement("div");
+                div.className = "autocomplete-suggestion";
+                div.innerText = country;
+                div.onclick = () => {
+                    document.getElementById(inputId).value = country;
+                    suggestionsDiv.innerHTML = "";
+                    toggleUSStates(inputId, country);
+                };
+                suggestionsDiv.appendChild(div);
+            });
+        }
+
+        function toggleUSStates(inputId, selectedCountry) {
+            const usStateContainer = document.getElementById("targetUsStateContainer");
+            const usStateSelect = document.getElementById("targetUsStateSelect");
+
+            usStateSelect.innerHTML = "";
+
+            if (selectedCountry === "ארצות הברית") {
+                usStateContainer.style.display = "block";
+                Object.keys(usStates).forEach(state => {
+                    let option = new Option(state, state);
+                    usStateSelect.add(option);
+                });
+            } else {
+                usStateContainer.style.display = "none";
+            }
+        }
+
+        function showInputScreen() {
+            document.getElementById("resultScreen").style.display = "none";
+            document.getElementById("inputScreen").style.display = "block";
+            
+            document.getElementById("targetSearch").value = "";
+            document.getElementById("targetUsStateContainer").style.display = "none";
+        }
+
+        function showResultScreen() {
+            document.getElementById("inputScreen").style.display = "none";
+            document.getElementById("resultScreen").style.display = "block";
+        }
+
+        function convertTime() {
+            const now = new Date();
+            
+            const targetCountry = document.getElementById("targetSearch").value;
+            
+            if (!targetCountry) {
+                alert("נא לבחור מדינת יעד.");
+                return;
+            }
+            
+            let targetTZ = countryToTimezone[targetCountry];
+            let locationName = targetCountry;
+
+            if (targetCountry === "ארצות הברית") {
+                const selectedState = document.getElementById("targetUsStateSelect").value;
+                if (!selectedState) {
+                    alert("נא לבחור מדינה בתוך ארה\"ב.");
+                    return;
+                }
+                targetTZ = usStates[selectedState];
+                locationName = selectedState + ", ארצות הברית";
+            }
+
+            let targetDate = new Intl.DateTimeFormat('he-IL', {
+                timeZone: targetTZ,
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
+            }).format(now);
+
+            document.getElementById("resultLabel").innerText = `השעה ב${locationName} היא:`;
+            document.getElementById("resultTime").innerText = targetDate;
+            
+            showResultScreen();
+        }
+    </script>
+</body>
+</html>
