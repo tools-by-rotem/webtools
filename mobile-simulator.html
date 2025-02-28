@@ -478,28 +478,26 @@
         </div>
     </footer>
 
- <script>
-    function loadPage() {
-        const url = document.getElementById('urlInput').value;
-        const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
+    <script>
+        function loadPage() {
+            const url = document.getElementById('urlInput').value;
+            const iframeAndroid = document.getElementById('testFrameAndroid');
+            const iframeIphone = document.getElementById('testFrameIphone');
 
-        const iframeAndroid = document.getElementById('testFrameAndroid');
-        const iframeIphone = document.getElementById('testFrameIphone');
+            iframeAndroid.src = url;
+            iframeIphone.src = url;
+        }
 
-        iframeAndroid.src = proxyUrl;
-        iframeIphone.src = proxyUrl;
-    }
-
-    function switchTab(tab) {
-        const tabs = document.querySelectorAll('.tab-content');
-        const tabLinks = document.querySelectorAll('.tab');
-        
-        tabs.forEach(t => t.classList.remove('active'));
-        tabLinks.forEach(t => t.classList.remove('active'));
-        
-        document.getElementById(tab + 'Tab').classList.add('active');
-        document.querySelector(`.tab[onclick="switchTab('${tab}')"]`).classList.add('active');
-    }
-</script>
+        function switchTab(tab) {
+            const tabs = document.querySelectorAll('.tab-content');
+            const tabLinks = document.querySelectorAll('.tab');
+            
+            tabs.forEach(t => t.classList.remove('active'));
+            tabLinks.forEach(t => t.classList.remove('active'));
+            
+            document.getElementById(tab + 'Tab').classList.add('active');
+            document.querySelector(`.tab[onclick="switchTab('${tab}')"]`).classList.add('active');
+        }
+    </script>
 </body>
 </html>
