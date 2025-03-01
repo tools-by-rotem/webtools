@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>הצהרת נגישות | ספריית הכלים של רותם קנון</title>
+    <meta name="description" content="הצהרת נגישות לאתר ספריית הכלים של רותם קנון - מחויבותנו לנגישות והתאמת האתר לכלל המשתמשים, כולל אנשים עם מוגבלויות">
+    <link rel="canonical" href="https://tools-by-rotem.github.io/webtools/accessibility-statement" />
+    <link rel="icon" type="image/x-icon" href="/webtools/site-favicon.ico">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Header Styles */
+        .main-header {
+            background-color: #2d3436;
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 60px;
+            width: auto;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            max-width: 800px;
+            width: 100%;
+            margin: 2rem auto;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        h2 {
+            color: #444;
+            margin-top: 1.5rem;
+            margin-bottom: 0.8rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+        }
+
+        ul {
+            margin-bottom: 1rem;
+            padding-right: 1.5rem;
+        }
+
+        .accessibility-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .accessibility-logo {
+            display: block;
+            margin: 1.5rem auto;
+            max-width: 200px;
+        }
+
+        /* Footer Styles */
+        .main-footer {
+            background-color: #2d3436;
+            color: white;
+            padding: 3rem 0 1.5rem;
+            margin-top: auto;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .footer-section p {
+            color: white;
+            margin-bottom: 1rem;
+            font-weight: bold;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a {
+            color: #ddd;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: #0984e3;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .social-icons img {
+            width: 24px;
+            height: 24px;
+            transition: opacity 0.3s ease;
+        }
+
+        .social-icons a:hover img {
+            opacity: 0.8;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #444;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .header-container {
+                padding: 0 1rem;
+            }
+
+            .container {
+                padding: 1rem;
+                margin: 1rem;
+            }
+
+            .footer-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+                padding: 0 1rem;
+            }
+
+            .footer-section {
+                align-items: center;
+            }
+        }
+    </style>
+    <script src="https://cdn.enable.co.il/licenses/enable-L34385vlixga9kjh-1224-66195/init.js"></script>
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-container">
+            <a href="https://tools-by-rotem.github.io/webtools/" class="logo">
+                <img src="https://tools-by-rotem.github.io/webtools/site-logo.png" alt="רותם קנון לוגו">
+            </a>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <h1>הצהרת נגישות</h1>
+            
+            <div class="accessibility-section">
+                <p>אתר "ספריית הכלים של רותם קנון" נבנה תוך שימת דגש על נגישות וזמינות לכלל המשתמשים, כולל אנשים עם מוגבלויות. אנו מאמינים שהאינטרנט צריך להיות נגיש לכולם, ולכן פעלנו להנגיש את האתר בהתאם לתקן הישראלי (ת"י 5568) המבוסס על הנחיות WCAG 2.1 ברמה AA.</p>
+            </div>
+            
+            <div class="accessibility-section">
+                <h2>אמצעי הנגישות באתר</h2>
+                <p>באתר מוטמע סרגל נגישות מבית Sienna, המאפשר התאמת ממשק האתר לצרכים מגוונים:</p>
+                <ul>
+                    <li>שינוי גודל הטקסט והגדלת התצוגה</li>
+                    <li>התאמת ניגודיות צבעים</li>
+                    <li>הגדלת סמן העכבר ושינוי צבעו</li>
+                    <li>הדגשת קישורים</li>
+                    <li>האטת אנימציות</li>
+                    <li>התאמה לקוראי מסך</li>
+                    <li>שינוי גופן לקריאה נוחה יותר</li>
+                    <li>ניווט מקלדת מלא</li>
+                </ul>
+                <p>סרגל הנגישות מופיע בצד ימין של המסך ומאפשר לכל משתמש להתאים את חווית הגלישה באתר לצרכיו האישיים.</p>
+            </div>
+            
+            <div class="accessibility-section">
+                <h2>מבנה האתר</h2>
+                <ul>
+                    <li>כותרות משמעותיות - כל העמודים באתר מאורגנים עם כותרות ברורות, המאפשרות ניווט נוח בעזרת קוראי מסך.</li>
+                    <li>טקסט חלופי לתמונות - כל התמונות והאיקונים באתר מלווים בטקסט חלופי המתאר את תוכנם.</li>
+                    <li>ניווט מקלדת - ניתן לנווט באתר באמצעות המקלדת בלבד, תוך שימוש במקש Tab ומקשי החיצים.</li>
+                    <li>שפה ברורה - המידע באתר מוצג בשפה פשוטה וברורה.</li>
+                    <li>עיצוב מגיב (Responsive) - האתר מותאם לגלישה בכל מכשיר, בכל רזולוציה ובכל מצב תצוגה.</li>
+                </ul>
+            </div>
+            
+            <div class="accessibility-section">
+                <h2>מסמכים להורדה</h2>
+                <p>המסמכים המוצעים להורדה באתר מונגשים ככל האפשר. במקרה שנתקלתם במסמך שאינו נגיש, אנא פנו אלינו ונשמח לספק גרסה נגישה.</p>
+            </div>
+            
+            <div class="accessibility-section">
+                <h2>מגבלות נגישות</h2>
+                <p>למרות מאמצנו להנגיש את האתר באופן מלא, ייתכן כי חלקים מסוימים טרם הונגשו או שאינם נגישים דיים. אנו מתחייבים לעבוד באופן שוטף לשיפור הנגישות באתר.</p>
+                <p>אם גיליתם תוכן שאינו נגיש באתר, נשמח לקבל על כך משוב ולתקן בהקדם.</p>
+            </div>
+            
+            <div class="accessibility-section">
+                <h2>פרטי רכז הנגישות</h2>
+                <p>שם: רותם קנון</p>
+                <p>דוא"ל: accessibility@tools-by-rotem.co.il</p>
+                <p>טלפון: 03-1234567</p>
+            </div>
+            
+            <div class="accessibility-section">
+                <h2>עדכון הצהרת הנגישות</h2>
+                <p>הצהרת הנגישות עודכנה לאחרונה בתאריך: 01 במרץ, 2025</p>
+                <p>אנו מתחייבים לבדוק את האתר באופן שוטף ולשפר את רמת הנגישות בהתאם לצורך.</p>
+            </div>
+            
+            <img src="https://cdn.enable.co.il/licenses/enable-L34385vlixga9kjh-1224-66195/sienna-badge.png" alt="תג נגישות Sienna" class="accessibility-logo">
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="footer-container">
+          <div class="footer-section">
+            <p>רשתות חברתיות</p>
+             <div class="social-icons">
+             <a href="https://www.linkedin.com/in/rotem-kanon" target="_blank">
+               <img src="https://cdn-icons-png.flaticon.com/512/145/145807.png" alt="LinkedIn">
+             </a>
+             <a href="https://github.com/tools-by-rotem" target="_blank">
+               <img src="https://cdn-icons-png.flaticon.com/512/2111/2111432.png" alt="GitHub">
+             </a>
+           </div>
+        </div>
+            <div class="footer-section">
+                <p>כמויות חיפושים</p>
+                <ul>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/google-search-volume">כמות חיפושים בגוגל</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/spotify-search-volume">כמות חיפושים בספוטיפיי</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/soundcloud-search-volume">כמות חיפושים בסאונדקלאוד </a></li>
+		    <li><a href="https://tools-by-rotem.github.io/webtools/competitors-traffic">חישוב תנועה לאתרי מתחרים </a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <p>תצוגה מקדימה</p>
+                <ul>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/google-serp-preview">תצוגה מקדימה לנראות בגוגל</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/social-link-preview">תצוגה מקדימה לרשתות חברתיות</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <p>אופטימיזציה</p>
+                <ul>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/page-speed-test">בדיקת מהירות טעינה</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/mobile-simulator">בדיקת תאימות למכשירים ניידים</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/image-minify-converter">המרת פורמט וכיווץ משקל תמונה</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <p>יצירה ועיצוב</p>
+                <ul>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/background-remover">הסרת רקע מתמונה</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/draw">ציור אינטראקטיבי</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/image-color-identifier">זיהוי צבעי תמונה</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/infographics">יצירת אינפוגרפיקות</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <p>נגישות</p>
+                <ul>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/accessibility-toolbar">סרגל נגישות</a></li>
+		                <li><a href="https://tools-by-rotem.github.io/webtools/accessibility-checker">בדיקת נגישות לאתר אינטרנט</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/accessibility-statement">הצהרת נגישות</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <p>שונות</p>
+                <ul>
+		    <li><a href="https://tools-by-rotem.github.io/webtools/time-zone-converter">ממיר זמן בינלאומי</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/navigation-links-generator">מחולל קישורי ניווט</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/reverse-typing-fix">תיקון הקלדה הפוכה</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/strong-password-generator">מחולל סיסמאות חזקות</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/time-to-go-home">הגיע הזמן ללכת הביתה</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/resume-scanner">התאמת קורות חיים לסורקים אוטומטיים</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 כל הזכויות שמורות לרותם קנון</p>
+        </div>
+    </footer>
+</body>
+</html>
