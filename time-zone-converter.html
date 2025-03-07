@@ -9,152 +9,283 @@
     <link rel="icon" type="image/x-icon" href="/webtools/site-favicon.ico">
     <style>
         :root {
-            --primary-color: #4a90e2;
-            --secondary-color: #f8f9fa;
-            --text-color: #2c3e50;
-            --border-radius: 12px;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            text-align: center;
-            direction: rtl;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-            box-sizing: border-box;
-            color: var(--text-color);
-        }
-        .container {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 25px;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-            max-width: 400px;
-            margin: 10px auto;
-            position: relative;
-            backdrop-filter: blur(10px);
-        }
-        h2 {
-            color: var(--primary-color);
-            margin-bottom: 20px;
-            font-size: 1.8em;
-        }
-        label {
-            display: block;
-            text-align: right;
-            margin: 12px 0 6px;
-            font-weight: 500;
-            color: var(--text-color);
-        }
-        select, input {
-            width: 100%;
-            padding: 12px;
-            margin: 6px 0;
-            border: 2px solid #e1e8ed;
-            border-radius: var(--border-radius);
-            font-size: 1em;
-            transition: all 0.3s ease;
-            box-sizing: border-box;
-            background: var(--secondary-color);
-        }
-        select:focus, input:focus {
-            border-color: var(--primary-color);
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
-        }
-        button {
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 14px 20px;
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            width: 100%;
-            font-size: 1.1em;
-            font-weight: 600;
-            margin-top: 15px;
-            transition: all 0.3s ease;
-        }
-        button:hover {
-            background: #357abd;
-            transform: translateY(-2px);
-        }
-        button:active {
-            transform: translateY(0);
-        }
-        .autocomplete-suggestions {
-            border: 2px solid #e1e8ed;
-            background: white;
-            max-height: 200px;
-            overflow-y: auto;
-            position: absolute;
-            width: 80%;
-            z-index: 1000;
-            text-align: right;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-        }
-        .autocomplete-suggestion {
-            padding: 12px 15px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .autocomplete-suggestion:hover {
-            background: var(--secondary-color);
-            color: var(--primary-color);
-        }
-        #resultTime {
-            font-size: 2em;
-            font-weight: bold;
-            color: var(--primary-color);
-            margin: 15px 0;
-            padding: 15px;
-            background: var(--secondary-color);
-            border-radius: var(--border-radius);
-            box-shadow: inset var(--shadow);
-        }
-        .time-section {
-            margin: 20px 0;
-            padding: 15px;
-            background: var(--secondary-color);
-            border-radius: var(--border-radius);
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
-        }
-        #currentTime {
-            font-size: 1.8em;
-            font-weight: bold;
-            color: var(--primary-color);
-            margin: 10px 0;
-        }
-        #inputScreen, #resultScreen {
-            transition: all 0.3s ease;
-        }
-        #resultScreen {
-            display: none;
-        }
-        @media (max-width: 480px) {
-            .container {
-                padding: 15px;
-                margin: 10px;
-            }
-            h2 {
-                font-size: 1.5em;
-                margin-bottom: 15px;
-            }
-            #resultTime, #currentTime {
-                font-size: 1.5em;
-            }
-            .time-section {
-                margin: 15px 0;
-                padding: 12px;
-            }
-        }
+    --primary-color: #4a90e2;
+    --secondary-color: #f8f9fa;
+    --text-color: #2c3e50;
+    --border-radius: 12px;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-align: center;
+    direction: rtl;
+    background: #c3cfe2;
+    min-height: 100vh;
+    margin: 0; /* ביטול שוליים של הגוף */
+    padding: 0; /* ביטול ריפוד של הגוף */
+    box-sizing: border-box;
+    color: var(--text-color);
+}
+
+.container {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 25px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    max-width: 400px;
+    margin: 20px auto;
+    position: relative;
+    backdrop-filter: blur(10px);
+}
+
+h2 {
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    font-size: 1.8em;
+}
+
+label {
+    display: block;
+    text-align: right;
+    margin: 12px 0 6px;
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+select, input {
+    width: 100%;
+    padding: 12px;
+    margin: 6px 0;
+    border: 2px solid #e1e8ed;
+    border-radius: var(--border-radius);
+    font-size: 1em;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+    background: var(--secondary-color);
+}
+
+select:focus, input:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+}
+
+button {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 14px 20px;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    width: 100%;
+    font-size: 1.1em;
+    font-weight: 600;
+    margin-top: 15px;
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    background: #357abd;
+    transform: translateY(-2px);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+.autocomplete-suggestions {
+    border: 2px solid #e1e8ed;
+    background: white;
+    max-height: 200px;
+    overflow-y: auto;
+    position: absolute;
+    width: 80%;
+    z-index: 1000;
+    text-align: right;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+}
+
+.autocomplete-suggestion {
+    padding: 12px 15px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.autocomplete-suggestion:hover {
+    background: var(--secondary-color);
+    color: var(--primary-color);
+}
+
+#resultTime {
+    font-size: 2em;
+    font-weight: bold;
+    color: var(--primary-color);
+    margin: 15px 0;
+    padding: 15px;
+    background: var(--secondary-color);
+    border-radius: var(--border-radius);
+    box-shadow: inset var(--shadow);
+}
+
+.time-section {
+    margin: 20px 0;
+    padding: 15px;
+    background: var(--secondary-color);
+    border-radius: var(--border-radius);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+#currentTime {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: var(--primary-color);
+    margin: 10px 0;
+}
+
+#inputScreen, #resultScreen {
+    transition: all 0.3s ease;
+}
+
+#resultScreen {
+    display: none;
+}
+
+.main-header {
+    background-color: #2d3436;
+    color: white;
+    padding: 1rem 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    margin: 0; /* ביטול שוליים */
+    width: 100%; /* וידוא רוחב מלא */
+}
+
+.header-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.logo img {
+    height: 60px;
+    width: auto;
+}
+
+.main-footer {
+    background-color: #2d3436;
+    color: white;
+    padding: 3rem 0 1.5rem;
+    margin-top: 0; /* ביטול שוליים עליונים */
+    margin-bottom: 0; /* ביטול שוליים תחתונים */
+    width: 100%; /* וידוא רוחב מלא */
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+}
+
+.footer-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center; /* מרכז את התוכן תחת הכותרת */
+    text-align: center; /* מרכז את הטקסט */
+}
+
+.footer-section p {
+    color: white;
+    margin-bottom: 1rem;
+    font-weight: bold;
+}
+
+.footer-section ul {
+    list-style: none;
+    padding: 0;
+    width: 100%;
+    text-align: center; /* מרכז את הטקסט ברשימה */
+}
+
+.footer-section ul li {
+    margin-bottom: 0.5rem;
+}
+
+.footer-section a {
+    color: #ddd;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-section a:hover {
+    color: #0984e3;
+}
+
+.social-icons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center; /* מרכז את האייקונים */
+    margin-right: 0; /* הסרת ההזחה השלילית */
+}
+
+.social-icons img {
+    width: 24px;
+    height: 24px;
+    transition: opacity 0.3s ease;
+}
+
+.social-icons a:hover img {
+    opacity: 0.8;
+}
+
+.footer-bottom {
+    text-align: center;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #444;
+}
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+        margin: 10px auto;
+        max-width: 90%;
+    }
+    
+    h2 {
+        font-size: 1.5em;
+        margin-bottom: 15px;
+    }
+    
+    #resultTime, #currentTime {
+        font-size: 1.5em;
+    }
+    
+    .time-section {
+        margin: 15px 0;
+        padding: 12px;
+    }
+}
     </style>
- <script src="https://cdn.enable.co.il/licenses/enable-L34385vlixga9kjh-1224-66195/init.js"></script>
+ <script src="https://website-widgets.pages.dev/dist/sienna.min.js" defer></script>
 </head>
 <body>
+  <header class="main-header">
+        <div class="header-container">
+            <a href="https://tools-by-rotem.github.io/webtools/" class="logo">
+                <img src="https://tools-by-rotem.github.io/webtools/site-logo.png" alt="רותם קנון לוגו">
+            </a>
+        </div>
+    </header>
     <div class="container" id="inputScreen">
         <h1>ממיר זמן בינלאומי</h1>
         
@@ -182,6 +313,82 @@
         <div id="resultTime" class="time-section">--:--</div>
         <button onclick="showInputScreen()">בדיקת שעה במדינה נוספת</button>
     </div>
+    <footer class="main-footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <p>רשתות חברתיות</p>
+                <div class="social-icons">
+                    <a href="https://www.linkedin.com/in/rotem-kanon" target="_blank">
+                        <img src="https://cdn-icons-png.flaticon.com/512/145/145807.png" alt="LinkedIn">
+                    </a>
+                    <a href="https://github.com/tools-by-rotem" target="_blank">
+                        <img src="https://cdn-icons-png.flaticon.com/512/2111/2111432.png" alt="GitHub">
+                    </a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <p>ניווט באתר</p>
+                <ul>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/">ספריית הכלים</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/accessibility-statement">הצהרת נגישות</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <p>כמויות חיפושים</p>
+                <ul>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/google-search-volume">כמות חיפושים בגוגל</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/spotify-search-volume">כמות חיפושים בספוטיפיי</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/soundcloud-search-volume">כמות חיפושים בסאונדקלאוד </a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/competitors-traffic">חישוב תנועה לאתרי מתחרים </a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <p>תצוגה מקדימה</p>
+                <ul>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/google-serp-preview">תצוגה מקדימה לנראות בגוגל</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/social-link-preview">תצוגה מקדימה לרשתות חברתיות</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <p>אופטימיזציה</p>
+                <ul>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/page-speed-test">בדיקת מהירות טעינה</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/mobile-simulator">בדיקת תאימות למכשירים ניידים</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/image-minify-converter">המרת פורמט וכיווץ משקל תמונה</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <p>יצירה ועיצוב</p>
+                <ul>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/background-remover">הסרת רקע מתמונה</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/draw">ציור אינטראקטיבי</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/image-color-identifier">זיהוי צבעי תמונה</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/infographics">יצירת אינפוגרפיקות</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <p>נגישות</p>
+                <ul>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/accessibility-toolbar">סרגל נגישות</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/accessibility-checker">בדיקת נגישות לאתר אינטרנט</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <p>שונות</p>
+                <ul>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/time-zone-converter">ממיר זמן בינלאומי</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/navigation-links-generator">מחולל קישורי ניווט</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/reverse-typing-fix">תיקון הקלדה הפוכה</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/strong-password-generator">מחולל סיסמאות חזקות</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/time-to-go-home">הגיע הזמן ללכת הביתה</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/resume-scanner">התאמת קורות חיים לסורקים אוטומטיים</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 כל הזכויות שמורות לרותם קנון</p>
+        </div>
+    </footer>
 
     <script>
         const countryToTimezone = {
