@@ -153,77 +153,77 @@ button:hover {
     z-index: 1;
 }
 
-.main-footer {
-    background-color: #2d3436;
-    color: white;
-    padding: 3rem 0 1.5rem;
-    margin-top: auto;
-    width: 100%;
-}
+ .main-footer {
+            background-color: #2d3436;
+            color: white;
+            padding: 3rem 0 1.5rem;
+            margin-top: 4rem;
+        }
 
-.footer-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 2rem;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 2rem;
-}
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
 
-.footer-section {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    align-items: flex-start;
-}
+        .footer-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            align-items: flex-start;
+        }
 
-.footer-section p {
-    color: white;
-    margin-bottom: 1rem;
-    font-weight: bold;
-}
+        .footer-section p {
+            color: white;
+            margin-bottom: 1rem;
+            font-weight: bold;
+        }
 
-.footer-section ul {
-    list-style: none;
-}
+        .footer-section ul {
+            list-style: none;
+            padding: 0;
+        }
 
-.footer-section ul li {
-    margin-bottom: 0.5rem;
-}
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
 
-.footer-section a {
-    color: #ddd;
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
+        .footer-section a {
+            color: #ddd;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
 
-.footer-section a:hover {
-    color: #6c63ff;
-}
+        .footer-section a:hover {
+            color: #0984e3;
+        }
 
-.social-icons {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-    margin-right: -4px;
-}
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-right: -4px;
+        }
 
-.social-icons img {
-    width: 24px;
-    height: 24px;
-    transition: opacity 0.3s ease;
-}
+        .social-icons img {
+            width: 24px;
+            height: 24px;
+            transition: opacity 0.3s ease;
+        }
 
-.social-icons img:hover {
-    opacity: 0.8;
-}
+        .social-icons a:hover img {
+            opacity: 0.8;
+        }
 
-.footer-bottom {
-    text-align: center;
-    margin-top: 2rem;
-    padding-top: 1rem;
-    border-top: 1px solid #444;
-}
+        .footer-bottom {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #444;
+        }
 
 @media screen and (max-width: 768px) {
     .footer-container {
@@ -291,33 +291,20 @@ button:hover {
         </div>
     </div>
 
-    <footer class="main-footer">
+     <footer class="main-footer">
         <div class="footer-container">
-          <div class="footer-section">
-            <p>רשתות חברתיות</p>
-             <div class="social-icons">
-             <a href="https://www.linkedin.com/in/rotem-kanon" target="_blank">
-               <img src="https://cdn-icons-png.flaticon.com/512/145/145807.png" alt="LinkedIn">
-             </a>
-             <a href="https://github.com/tools-by-rotem" target="_blank">
-               <img src="https://cdn-icons-png.flaticon.com/512/2111/2111432.png" alt="GitHub">
-             </a>
-           </div>
-        </div>
-            <footer class="main-footer">
-        <div class="footer-container">
-          <div class="footer-section">
-            <p>רשתות חברתיות</p>
-             <div class="social-icons">
-             <a href="https://www.linkedin.com/in/rotem-kanon" target="_blank">
-               <img src="https://cdn-icons-png.flaticon.com/512/145/145807.png" alt="LinkedIn">
-             </a>
-             <a href="https://github.com/tools-by-rotem" target="_blank">
-               <img src="https://cdn-icons-png.flaticon.com/512/2111/2111432.png" alt="GitHub">
-             </a>
-           </div>
-        </div>
-	<div class="footer-section">
+            <div class="footer-section">
+                <p>רשתות חברתיות</p>
+                <div class="social-icons">
+                    <a href="https://www.linkedin.com/in/rotem-kanon" target="_blank">
+                        <img src="https://cdn-icons-png.flaticon.com/512/145/145807.png" alt="LinkedIn">
+                    </a>
+                    <a href="https://github.com/tools-by-rotem" target="_blank">
+                        <img src="https://cdn-icons-png.flaticon.com/512/2111/2111432.png" alt="GitHub">
+                    </a>
+                </div>
+            </div>
+            <div class="footer-section">
                 <p>ניווט באתר</p>
                 <ul>
                     <li><a href="https://tools-by-rotem.github.io/webtools/">ספריית הכלים</a></li>
@@ -330,7 +317,7 @@ button:hover {
                     <li><a href="https://tools-by-rotem.github.io/webtools/google-search-volume">כמות חיפושים בגוגל</a></li>
                     <li><a href="https://tools-by-rotem.github.io/webtools/spotify-search-volume">כמות חיפושים בספוטיפיי</a></li>
                     <li><a href="https://tools-by-rotem.github.io/webtools/soundcloud-search-volume">כמות חיפושים בסאונדקלאוד </a></li>
-		    <li><a href="https://tools-by-rotem.github.io/webtools/competitors-traffic">חישוב תנועה לאתרי מתחרים </a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/competitors-traffic">חישוב תנועה לאתרי מתחרים </a></li>
                 </ul>
             </div>
             <div class="footer-section">
@@ -361,13 +348,13 @@ button:hover {
                 <p>נגישות</p>
                 <ul>
                     <li><a href="https://tools-by-rotem.github.io/webtools/accessibility-toolbar">סרגל נגישות</a></li>
-		                <li><a href="https://tools-by-rotem.github.io/webtools/accessibility-checker">בדיקת נגישות לאתר אינטרנט</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/accessibility-checker">בדיקת נגישות לאתר אינטרנט</a></li>
                 </ul>
             </div>
             <div class="footer-section">
                 <p>שונות</p>
                 <ul>
-		    <li><a href="https://tools-by-rotem.github.io/webtools/time-zone-converter">ממיר זמן בינלאומי</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/time-zone-converter">ממיר זמן בינלאומי</a></li>
                     <li><a href="https://tools-by-rotem.github.io/webtools/navigation-links-generator">מחולל קישורי ניווט</a></li>
                     <li><a href="https://tools-by-rotem.github.io/webtools/reverse-typing-fix">תיקון הקלדה הפוכה</a></li>
                     <li><a href="https://tools-by-rotem.github.io/webtools/strong-password-generator">מחולל סיסמאות חזקות</a></li>
@@ -377,8 +364,8 @@ button:hover {
             </div>
         </div>
         <div class="footer-bottom">
-    <p>© 2025 כל הזכויות שמורות לרותם קנון</p>
-	</div>
+            <p>© 2025 כל הזכויות שמורות לרותם קנון</p>
+        </div>
     </footer>
 		
     <script>
