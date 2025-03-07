@@ -152,6 +152,7 @@ canvas {
 }
 
 /* Footer Styles */
+/* Footer Styles */
 .main-footer {
     background-color: #2d3436;
     color: white;
@@ -172,8 +173,8 @@ canvas {
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    align-items: center;
-    text-align: center;
+    align-items: center; /* שונה מ-flex-start ל-center */
+    text-align: center; /* נוסף יישור טקסט למרכז */
 }
 
 .footer-section p {
@@ -184,9 +185,8 @@ canvas {
 
 .footer-section ul {
     list-style: none;
-    width: 100%;
-    text-align: center;
     padding: 0;
+    text-align: center; /* נוסף יישור טקסט למרכז */
 }
 
 .footer-section ul li {
@@ -207,6 +207,7 @@ canvas {
     display: flex;
     gap: 1rem;
     justify-content: center;
+    margin-right: -4px;
 }
 
 .social-icons img {
@@ -279,31 +280,18 @@ canvas {
 
     <footer class="main-footer">
         <div class="footer-container">
-          <div class="footer-section">
-            <p>רשתות חברתיות</p>
-             <div class="social-icons">
-             <a href="https://www.linkedin.com/in/rotem-kanon" target="_blank">
-               <img src="https://cdn-icons-png.flaticon.com/512/145/145807.png" alt="LinkedIn">
-             </a>
-             <a href="https://github.com/tools-by-rotem" target="_blank">
-               <img src="https://cdn-icons-png.flaticon.com/512/2111/2111432.png" alt="GitHub">
-             </a>
-           </div>
-        </div>
-            <footer class="main-footer">
-        <div class="footer-container">
-          <div class="footer-section">
-            <p>רשתות חברתיות</p>
-             <div class="social-icons">
-             <a href="https://www.linkedin.com/in/rotem-kanon" target="_blank">
-               <img src="https://cdn-icons-png.flaticon.com/512/145/145807.png" alt="LinkedIn">
-             </a>
-             <a href="https://github.com/tools-by-rotem" target="_blank">
-               <img src="https://cdn-icons-png.flaticon.com/512/2111/2111432.png" alt="GitHub">
-             </a>
-           </div>
-        </div>
-	<div class="footer-section">
+            <div class="footer-section">
+                <p>רשתות חברתיות</p>
+                <div class="social-icons">
+                    <a href="https://www.linkedin.com/in/rotem-kanon" target="_blank">
+                        <img src="https://cdn-icons-png.flaticon.com/512/145/145807.png" alt="LinkedIn">
+                    </a>
+                    <a href="https://github.com/tools-by-rotem" target="_blank">
+                        <img src="https://cdn-icons-png.flaticon.com/512/2111/2111432.png" alt="GitHub">
+                    </a>
+                </div>
+            </div>
+            <div class="footer-section">
                 <p>ניווט באתר</p>
                 <ul>
                     <li><a href="https://tools-by-rotem.github.io/webtools/">ספריית הכלים</a></li>
@@ -316,7 +304,7 @@ canvas {
                     <li><a href="https://tools-by-rotem.github.io/webtools/google-search-volume">כמות חיפושים בגוגל</a></li>
                     <li><a href="https://tools-by-rotem.github.io/webtools/spotify-search-volume">כמות חיפושים בספוטיפיי</a></li>
                     <li><a href="https://tools-by-rotem.github.io/webtools/soundcloud-search-volume">כמות חיפושים בסאונדקלאוד </a></li>
-		    <li><a href="https://tools-by-rotem.github.io/webtools/competitors-traffic">חישוב תנועה לאתרי מתחרים </a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/competitors-traffic">חישוב תנועה לאתרי מתחרים </a></li>
                 </ul>
             </div>
             <div class="footer-section">
@@ -347,13 +335,13 @@ canvas {
                 <p>נגישות</p>
                 <ul>
                     <li><a href="https://tools-by-rotem.github.io/webtools/accessibility-toolbar">סרגל נגישות</a></li>
-		                <li><a href="https://tools-by-rotem.github.io/webtools/accessibility-checker">בדיקת נגישות לאתר אינטרנט</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/accessibility-checker">בדיקת נגישות לאתר אינטרנט</a></li>
                 </ul>
             </div>
             <div class="footer-section">
                 <p>שונות</p>
                 <ul>
-		    <li><a href="https://tools-by-rotem.github.io/webtools/time-zone-converter">ממיר זמן בינלאומי</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/time-zone-converter">ממיר זמן בינלאומי</a></li>
                     <li><a href="https://tools-by-rotem.github.io/webtools/navigation-links-generator">מחולל קישורי ניווט</a></li>
                     <li><a href="https://tools-by-rotem.github.io/webtools/reverse-typing-fix">תיקון הקלדה הפוכה</a></li>
                     <li><a href="https://tools-by-rotem.github.io/webtools/strong-password-generator">מחולל סיסמאות חזקות</a></li>
@@ -363,8 +351,8 @@ canvas {
             </div>
         </div>
         <div class="footer-bottom">
-    <p>© 2025 כל הזכויות שמורות לרותם קנון</p>
-	</div>
+            <p>© 2025 כל הזכויות שמורות לרותם קנון</p>
+        </div>
     </footer>
 		
     <script src="https://chir.ag/projects/ntc/ntc.js"></script>
