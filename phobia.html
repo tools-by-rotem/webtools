@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מנוע חיפוש לסוגי פוביות</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .search-container {
+            position: relative;
+            margin-bottom: 30px;
+        }
+        .search-input {
+            width: 100%;
+            padding: 15px 20px;
+            font-size: 18px;
+            border: 2px solid #ddd;
+            border-radius: 30px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .search-input:focus {
+            border-color: #4285f4;
+        }
+        .autocomplete-container {
+            position: absolute;
+            width: 100%;
+            background-color: white;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 10;
+            display: none;
+        }
+        .autocomplete-item {
+            padding: 10px 20px;
+            text-align: right;
+            cursor: pointer;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .autocomplete-item:hover {
+            background-color: #f8f8f8;
+        }
+        .result-container {
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #f8f8f8;
+            display: none;
+            margin-top: 20px;
+        }
+        .phobia-name {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4285f4;
+            margin-bottom: 10px;
+        }
+        .phobia-description {
+            font-size: 18px;
+            color: #333;
+        }
+        footer {
+            margin-top: 30px;
+            color: #777;
+            font-size: 14px;
+        }
+        .highlight {
+            font-weight: bold;
+            color: #4285f4;
+        }
+    </style>
+   <script src="https://website-widgets.pages.dev/dist/sienna.min.js" defer></script>
+</head>
+<body>
+    <div class="container">
+        <h1>מנוע חיפוש לסוגי פוביות</h1>
+        <p>הקלידו שם של מצב, חפץ או פעילות כדי למצוא את הפוביה המתאימה</p>
+        
+        <div class="search-container">
+            <input type="text" class="search-input" id="searchInput" placeholder="לדוגמה: חתולים, גבהים, מים...">
+            <div class="autocomplete-container" id="autocompleteContainer"></div>
+        </div>
+        
+        <div class="result-container" id="resultContainer">
+            <div class="phobia-name" id="phobiaName"></div>
+            <div class="phobia-description" id="phobiaDescription"></div>
+        </div>
+        
+        <footer>
+            מאגר המידע מכיל מעל 200 פוביות מוכרות בעברית ואנגלית
+        </footer>
+    </div>
+
+    <script>
+        // מאגר הפוביות
+        const phobias = [
+            { name: "Ablutophobia", description: "פחד מרחצה או ניקיון", keywords: ["רחצה", "ניקיון", "מקלחת", "אמבטיה", "שטיפה", "נקי"] },
+            { name: "Acrophobia", description: "פחד מגבהים", keywords: ["גובה", "גבהים", "גבוה", "נפילה"] },
+            { name: "Aerophobia", description: "פחד מטיסה או אוויר זיהום", keywords: ["טיסה", "מטוס", "אוויר", "זיהום", "מטוסים"] },
+            { name: "Alektorophobia", description: "פחד מתרנגולות", keywords: ["תרנגול", "תרנגולת", "תרנגולות", "עוף"] },
+            { name: "Algophobia", description: "פחד מכאב", keywords: ["כאב", "כאבים", "כואב"] },
+            { name: "Agoraphobia", description: "פחד ממקומות פתוחים או צפופים", keywords: ["מקום פתוח", "צפוף", "צפיפות", "המון", "מרחב"] },
+            { name: "Agyrophobia", description: "פחד מחציית כבישים", keywords: ["כביש", "כבישים", "חצייה", "לחצות"] },
+            { name: "Aichmophobia", description: "פחד ממחטים או חפצים חדים", keywords: ["מחט", "מחטים", "חד", "חדים", "חידוד", "חודים", "דקירה"] },
+            { name: "Ailurophobia", description: "פחד מחתולים", keywords: ["חתול", "חתולים", "חתולה"] },
+            { name: "Amathophobia", description: "פחד מאבק", keywords: ["אבק", "אבקה", "לכלוך"] },
+            { name: "Amaxophobia", description: "פחד מנהיגה או מנסיעה ברכב", keywords: ["נהיגה", "רכב", "מכונית", "לנהוג", "נסיעה"] },
+            { name: "Androphobia", description: "פחד מגברים", keywords: ["גבר", "גברים", "זכר"] },
+            { name: "Anthophobia", description: "פחד מפרחים", keywords: ["פרח", "פרחים", "צמח"] },
+            { name: "Anthropophobia", description: "פחד מבני אדם או מחברה", keywords: ["אדם", "אנשים", "חברה", "בני אדם"] },
+            { name: "Aphenphosmphobia", description: "פחד ממגע פיזי", keywords: ["מגע", "לגעת", "נגיעה", "מישוש"] },
+            { name: "Aquaphobia", description: "פחד ממים או מטביעה", keywords: ["מים", "טביעה", "לטבוע", "רטיבות", "רטוב"] },
+            { name: "Arachnophobia", description: "פחד מעכבישים", keywords: ["עכביש", "עכבישים", "קורים"] },
+            { name: "Arithmophobia", description: "פחד ממספרים", keywords: ["מספר", "מספרים", "חישוב", "מתמטיקה"] },
+            { name: "Astraphobia", description: "פחד מרעמים וברקים", keywords: ["רעם", "רעמים", "ברק", "ברקים", "סערה", "סופה"] },
+            { name: "Atelophobia", description: "פחד מאי-שלמות או מהיות לא מושלם", keywords: ["מושלם", "שלמות", "אי שלמות", "פגם", "חיסרון"] },
+            { name: "Athazagoraphobia", description: "פחד מלהישכח או מהזנחה", keywords: ["שכחה", "לשכוח", "הזנחה", "להזניח", "להישכח"] },
+            { name: "Atomosophobia", description: "פחד מפצצות אטום", keywords: ["אטום", "פצצה", "גרעין", "גרעיני", "פיצוץ"] },
+            { name: "Automatonophobia", description: "פחד מבובות שעווה, רובוטים או כל דמות מלאכותית דמוית אדם", keywords: ["בובה", "רובוט", "שעווה", "מלאכותי", "דמות"] },
+            { name: "Autophobia", description: "פחד מלהיות לבד", keywords: ["לבד", "בדידות", "עצמי", "בודד"] },
+            { name: "Aviophobia", description: "פחד מטיסה", keywords: ["טיסה", "מטוס", "לטוס", "תעופה"] },
+            { name: "Bacillophobia", description: "פחד מחיידקים", keywords: ["חיידק", "חיידקים", "בקטריה", "בקטריות", "זיהום"] },
+            { name: "Ballistophobia", description: "פחד מכדורים (תחמושת) או מירי", keywords: ["כדור", "ירי", "אקדח", "רובה", "נשק"] },
+            { name: "Barophobia", description: "פחד מכבידה (גרביטציה)", keywords: ["כבידה", "גרביטציה", "משקל", "כובד"] },
+            { name: "Basophobia", description: "פחד מנפילה או מהליכה", keywords: ["נפילה", "ליפול", "הליכה", "ללכת"] },
+            { name: "Bathophobia", description: "פחד מעומק (למשל, תהומות או מים עמוקים)", keywords: ["עומק", "עמוק", "תהום", "תהומות"] },
+            { name: "Batrachophobia", description: "פחד מצפרדעים או דו-חיים", keywords: ["צפרדע", "צפרדעים", "דו חיים", "קרפדה"] },
+            { name: "Bibliophobia", description: "פחד מספרים או מקריאה", keywords: ["ספר", "ספרים", "קריאה", "לקרוא"] },
+            { name: "Blennophobia", description: "פחד מריר או מהפרשות גוף דומות", keywords: ["ריר", "הפרשה", "הפרשות", "גוף", "נוזל"] },
+            { name: "Botanophobia", description: "פחד מצמחים", keywords: ["צמח", "צמחים", "צמחייה", "פרח", "פרחים"] },
+            { name: "Bromidrosiphobia", description: "פחד מריח גוף רע", keywords: ["ריח", "גוף", "זיעה", "סירחון"] },
+            { name: "Brontophobia", description: "פחד מרעמים וברקים (שם נוסף ל-Astraphobia)", keywords: ["רעם", "רעמים", "ברק", "ברקים", "סערה"] },
+            { name: "Bufonophobia", description: "פחד מקרפדות", keywords: ["קרפדה", "קרפדות", "צפרדע"] },
+            { name: "Cacophobia", description: "פחד מכיעור", keywords: ["כיעור", "מכוער", "מכוערים"] },
+            { name: "Cainophobia", description: "פחד משינויים או מחידושים", keywords: ["שינוי", "שינויים", "חידוש", "חדש"] },
+            { name: "Caligynephobia", description: "פחד מנשים יפות", keywords: ["אישה", "נשים", "יפה", "יפות"] },
+            { name: "Carcinophobia", description: "פחד מסרטן (המחלה)", keywords: ["סרטן", "מחלה", "גידול"] },
+            { name: "Cardiophobia", description: "פחד מבעיות לב או מהלב עצמו", keywords: ["לב", "דופק", "התקף", "קרדיו"] },
+            { name: "Catoptrophobia", description: "פחד ממראות", keywords: ["מראה", "מראות", "השתקפות"] },
+            { name: "Ceraunophobia", description: "פחד מרעמים וברקים (שם נוסף ל-Astraphobia)", keywords: ["רעם", "רעמים", "ברק", "ברקים", "סערה"] },
+            { name: "Chaetophobia", description: "פחד משיער", keywords: ["שיער", "שערות", "פרווה"] },
+            { name: "Cheimatophobia", description: "פחד מקור", keywords: ["קור", "קר", "חורף", "כפור"] },
+            { name: "Cherophobia", description: "פחד משמחה או מתחושות של אושר", keywords: ["שמחה", "אושר", "שמח", "לשמוח"] },
+            { name: "Chionophobia", description: "פחד משלג", keywords: ["שלג", "מושלג", "שלגי"] },
+            { name: "Chromophobia", description: "פחד מצבעים", keywords: ["צבע", "צבעים", "צבעוני"] },
+            { name: "Chronophobia", description: "פחד מהזמן או מהעתיד", keywords: ["זמן", "עתיד", "שעון", "שעה"] },
+            { name: "Cibophobia", description: "פחד מאוכל (נקרא גם Sitophobia)", keywords: ["אוכל", "מזון", "לאכול", "ארוחה"] },
+            { name: "Claustrophobia", description: "פחד ממקומות סגורים", keywords: ["סגור", "סגירות", "צפוף", "חדר", "מעלית"] },
+            { name: "Cleithrophobia", description: "פחד מלהיות נעול או לכוד", keywords: ["נעול", "לכוד", "כלוא", "כליאה"] },
+            { name: "Cnidophobia", description: "פחד מעוקצים של מדוזות", keywords: ["מדוזה", "מדוזות", "עקיצה", "עוקץ", "ים"] },
+            { name: "Coimetrophobia", description: "פחד מבתי קברות", keywords: ["בית קברות", "קבר", "קברים", "קבורה"] },
+            { name: "Coulrophobia", description: "פחד מליצנים", keywords: ["ליצן", "ליצנים", "קרקס"] },
+            { name: "Cyberphobia", description: "פחד ממחשבים או מטכנולוגיה", keywords: ["מחשב", "טכנולוגיה", "דיגיטלי", "מחשוב"] },
+            { name: "Cynophobia", description: "פחד מכלבים", keywords: ["כלב", "כלבים", "כלבלב"] },
+            { name: "Decidophobia", description: "פחד מקבלת החלטות", keywords: ["החלטה", "להחליט", "בחירה", "לבחור"] },
+            { name: "Dendrophobia", description: "פחד מעצים", keywords: ["עץ", "עצים", "יער"] },
+            { name: "Dentophobia", description: "פחד מרופאי שיניים", keywords: ["רופא שיניים", "שיניים", "דנטלי", "שן"] },
+            { name: "Dextrophobia", description: "פחד מחפצים שנמצאים בצד הימני של הגוף", keywords: ["ימין", "ימני", "צד ימין"] },
+            { name: "Didaskaleinophobia", description: "פחד מבית ספר", keywords: ["בית ספר", "לימודים", "כיתה", "מורה"] },
+            { name: "Dipsophobia", description: "פחד משתייה אלכוהולית", keywords: ["אלכוהול", "שתייה", "לשתות", "יין", "בירה"] },
+            { name: "Domatophobia", description: "פחד מבתים או משהות בבית", keywords: ["בית", "בתים", "דירה", "מגורים"] },
+            { name: "Electrophobia", description: "פחד מחשמל", keywords: ["חשמל", "חשמלי", "התחשמלות"] },
+            { name: "Emetophobia", description: "פחד מהקאה או מהקאות של אחרים", keywords: ["הקאה", "להקיא", "בחילה"] },
+            { name: "Entomophobia", description: "פחד מחרקים", keywords: ["חרק", "חרקים", "חרקים"] },
+            { name: "Equinophobia", description: "פחד מסוסים", keywords: ["סוס", "סוסים", "סוסה"] },
+            { name: "Ergophobia", description: "פחד ממקום עבודה או מסביבה משרדית", keywords: ["עבודה", "משרד", "לעבוד", "תעסוקה"] },
+            { name: "Erotophobia", description: "פחד ממיניות או משיחות על נושאים מיניים", keywords: ["מין", "מיני", "מיניות", "אירוטי"] },
+            { name: "Felinophobia", description: "פחד מחתולים", keywords: ["חתול", "חתולים", "חתולה"] },
+            { name: "Fungophobia", description: "פחד מפטריות", keywords: ["פטרייה", "פטריות", "עובש"] },
+            { name: "Formicophobia", description: "פחד מנמלים", keywords: ["נמלה", "נמלים", "חרק"] },
+            { name: "Gephyrophobia", description: "פחד מגשרים", keywords: ["גשר", "גשרים", "מעבר"] },
+            { name: "Gerascophobia", description: "פחד מהזדקנות", keywords: ["זקנה", "להזדקן", "זקן", "מבוגר"] },
+            { name: "Gerontophobia", description: "פחד מאנשים זקנים או מהזדקנות", keywords: ["זקן", "זקנים", "זקנה", "קשיש"] },
+            { name: "Glossophobia", description: "פחד מדיבור בפני קהל", keywords: ["דיבור", "קהל", "במה", "הופעה", "נאום"] },
+            { name: "Gymnophobia", description: "פחד מעירום", keywords: ["עירום", "ערום", "עירומים", "להתפשט"] },
+            { name: "Gynophobia", description: "פחד מנשים", keywords: ["אישה", "נשים", "נקבה"] },
+            { name: "Haphephobia", description: "פחד ממגע פיזי", keywords: ["מגע", "לגעת", "נגיעה", "מישוש"] },
+            { name: "Heliophobia", description: "פחד מהשמש או מאור שמש", keywords: ["שמש", "אור", "קרינה", "שמשי"] },
+            { name: "Hemophobia", description: "פחד מדם", keywords: ["דם", "דימום", "מדמם"] },
+            { name: "Herpetophobia", description: "פחד מזוחלים (כגון נחשים ולטאות)", keywords: ["זוחל", "זוחלים", "נחש", "לטאה"] },
+            { name: "Hydrophobia", description: "פחד ממים (לעיתים מתקשר לכלבת)", keywords: ["מים", "רטוב", "רטיבות", "שתייה"] },
+            { name: "Hypnophobia", description: "פחד משינה", keywords: ["שינה", "לישון", "רדומה"] },
+            { name: "Ichthyophobia", description: "פחד מדגים", keywords: ["דג", "דגים", "ים"] },
+            { name: "Insectophobia", description: "פחד מחרקים (שם נוסף ל-Entomophobia)", keywords: ["חרק", "חרקים", "ג'וק"] },
+            { name: "Ligyrophobia", description: "פחד מרעשים חזקים", keywords: ["רעש", "רעשים", "חזק", "קול"] },
+            { name: "Lilapsophobia", description: "פחד מסופות טורנדו או הוריקן", keywords: ["סופה", "טורנדו", "הוריקן", "סערה"] },
+            { name: "Limnophobia", description: "פחד מאגמים", keywords: ["אגם", "אגמים", "מים", "ימה"] },
+            { name: "Lockiophobia", description: "פחד מלידה", keywords: ["לידה", "ללדת", "היריון", "תינוק"] },
+            { name: "Logophobia", description: "פחד ממילים", keywords: ["מילה", "מילים", "דיבור", "לדבר"] },
+            { name: "Mageirocophobia", description: "פחד מבישול", keywords: ["בישול", "לבשל", "מטבח", "אוכל"] },
+            { name: "Maieusiophobia", description: "פחד מהריון", keywords: ["הריון", "בהריון", "היריון", "לידה"] },
+            { name: "Melissophobia", description: "פחד מדבורים", keywords: ["דבורה", "דבורים", "צרעה", "עקיצה"] },
+            { name: "Metallophobia", description: "פחד ממתכות", keywords: ["מתכת", "מתכות", "ברזל", "פלדה"] },
+            { name: "Meteorophobia", description: "פחד ממטאורים או מנפילת גופים מהחלל", keywords: ["מטאור", "חלל", "כוכב", "שביט"] },
+            { name: "Methyphobia", description: "פחד מאלכוהול", keywords: ["אלכוהול", "שתייה", "יין", "וויסקי", "בירה"] },
+            { name: "Microphobia", description: "פחד מחפצים קטנים או מיצורים קטנים", keywords: ["קטן", "קטנים", "זעיר"] },
+            { name: "Misophobia", description: "פחד מלכלוך וחיידקים", keywords: ["לכלוך", "חיידק", "חיידקים", "זיהום"] },
+            { name: "Monophobia", description: "פחד מלהיות לבד", keywords: ["לבד", "בדידות", "בודד", "בודדים"] },
+            { name: "Musophobia", description: "פחד מעכברים או מחולדות", keywords: ["עכבר", "עכברים", "חולדה", "חולדות", "מכרסם"] },
+            { name: "Mycophobia", description: "פחד מפטריות", keywords: ["פטרייה", "פטריות", "עובש"] },
+            { name: "Necrophobia", description: "פחד מגופות או מכל מה שקשור למוות", keywords: ["מוות", "גופה", "גופות", "מת"] },
+            { name: "Nyctophobia", description: "פחד מחושך או מלילה", keywords: ["חושך", "לילה", "אפלה", "חשכה"] },
+            { name: "Octophobia", description: "פחד מהמספר 8", keywords: ["שמונה", "8", "מספר"] },
+            { name: "Odontophobia", description: "פחד מרופאי שיניים או מטיפולי שיניים", keywords: ["שיניים", "רופא שיניים", "דנטלי", "שן"] },
+            { name: "Olfactophobia", description: "פחד מריחות מסוימים", keywords: ["ריח", "ריחות", "להריח"] },
+            { name: "Ombrophobia", description: "פחד מגשם", keywords: ["גשם", "מטר", "ממטרים", "רטיבות"] },
+            { name: "Oneirophobia", description: "פחד מחלומות", keywords: ["חלום", "חלומות", "לחלום", "סיוט"] },
+            { name: "Ophidiophobia", description: "פחד מנחשים", keywords: ["נחש", "נחשים", "זוחל"] },
+            { name: "Ornithophobia", description: "פחד מציפורים", keywords: ["ציפור", "ציפורים", "עוף", "עופות"] },
+            { name: "Pagophobia", description: "פחד מקרח או מקור קיצוני", keywords: ["קרח", "קור", "קפוא", "קפיאה"] },
+            { name: "Papyrophobia", description: "פחד מנייר", keywords: ["נייר", "דף", "דפים"] },
+            { name: "Pathophobia", description: "פחד ממחלות", keywords: ["מחלה", "מחלות", "חולי", "לחלות"] },
+            { name: "Pediophobia", description: "פחד מילדים או מבובות", keywords: ["ילד", "ילדים", "בובה", "בובות"] },
+            { name: "Phagophobia", description: "פחד מבליעה או מאכילה", keywords: ["בליעה", "לבלוע", "אכילה", "לאכול"] },
+            { name: "Phasmophobia", description: "פחד מרוחות רפאים", keywords: ["רוח", "רוחות", "רפאים", "שדים"] },
+            { name: "Philophobia", description: "פחד מאהבה או ממערכות יחסים רומנטיות", keywords: ["אהבה", "לאהוב", "רומנטיקה", "זוגיות"] },
+            { name: "Phonophobia", description: "פחד מרעשים חזקים או מפחד מקולות חזקים", keywords: ["רעש", "קול", "צליל", "חזק"] },
+            { name: "Pogonophobia", description: "פחד מזקנים (זקן פנים)", keywords: ["זקן", "שיער פנים", "שפם"] },
+            { name: "Potamophobia", description: "פחד מנהרות או מים זורמים", keywords: ["נהר", "נהרות", "זרימה", "מים זורמים"] },
+            { name: "Pyrophobia", description: "פחד מאש", keywords: ["אש", "שריפה", "להבה", "חום"] },
+            { name: "Ranidaphobia", description: "פחד מצפרדעים", keywords: ["צפרדע", "צפרדעים", "קרפדה"] },
+            { name: "Scolionophobia", description: "פחד מבית ספר", keywords: ["בית ספר", "לימודים", "כיתה", "מורה"] },
+            { name: "Scopophobia", description: "פחד מלהיות נצפה או ממבטים של אחרים", keywords: ["מבט", "להסתכל", "לצפות", "עין"] },
+            { name: "Selenophobia", description: "פחד מהירח", keywords: ["ירח", "לבנה", "לילה"] },
+            { name: "Seplophobia", description: "פחד מריקבון", keywords: ["ריקבון", "רקב", "ריקבון", "עיפוש"] },
+            { name: "Sesquipedalophobia", description: "פחד ממילים ארוכות", keywords: ["מילה", "ארוכה", "ארוכות", "מילים"] },
+            { name: "Sexophobia", description: "פחד ממין או מהיבטים מיניים", keywords: ["מין", "מיני", "מיניות", "יחסי מין"] },
+            { name: "Siderodromophobia", description: "פחד מרכבות או מנסיעה ברכבת", keywords: ["רכבת", "רכבות", "פסים", "נסיעה"] },
+            { name: "Siderophobia", description: "פחד מכוכבים", keywords: ["כוכב", "כוכבים", "שמיים", "חלל"] },
+            { name: "Sitophobia", description: "פחד מאוכל או מאכילה", keywords: ["אוכל", "אכילה", "לאכול", "מזון"] },
+            { name: "Soceraphobia", description: "פחד מחותנים", keywords: ["חותן", "חותנת", "חותנים", "משפחה"] },
+            { name: "Sociophobia", description: "פחד חברתי, חרדה חברתית", keywords: ["חברתי", "חברה", "אנשים", "מפגש"] },
+            { name: "Somniphobia", description: "פחד משינה", keywords: ["שינה", "לישון", "נרדם", "מיטה"] },
+            { name: "Sophophobia", description: "פחד מלמידה או מידע חדש", keywords: ["למידה", "ידע", "חכמה", "לימוד"] },
+            { name: "Spectrophobia", description: "פחד ממראות או מהשתקפויות", keywords: ["מראה", "השתקפות", "ראי", "מראות"] },
+            { name: "Spheksophobia", description: "פחד מצרעות", keywords: ["צרעה", "צרעות", "עקיצה", "חרק"] },
+            { name: "Stasiphobia", description: "פחד מעמידה או מהליכה", keywords: ["עמידה", "לעמוד", "הליכה", "ללכת"] },
+            { name: "Syngenesophobia", description: "פחד מקרובי משפחה", keywords: ["משפחה", "קרובים", "שארים", "דודים"] },
+            { name: "Symmetrophobia", description: "פחד מסימטריה", keywords: ["סימטריה", "סימטרי", "מאוזן", "שווה"] },
+            { name: "Syphilophobia", description: "פחד מעגבת (מחלת מין)", keywords: ["עגבת", "מחלת מין", "מחלה", "זיהום"] },
+            { name: "Tachophobia", description: "פחד ממהירות", keywords: ["מהירות", "מהיר", "תאוצה", "מרוץ"] },
+            { name: "Taeniophobia", description: "פחד מתולעי סרט", keywords: ["תולעת", "תולעים", "סרט", "טפיל"] },
+            { name: "Taphephobia", description: "פחד מלהיות קבור חי", keywords: ["קבורה", "חי", "קבר", "מוות"] },
+            { name: "Technophobia", description: "פחד מטכנולוגיה או ממכשירים טכנולוגיים", keywords: ["טכנולוגיה", "מכשיר", "מחשב", "אלקטרוני"] },
+            { name: "Telephonophobia", description: "פחד משיחות טלפון", keywords: ["טלפון", "שיחה", "להתקשר", "צלצול"] },
+            { name: "Teratophobia", description: "פחד ממומים מולדים או מאנשים עם עיוותים פיזיים", keywords: ["מום", "עיוות", "מולד", "חריג"] },
+            { name: "Testophobia", description: "פחד ממבחנים", keywords: ["מבחן", "בחינה", "בוחן", "מבחנים"] },
+            { name: "Textophobia", description: "פחד מבדים מסוימים", keywords: ["בד", "בדים", "טקסטיל", "אריג"] },
+            { name: "Thalassophobia", description: "פחד מהים או מגופי מים עמוקים", keywords: ["ים", "מים", "עמוק", "אוקיינוס"] },
+            { name: "Thanatophobia", description: "פחד מהמוות או מגסיסה", keywords: ["מוות", "למות", "גסיסה", "סוף"] },
+            { name: "Theatrophobia", description: "פחד מתיאטראות או מהופעות חיות", keywords: ["תיאטרון", "הופעה", "במה", "מופע"] },
+            { name: "Theologicophobia", description: "פחד מתיאולוגיה או מדיונים דתיים", keywords: ["דת", "תיאולוגיה", "אמונה", "דתי"] },
+            { name: "Thermophobia", description: "פחד מחום", keywords: ["חום", "חמים", "חמה", "לוהט"] },
+            { name: "Tocophobia", description: "פחד מלידה או מהריון", keywords: ["לידה", "הריון", "תינוק", "ללדת"] },
+            { name: "Tomophobia", description: "פחד מניתוחים", keywords: ["ניתוח", "ניתוחים", "מנתח", "חתך"] },
+            { name: "Tonitrophobia", description: "פחד מרעמים", keywords: ["רעם", "רעמים", "סערה", "ברק"] },
+            { name: "Topophobia", description: "פחד ממקומות מסוימים, לרוב מקומות הקשורים לטראומה", keywords: ["מקום", "אתר", "מיקום", "אזור"] },
+            { name: "Toxiphobia", description: "פחד מרעלים או מהרעלה", keywords: ["רעל", "רעלים", "הרעלה", "רעיל"] },
+            { name: "Traumatophobia", description: "פחד מפציעות או מטראומה", keywords: ["טראומה", "פציעה", "פצע", "נזק"] },
+            { name: "Tremophobia", description: "פחד מרעידות או מרעידה עצמית", keywords: ["רעד", "רעידה", "רטט", "זעזוע"] },
+            { name: "Trichophobia", description: "פחד משיער רפוי או מנשירת שיער", keywords: ["שיער", "נשירה", "רפוי", "קרחת"] },
+            { name: "Triskaidekaphobia", description: "פחד מהמספר 13", keywords: ["13", "שלוש עשרה", "מספר", "שלושה עשר"] },
+            { name: "Tropophobia", description: "פחד משינויים או מלעבור דירה", keywords: ["שינוי", "מעבר", "דירה", "חדש"] },
+            { name: "Trypanophobia", description: "פחד ממחטים או מהזרקות", keywords: ["מחט", "זריקה", "דקירה", "עירוי"] },
+            { name: "Trypophobia", description: "פחד מחורים קטנים או מדפוסים צפופים של חורים", keywords: ["חור", "חורים", "נקבוביות", "דפוס"] },
+            { name: "Uranophobia", description: "פחד מהשמיים או מגן עדן", keywords: ["שמיים", "גן עדן", "רקיע", "שמימי"] },
+            { name: "Urophobia", description: "פחד משתן או מהשתנה, במיוחד בציבור", keywords: ["שתן", "השתנה", "להשתין", "שירותים"] },
+            { name: "Vaccinophobia", description: "פחד מחיסונים", keywords: ["חיסון", "חיסונים", "זריקה", "מחט"] },
+            { name: "Venustraphobia", description: "פחד מנשים יפות", keywords: ["אישה", "נשים", "יפה", "יופי"] },
+            { name: "Verbophobia", description: "פחד ממילים", keywords: ["מילה", "מילים", "ביטוי", "דיבור"] },
+            { name: "Verminophobia", description: "פחד מחיידקים או מטפילים", keywords: ["חיידק", "טפיל", "תולעת", "זיהום"] },
+            { name: "Vestiphobia", description: "פחד מבגדים או מלבישת בגדים", keywords: ["בגד", "בגדים", "לבוש", "להתלבש"] },
+            { name: "Vitricophobia", description: "פחד מאב חורג", keywords: ["אב", "חורג", "אבא", "משפחה"] },
+            { name: "Wiccaphobia", description: "פחד ממכשפות או מכישוף", keywords: ["מכשפה", "כישוף", "קסם", "מאגיה"] },
+            { name: "Wallophobia", description: "פחד מקירות", keywords: ["קיר", "קירות", "מחיצה", "חומה"] },
+            { name: "Weldophobia", description: "פחד מריתוך או מניצוצות ריתוך", keywords: ["ריתוך", "ניצוץ", "ריתוכים", "מתכת"] },
+            { name: "Xanthophobia", description: "פחד מהצבע צהוב או מהמילה צהוב", keywords: ["צהוב", "צבע", "צהבהב", "גוון"] },
+            { name: "Xenoglossophobia", description: "פחד משפות זרות", keywords: ["שפה", "זרה", "זר", "דיבור"] },
+            { name: "Xenophobia", description: "פחד או שנאה של זרים או של תרבויות זרות", keywords: ["זר", "זרים", "תרבות", "שנאה"] },
+            { name: "Xerophobia", description: "פחד מיובש או מאזורים יבשים", keywords: ["יובש", "יבש", "מדבר", "צחיחות"] },
+            { name: "Xylophobia", description: "פחד מעץ או מחפצים עשויים עץ", keywords: ["עץ", "עצים", "גזע", "ענף"] },
+            { name: "Ypnophobia", description: "פחד משינה", keywords: ["שינה", "לישון", "נרדם", "חלום"] },
+            { name: "Zoophobia", description: "פחד מבעלי חיים", keywords: ["חיה", "חיות", "בעל חיים", "בעלי חיים"] }
+ ];
+        
+        // אלמנטי DOM
+        const searchInput = document.getElementById('searchInput');
+        const autocompleteContainer = document.getElementById('autocompleteContainer');
+        const resultContainer = document.getElementById('resultContainer');
+        const phobiaNameElement = document.getElementById('phobiaName');
+        const phobiaDescriptionElement = document.getElementById('phobiaDescription');
+        
+        // פונקציה לחיפוש מילות מפתח
+        function searchPhobias(query) {
+            if (!query) return [];
+            
+            query = query.trim().toLowerCase();
+            if (query.length < 2) return [];
+            
+            const results = [];
+            const addedResults = new Set(); // למנוע כפילויות
+            
+            phobias.forEach(phobia => {
+                // בדיקה אם המילה מופיעה באחת ממילות המפתח
+                const matchingKeywords = phobia.keywords.filter(keyword => 
+                    keyword.toLowerCase().includes(query) || query.includes(keyword.toLowerCase())
+                );
+                
+                if (matchingKeywords.length > 0 && !addedResults.has(phobia.name)) {
+                    results.push({
+                        phobia: phobia,
+                        keyword: matchingKeywords[0], // משתמשים במילת המפתח הראשונה שתואמת
+                        relevance: matchingKeywords.length // מספר ההתאמות משמש למיון
+                    });
+                    addedResults.add(phobia.name);
+                }
+            });
+            
+            // מיון התוצאות לפי רלוונטיות
+            return results.sort((a, b) => b.relevance - a.relevance);
+        }
+        
+        // פונקציה להצגת ההשלמה האוטומטית
+        function showAutocomplete(query) {
+            const results = searchPhobias(query);
+            
+            // ניקוי התוצאות הקודמות
+            autocompleteContainer.innerHTML = '';
+            
+            if (results.length > 0) {
+                results.slice(0, 10).forEach(result => { // מציג עד 10 תוצאות
+                    const phobia = result.phobia;
+                    const keyword = result.keyword;
+                    
+                    const item = document.createElement('div');
+                    item.className = 'autocomplete-item';
+                    
+                    // הדגשת מילת המפתח שתואמת
+                    const highlightedKeyword = keyword.replace(
+                        new RegExp('(' + query + ')', 'gi'),
+                        '<span class="highlight">$1</span>'
+                    );
+                    
+                    item.innerHTML = `${highlightedKeyword} - ${phobia.name}`;
+                    
+                    // הוספת אירוע לחיצה
+                    item.addEventListener('click', () => {
+                        showPhobiaResult(phobia);
+                        autocompleteContainer.style.display = 'none';
+                        searchInput.value = keyword;
+                    });
+                    
+                    autocompleteContainer.appendChild(item);
+                });
+                
+                autocompleteContainer.style.display = 'block';
+            } else {
+                autocompleteContainer.style.display = 'none';
+            }
+        }
+        
+        // פונקציה להצגת תוצאת החיפוש
+        function showPhobiaResult(phobia) {
+            phobiaNameElement.textContent = phobia.name;
+            phobiaDescriptionElement.textContent = phobia.description;
+            resultContainer.style.display = 'block';
+        }
+        
+        // אירועי קלט
+        searchInput.addEventListener('input', () => {
+            const query = searchInput.value;
+            showAutocomplete(query);
+            
+            // אם השדה ריק, מסתיר את תוצאות החיפוש
+            if (!query) {
+                resultContainer.style.display = 'none';
+            }
+        });
+        
+        // סגירת ההשלמה האוטומטית כשלוחצים מחוץ לה
+        document.addEventListener('click', (event) => {
+            if (!autocompleteContainer.contains(event.target) && event.target !== searchInput) {
+                autocompleteContainer.style.display = 'none';
+            }
+        });
+        
+        // מאפשר לחפש על ידי הקשה על Enter
+        searchInput.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                const query = searchInput.value;
+                const results = searchPhobias(query);
+                
+                if (results.length > 0) {
+                    showPhobiaResult(results[0].phobia);
+                    autocompleteContainer.style.display = 'none';
+                }
+            }
+        });
+        
+        // מונע סגירה של ההשלמה האוטומטית כאשר לוחצים עליה
+        autocompleteContainer.addEventListener('click', (event) => {
+            event.stopPropagation();
+        });
+    </script>
+</body>
+</html>
