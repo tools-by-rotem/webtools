@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>בדיקת Open Graph - כך העמוד מופיע בסושיאל | Tools by Rotem</title>
+    <meta name="description" content="בדקו כיצד רשתות חברתיות מציגות את עמודי האתר שלכם - התמונה הראשית הנבחרת, כותרת ותיאור העמוד, הכתובת הקנונית והרכיבים הגולמיים. בדקו את פרטי ה-Open Graph >>>">
+    <link rel="canonical" href="https://tools-by-rotem.github.io/webtools/open-graph-checker" />
+    <link rel="icon" type="image/x-icon" href="/webtools/site-favicon.ico">
+    <style>
+        :root {
+            --primary-color: #4a6ee0;
+            --secondary-color: #6c8ff8;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f4f7fc;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .description {
+            margin-bottom: 20px;
+            text-align: center;
+            color: var(--dark-color);
+        }
+
+        .input-group {
+    display: flex;
+    flex-direction: column; /* שורות אחת מעל השנייה */
+    align-items: center; /* ממרכז את התוכן */
+    margin-bottom: 10px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+/* הוסף סגנון לכפתור שהוא מתחת לשורת החיפוש */
+.input-group {
+    display: block;
+    margin-bottom: 10px;
+    text-align: center; /* ממרכז את התוכן */
+}
+
+.check-button {
+    display: inline-block; /* מאפשר לכפתור להיות ממורכז */
+    width: auto; /* מאפשר לרוחב להיות לפי התוכן */
+    padding: 12px 20px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: background-color 0.3s;
+    margin-bottom: 20px;
+    margin-top: 10px;
+}
+
+.check-button:hover {
+    background-color: var(--secondary-color);
+}
+
+
+        .result {
+            margin-top: 20px;
+            display: none;
+        }
+
+        .result.show {
+            display: block;
+        }
+
+        .preview-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .preview-image {
+            width: 100%;
+            height: 300px;
+            background-size: cover;
+            background-position: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .preview-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .preview-content {
+            padding: 15px;
+        }
+
+        .preview-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .preview-description {
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .preview-url {
+            color: #999;
+            font-size: 14px;
+        }
+
+        .raw-data {
+            margin-top: 20px;
+            background-color: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+        }
+
+        .raw-data h3 {
+            margin-bottom: 10px;
+        }
+
+        .raw-data pre {
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .tag-list {
+            margin-top: 20px;
+        }
+
+        .tag-list h3 {
+            margin-bottom: 10px;
+        }
+
+        .tag {
+            display: flex;
+            padding: 8px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .tag:last-child {
+            border-bottom: none;
+        }
+
+        .tag-name {
+            font-weight: bold;
+            width: 120px;
+            flex-shrink: 0;
+        }
+
+        .tag-value {
+            flex: 1;
+            word-break: break-all;
+        }
+
+        .error {
+            background-color: var(--danger-color);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .loading {
+            text-align: center;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid var(--primary-color);
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .recommendations {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: rgb(240, 249, 255);
+            border-radius: 5px;
+            border-right: 4px solid var(--primary-color);
+        }
+
+        .recommendations h3 {
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+
+        .recommendations ul {
+            padding-right: 20px;
+        }
+
+        .recommendations li {
+            margin-bottom: 5px;
+        }
+
+        .missing {
+            color: var(--danger-color);
+        }
+
+        .found {
+            color: var(--success-color);
+        }
+        .placeholder-rtl::placeholder {
+        direction: rtl;
+        text-align: right;
+        }
+    
+        .placeholder-rtl {
+        direction: ltr;
+        text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>בודק Open Graph</h1>
+        <p class="description">הזינו כתובת URL כדי לבדוק את תגיות ה-Open Graph של האתר</p>
+        
+        <div class="input-group">
+    <input type="url" id="url-input" placeholder="הזינו כתובת אתר" dir="ltr" class="placeholder-rtl">
+    <button id="check-button" class="check-button">בדיקה</button>
+    </div>
+        
+        <div id="error-message" class="error" style="display: none;"></div>
+        
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p>טוען נתונים...</p>
+        </div>
+        
+        <div id="result" class="result">
+            <h2>תצוגה מקדימה</h2>
+            <div class="preview-card">
+                <div class="preview-image">
+                    <img id="preview-img" src="/api/placeholder/800/400" alt="תמונת Open Graph">
+                </div>
+                <div class="preview-content">
+                    <div id="preview-title" class="preview-title">כותרת הדף</div>
+                    <div id="preview-description" class="preview-description">תיאור הדף</div>
+                    <div id="preview-url" class="preview-url">domain.com</div>
+                </div>
+            </div>
+            
+            <div class="recommendations" id="recommendations">
+                <h3>המלצות לשיפור</h3>
+                <ul id="recommendations-list"></ul>
+            </div>
+            
+            <div class="tag-list">
+                <h3>תגיות Open Graph שנמצאו</h3>
+                <div id="tags-container"></div>
+            </div>
+            
+            <div class="raw-data">
+                <h3>נתונים גולמיים</h3>
+                <pre id="raw-data-content"></pre>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+    const urlInput = document.getElementById('url-input');
+    const checkButton = document.getElementById('check-button');
+    const resultContainer = document.getElementById('result');
+    const errorMessage = document.getElementById('error-message');
+    const loading = document.getElementById('loading');
+    const rawDataContent = document.getElementById('raw-data-content');
+    const tagsContainer = document.getElementById('tags-container');
+    const recommendationsList = document.getElementById('recommendations-list');
+    
+    // Preview elements
+    const previewImg = document.getElementById('preview-img');
+    const previewTitle = document.getElementById('preview-title');
+    const previewDescription = document.getElementById('preview-description');
+    const previewUrl = document.getElementById('preview-url');
+    
+    // Using a CORS proxy to fetch the HTML content
+    const corsProxy = 'https://api.allorigins.win/get?url=';
+    
+    checkButton.addEventListener('click', checkOpenGraph);
+    urlInput.addEventListener('keypress', function(event) {
+        if (event.key === 'Enter') {
+            checkOpenGraph();
+        }
+    });
+    
+    function checkOpenGraph() {
+        const url = urlInput.value.trim();
+        
+        if (!url) {
+            showError('אנא הכנס כתובת URL');
+            return;
+        }
+        
+        if (!isValidURL(url)) {
+            showError('אנא הכנס כתובת URL תקינה');
+            return;
+        }
+        
+        // Reset UI
+        resultContainer.classList.remove('show');
+        errorMessage.style.display = 'none';
+        loading.style.display = 'block';
+        
+        // Fetch the URL content
+        fetch(corsProxy + encodeURIComponent(url))
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('נכשל בטעינת הדף');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const htmlContent = data.contents;
+                parseOpenGraph(htmlContent, url);
+                loading.style.display = 'none';
+                resultContainer.classList.add('show');
+            })
+            .catch(error => {
+                loading.style.display = 'none';
+                showError('שגיאה בטעינת הדף: ' + error.message);
+            });
+    }
+    
+    function parseOpenGraph(htmlContent, pageUrl) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(htmlContent, 'text/html');
+        
+        // Get all meta tags
+        const metaTags = doc.querySelectorAll('meta');
+        
+        // Extract Open Graph data
+        const ogData = {
+            'og:title': getMetaContent(metaTags, 'og:title'),
+            'og:description': getMetaContent(metaTags, 'og:description'),
+            'og:image': getMetaContent(metaTags, 'og:image'),
+            'og:url': getMetaContent(metaTags, 'og:url'),
+            'og:type': getMetaContent(metaTags, 'og:type'),
+            'og:site_name': getMetaContent(metaTags, 'og:site_name')
+        };
+        
+        // Extract Twitter Card data
+        const twitterData = {
+            'twitter:card': getMetaContent(metaTags, 'twitter:card'),
+            'twitter:site': getMetaContent(metaTags, 'twitter:site'),
+            'twitter:title': getMetaContent(metaTags, 'twitter:title'),
+            'twitter:description': getMetaContent(metaTags, 'twitter:description'),
+            'twitter:image': getMetaContent(metaTags, 'twitter:image')
+        };
+        
+        // Fallback to standard HTML tags
+        const fallbackData = {
+            'title': doc.title || '',
+            'description': getMetaContent(metaTags, 'description'),
+            'canonical': getCanonicalUrl(doc)
+        };
+        
+        // Combine all data
+        const allData = {
+            'Open Graph': ogData,
+            'Twitter Card': twitterData,
+            'Standard HTML': fallbackData
+        };
+        
+        // Update the raw data display
+        rawDataContent.textContent = JSON.stringify(allData, null, 2);
+        
+        // Update the tags display
+        updateTagsDisplay(allData);
+        
+        // Update the preview
+        updatePreview(allData, pageUrl);
+        
+        // Show recommendations
+        showRecommendations(allData);
+    }
+    
+    function getMetaContent(metaTags, property) {
+        for (const tag of metaTags) {
+            const propertyAttr = tag.getAttribute('property') || tag.getAttribute('name');
+            if (propertyAttr === property) {
+                return tag.getAttribute('content') || '';
+            }
+        }
+        return '';
+    }
+    
+    function getCanonicalUrl(doc) {
+        const canonicalLink = doc.querySelector('link[rel="canonical"]');
+        return canonicalLink ? canonicalLink.getAttribute('href') : '';
+    }
+    
+    // פונקציות חדשות שהוספתי
+    
+    function updatePreview(data, pageUrl) {
+        // נסה להשתמש בתמונת OG, אם לא קיימת השתמש בתמונת Twitter
+        const imageUrl = data['Open Graph']['og:image'] || data['Twitter Card']['twitter:image'] || '/api/placeholder/800/400';
+        previewImg.src = imageUrl;
+        previewImg.onerror = function() {
+            this.src = '/api/placeholder/800/400';
+        };
+        
+        // שם האתר וכותרת
+        const title = data['Open Graph']['og:title'] || data['Twitter Card']['twitter:title'] || data['Standard HTML']['title'] || 'אין כותרת';
+        previewTitle.textContent = title;
+        
+        // תיאור
+        const description = data['Open Graph']['og:description'] || data['Twitter Card']['twitter:description'] || data['Standard HTML']['description'] || 'אין תיאור';
+        previewDescription.textContent = description;
+        
+        // URL
+        const url = data['Open Graph']['og:url'] || data['Standard HTML']['canonical'] || pageUrl;
+        const domain = extractDomain(url);
+        previewUrl.textContent = domain;
+    }
+    
+    function extractDomain(url) {
+        try {
+            const urlObj = new URL(url);
+            return urlObj.hostname;
+        } catch (e) {
+            return url;
+        }
+    }
+    
+    function showRecommendations(data) {
+        recommendationsList.innerHTML = '';
+        const recommendations = [];
+        
+        // בדוק את תגיות ה-OG העיקריות
+        if (!data['Open Graph']['og:title']) {
+            recommendations.push('<span class="missing">חסר:</span> תגית og:title - חשוב לשיתוף תוכן');
+        } else {
+            recommendations.push('<span class="found">נמצא:</span> תגית og:title');
+        }
+        
+        if (!data['Open Graph']['og:description']) {
+            recommendations.push('<span class="missing">חסר:</span> תגית og:description - חשוב לשיתוף תוכן');
+        } else {
+            recommendations.push('<span class="found">נמצא:</span> תגית og:description');
+        }
+        
+        if (!data['Open Graph']['og:image']) {
+            recommendations.push('<span class="missing">חסר:</span> תגית og:image - חשוב לשיתוף תוכן');
+        } else {
+            recommendations.push('<span class="found">נמצא:</span> תגית og:image');
+        }
+        
+        if (!data['Open Graph']['og:url']) {
+            recommendations.push('<span class="missing">חסר:</span> תגית og:url - חשוב לשיתוף תוכן');
+        } else {
+            recommendations.push('<span class="found">נמצא:</span> תגית og:url');
+        }
+        
+        // בדוק את תגיות Twitter
+        if (!data['Twitter Card']['twitter:card']) {
+            recommendations.push('<span class="missing">חסר:</span> תגית twitter:card - חשוב לשיתוף בטוויטר');
+        } else {
+            recommendations.push('<span class="found">נמצא:</span> תגית twitter:card');
+        }
+        
+        // הוסף המלצות לרשימה
+        recommendations.forEach(rec => {
+            const li = document.createElement('li');
+            li.innerHTML = rec;
+            recommendationsList.appendChild(li);
+        });
+    }
+    
+    function showError(message) {
+        errorMessage.textContent = message;
+        errorMessage.style.display = 'block';
+        loading.style.display = 'none';
+        resultContainer.classList.remove('show');
+    }
+    
+    function isValidURL(url) {
+        try {
+            new URL(url);
+            return true;
+        } catch (e) {
+            return false;
+        }
+    }
+    
+    function updateTagsDisplay(data) {
+        tagsContainer.innerHTML = '';
+        
+        for (const category in data) {
+            const categoryData = data[category];
+            
+            for (const tagName in categoryData) {
+                const tagValue = categoryData[tagName];
+                
+                if (tagValue) {
+                    const tagElement = document.createElement('div');
+                    tagElement.className = 'tag';
+                    
+                    const nameElement = document.createElement('div');
+                    nameElement.className = 'tag-name';
+                    nameElement.textContent = `${tagName}:`;
+                    
+                    const valueElement = document.createElement('div');
+                    valueElement.className = 'tag-value';
+                    valueElement.textContent = tagValue;
+                    
+                    tagElement.appendChild(nameElement);
+                    tagElement.appendChild(valueElement);
+                    tagsContainer.appendChild(tagElement);
+                }
+            }
+        }
+        
+        if (tagsContainer.children.length === 0) {
+            tagsContainer.innerHTML = '<p>לא נמצאו תגיות Open Graph</p>';
+        }
+    }
+ });
+</script>
+</body>
+</html>
