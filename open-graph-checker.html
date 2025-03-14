@@ -27,7 +27,6 @@
         body {
             background-color: #f4f7fc;
             line-height: 1.6;
-            padding: 20px;
         }
 
         .container {
@@ -52,45 +51,44 @@
         }
 
         .input-group {
-    display: flex;
-    flex-direction: column; /* שורות אחת מעל השנייה */
-    align-items: center; /* ממרכז את התוכן */
-    margin-bottom: 10px;
-}
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 10px;
+        }
 
-.input-group input {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 16px;
-}
+        .input-group input {
+           width: 100%;
+           padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
 
-/* הוסף סגנון לכפתור שהוא מתחת לשורת החיפוש */
-.input-group {
-    display: block;
-    margin-bottom: 10px;
-    text-align: center; /* ממרכז את התוכן */
-}
+        .input-group {
+            display: block;
+            margin-bottom: 10px;
+            text-align: center;
+        }
 
-.check-button {
-    display: inline-block; /* מאפשר לכפתור להיות ממורכז */
-    width: auto; /* מאפשר לרוחב להיות לפי התוכן */
-    padding: 12px 20px;
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-    font-size: 16px;
-    transition: background-color 0.3s;
-    margin-bottom: 20px;
-    margin-top: 10px;
-}
+        .check-button {
+           display: inline-block;
+            width: auto;
+            padding: 12px 20px;
+            background-color: var(--primary-color);
+           color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+           transition: background-color 0.3s;
+           margin-bottom: 20px;
+           margin-top: 10px;
+        }
 
-.check-button:hover {
-    background-color: var(--secondary-color);
-}
+        .check-button:hover {
+           background-color: var(--secondary-color);
+        }
 
 
         .result {
@@ -213,6 +211,157 @@
             animation: spin 1s linear infinite;
             margin: 0 auto;
         }
+        .main-header {
+            background-color: #2d3436;
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            margin: 0;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 60px;
+            width: auto;
+            display: block;
+        }
+        .main-footer {
+            background-color: #2d3436;
+            color: white;
+            padding: 3rem 0 1.5rem;
+            margin: 4rem 0 0 0;
+            direction: rtl;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .footer-section h3 {
+            color: white;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .footer-section p {
+            text-align: center;
+            margin-bottom: 1rem;
+            font-weight: bold;
+        }
+
+        .footer-section ul {
+            list-style: none;
+            text-align: center;
+            padding: 0;
+            margin: 0;
+            width: 100%;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .footer-section a {
+            color: #ddd;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: #0984e3;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-right: -4px;
+        }
+
+        .social-icons img {
+            width: 24px;
+            height: 24px;
+            transition: opacity 0.3s ease;
+            margin-right: -4px;
+        }
+
+        .social-icons a:hover img {
+            opacity: 0.8;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #444;
+        }
+        .article-content {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            direction: rtl;
+            text-align: right;
+        }
+
+        .article-content h2 {
+            color: #2d3436;
+            margin: 1.5rem 0 1rem;
+            text-align: right;
+        }
+
+        .article-content ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 1rem 0;
+            text-align: right;
+        }
+
+        .article-content li {
+            margin: 0.5rem 0;
+            padding-right: 1.5rem;
+            position: relative;
+            text-align: right;
+        }
+
+        .article-content li::before {
+            content: "•";
+            position: absolute;
+            right: 0;
+            color: #0984e3;
+        }
+
+        .article-content p {
+            margin: 1rem 0;
+            line-height: 1.8;
+            text-align: right;
+        }
 
         @keyframes spin {
             0% { transform: rotate(0deg); }
@@ -257,10 +406,19 @@
         text-align: left;
         }
     </style>
+    <script src="https://website-widgets.pages.dev/dist/sienna.min.js" defer></script>
 </head>
 <body>
+  <header class="main-header">
+        <div class="header-container">
+            <a href="https://tools-by-rotem.github.io/webtools/" class="logo">
+                <img src="https://tools-by-rotem.github.io/webtools/site-logo.png" alt="רותם קנון לוגו">
+            </a>
+        </div>
+    </header>
+    
     <div class="container">
-        <h1>בודק Open Graph</h1>
+        <h1>בדיקת Open Graph</h1>
         <p class="description">הזינו כתובת URL כדי לבדוק את תגיות ה-Open Graph של האתר</p>
         
         <div class="input-group">
@@ -304,6 +462,119 @@
             </div>
         </div>
     </div>
+    
+    <article class="article-content">
+            <h2>איך להשתמש בכלי בדיקת Open Graph?</h2>
+            <p>כלי הבדיקה להימצאות Open Graph הוא כלי קל לשימוש לבחינת נראות רכיבי העמוד כאשר הם משותפים ברשתות החברתיות. כדי להתחיל:</p>
+            <ul>
+            <li><strong>הזינו את כתובת העמוד</strong>: הזינו את כתובת ה-url של העמוד אותו תרצו לבדוק.</li>
+                <li><strong>הרצת הבדיקה</strong>: לחצו על כפתור “בדיקה” וראו כיצד הכלי אוסף את הנתונים..</li>
+                <li><strong>בחנו את הנתונים</strong>: בסיום הטעינה, הכלי יספק תצוגה מקדימה ואת רכיבי ה-Open Graph של העמוד.</li>
+            </ul>
+
+            <h2>מה זה Open Graph ולמה הוא חשוב לאתר שלכם</h2>
+            <p>אם אי פעם שיתפתם לינק בפייסבוק, וואטסאפ או טוויטר ושמת לב שהוא מציג תמונה, כותרת ותיאור – אז Open Graph עבד בשבילכם. אבל מה זה בעצם Open Graph ולמה הוא כזה חשוב לכל בעל אתר?
+<br>
+פרוטוקול Open Graph (OG) הוא תקן שפותח על ידי פייסבוק ומאפשר לשלוט איך דף אינטרנט מוצג כאשר משתפים אותו ברשתות חברתיות. במקום שרשתות חברתיות ינסו לנחש את הכותרת והתמונה מתוך העמוד, Open Graph מאפשר לכם להגדיר בדיוק את מה שיוצג.</p>
+
+            <h2>איך שימוש ב-Open Graph תורם לאתר שלכם?</h2>
+            <h3>תצוגה אטרקטיבית</h3>
+            <p>כאשר מישהו משתף עמוד מהאתר שלכם, Open Graph מבטיח שהתמונה תוצג בצורה נכונה, שהכותרת תהיה מושכת, ושאנשים יבינו במה מדובר כבר מהתצוגה המקדימה.</p>
+
+            <h3>שליטה בתוכן המוצג</h3> 
+<p>בלי Open Graph, פלטפורמות חברתיות עשויות לבחור טקסט אקראי מהעמוד, תמונה לא קשורה או אפילו להשאיר את התצוגה ריקה. עם Open Graph, אתם מגדירים בדיוק מה יוצג וכך מונע תצוגות מבולגנות או לא מקצועיות.</p>
+
+            <h3>שיפור CTR (שיעור הקלקה)</h3>
+            <p>תמונה איכותית + כותרת מדויקת + תיאור מעניין = יותר אנשים ילחצו על הקישור שלכם ויגיעו לאתר.</p>
+
+ <h3>שיפור נראות המותג שלכם</h3>
+            <p>תצוגה מסודרת ומעוצבת משדרת מקצועיות ויוצרת רושם חיובי על המשתמשים, מה שיכול לחזק את המותג שלכם ולהגביר מעורבות.</p>
+
+<h2>איך לבדוק אם Open Graph מוגדר באתר שלכם?</h2>
+            <p>יש לכם אתר ואתם לא בטוחים אם Open Graph מוגדר כמו שצריך? כאן הכלי שלי נכנס לפעולה! במקום לבדוק ידנית בקוד, פשוט מזינים את כתובת ה-URL של העמוד והכלי נותן לכם תוצאה ברורה – אילו תגיות קיימות, האם חסרה תגית חשובה ואיך ניתן לשפר את ההגדרות.</p>
+
+<h2>בשורה התחתונה, כדאי להוסיף תגיות Open Graph?</h2>
+ללא Open Graph, האתר שלכם עשוי להופיע בצורה לא מחמיאה ברשתות החברתיות, מה שעלול לפגוע בהקלקות ובמוניטין שלכם. הכלי שלי מספק דרך פשוטה לוודא שהאתר מוצג באופן מושלם – אז למה לא לבדוק את זה עכשיו?
+</p>
+
+  </article>
+  
+    <footer class="main-footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <p>רשתות חברתיות</p>
+                <div class="social-icons">
+                    <a href="https://www.linkedin.com/in/rotem-kanon" target="_blank">
+                        <img src="https://cdn-icons-png.flaticon.com/512/145/145807.png" alt="LinkedIn">
+                    </a>
+                    <a href="https://github.com/tools-by-rotem" target="_blank">
+                        <img src="https://cdn-icons-png.flaticon.com/512/2111/2111432.png" alt="GitHub">
+                    </a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <p>ניווט באתר</p>
+                <ul>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/">ספריית הכלים</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/accessibility-statement">הצהרת נגישות</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <p>כמויות חיפושים</p>
+                <ul>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/google-search-volume">כמות חיפושים בגוגל</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/spotify-search-volume">כמות חיפושים בספוטיפיי</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/soundcloud-search-volume">כמות חיפושים בסאונדקלאוד </a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/competitors-traffic">חישוב תנועה לאתרי מתחרים </a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <p>תצוגה מקדימה</p>
+                <ul>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/google-serp-preview">תצוגה מקדימה לנראות בגוגל</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/social-link-preview">תצוגה מקדימה לרשתות חברתיות</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <p>אופטימיזציה</p>
+                <ul>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/page-speed-test">בדיקת מהירות טעינה</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/mobile-simulator">בדיקת תאימות למכשירים ניידים</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/image-minify-converter">המרת פורמט וכיווץ משקל תמונה</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <p>יצירה ועיצוב</p>
+                <ul>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/background-remover">הסרת רקע מתמונה</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/draw">ציור אינטראקטיבי</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/image-color-identifier">זיהוי צבעי תמונה</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/infographics">יצירת אינפוגרפיקות</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <p>נגישות</p>
+                <ul>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/accessibility-toolbar">סרגל נגישות</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/accessibility-checker">בדיקת נגישות לאתר אינטרנט</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <p>שונות</p>
+                <ul>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/time-zone-converter">ממיר זמן בינלאומי</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/navigation-links-generator">מחולל קישורי ניווט</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/reverse-typing-fix">תיקון הקלדה הפוכה</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/strong-password-generator">מחולל סיסמאות חזקות</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/time-to-go-home">הגיע הזמן ללכת הביתה</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/resume-scanner">התאמת קורות חיים לסורקים אוטומטיים</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 כל הזכויות שמורות לרותם קנון</p>
+        </div>
+    </footer>
 
     <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -336,12 +607,12 @@
         const url = urlInput.value.trim();
         
         if (!url) {
-            showError('אנא הכנס כתובת URL');
+            showError('אנא הזינו כתובת URL');
             return;
         }
         
         if (!isValidURL(url)) {
-            showError('אנא הכנס כתובת URL תקינה');
+            showError('אנא הזינו כתובת URL תקינה');
             return;
         }
         
