@@ -7,6 +7,7 @@
     <meta name="description" content="בדיקת נגישות לאתרי אינטרנט שתאפשר לכם לבחון את התאמת האתר לבעלי מוגבלויות. הכלי מכיל הסברים על תיקון בעיות ומאפשר הורדת דוח מסכם כ-PDF. שפרו את האתר לכלל הגולשים">
     <link rel="canonical" href="https://tools-by-rotem.github.io/webtools/accessibility-checker" />
     <link rel="icon" type="image/x-icon" href="/webtools/site-favicon.ico">
+    <link rel="stylesheet" href="footer.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
@@ -106,90 +107,6 @@ button:hover {
     background: #0056b3;
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-/* Footer Styles */
-.main-footer {
-    background-color: #2d3436;
-    color: white;
-    padding: 3rem 0 1.5rem;
-    margin-top: 4rem;
-}
-
-.footer-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 2rem;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 2rem;
-    text-align: center;
-}
-
-.footer-section {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    align-items: center;
-}
-
-.footer-section p {
-    color: white;
-    margin-bottom: 1rem;
-    font-weight: bold;
-    width: 100%;
-    text-align: center;
-}
-
-.footer-section ul {
-    list-style: none;
-    width: 100%;
-    text-align: center;
-}
-
-.footer-section ul li {
-    margin-bottom: 0.5rem;
-}
-
-.footer-section a {
-    color: #ddd;
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
-
-.footer-section a:hover {
-    color: #0984e3;
-}
-
-.social-icons {
-    display: flex;
-    gap: 1rem;
-    justify-content: flex-end;
-    width: 100%;
-}
-
-.social-icons {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-    width: 100%;
-}
-
-.social-icons img {
-    width: 24px;
-    height: 24px;
-    transition: opacity 0.3s ease;
-}
-
-.social-icons a:hover img {
-    opacity: 0.8;
-}
-
-.footer-bottom {
-    text-align: center;
-    margin-top: 2rem;
-    padding-top: 1rem;
-    border-top: 1px solid #444;
 }
 
 /* Tool-specific Styles */
@@ -350,21 +267,6 @@ button:hover {
         width: 90%;
     }
 
-    .footer-container {
-        grid-template-columns: 1fr;
-        text-align: center;
-    }
-
-    .footer-section {
-        align-items: center;
-    }
-
-.footer-section p {
-    color: white;
-    margin-bottom: 1rem;
-    font-weight: bold;
-}
-
     .buttons-container {
         flex-direction: column;
         align-items: center;
@@ -451,84 +353,6 @@ button:hover {
 </p>
      </div>
     </main>
-
-  <footer class="main-footer">
-        <div class="footer-container">
-          <div class="footer-section">
-            <p>רשתות חברתיות</p>
-             <div class="social-icons">
-             <a href="https://www.linkedin.com/in/rotem-kanon" target="_blank">
-               <img src="https://cdn-icons-png.flaticon.com/512/145/145807.png" alt="LinkedIn">
-             </a>
-             <a href="https://github.com/tools-by-rotem" target="_blank">
-               <img src="https://cdn-icons-png.flaticon.com/512/2111/2111432.png" alt="GitHub">
-             </a>
-           </div>
-        </div>
-	<div class="footer-section">
-                <p>ניווט באתר</p>
-                <ul>
-                    <li><a href="https://tools-by-rotem.github.io/webtools/">ספריית הכלים</a></li>
-                    <li><a href="https://tools-by-rotem.github.io/webtools/accessibility-statement">הצהרת נגישות</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <p>כמויות חיפושים</p>
-                <ul>
-                    <li><a href="https://tools-by-rotem.github.io/webtools/google-search-volume">כמות חיפושים בגוגל</a></li>
-                    <li><a href="https://tools-by-rotem.github.io/webtools/spotify-search-volume">כמות חיפושים בספוטיפיי</a></li>
-                    <li><a href="https://tools-by-rotem.github.io/webtools/soundcloud-search-volume">כמות חיפושים בסאונדקלאוד </a></li>
-		    <li><a href="https://tools-by-rotem.github.io/webtools/competitors-traffic">חישוב תנועה לאתרי מתחרים </a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <p>תצוגה מקדימה</p>
-                <ul>
-		    <li><a href="https://tools-by-rotem.github.io/webtools/open-graph-checker">בדיקת Open Graph</a></li>
-                    <li><a href="https://tools-by-rotem.github.io/webtools/google-serp-preview">תצוגה מקדימה לנראות בגוגל</a></li>
-                    <li><a href="https://tools-by-rotem.github.io/webtools/social-link-preview">תצוגה מקדימה לרשתות חברתיות</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <p>אופטימיזציה</p>
-                <ul>
-                    <li><a href="https://tools-by-rotem.github.io/webtools/page-speed-test">בדיקת מהירות טעינה</a></li>
-                    <li><a href="https://tools-by-rotem.github.io/webtools/mobile-simulator">בדיקת תאימות למכשירים ניידים</a></li>
-                    <li><a href="https://tools-by-rotem.github.io/webtools/image-minify-converter">המרת פורמט וכיווץ משקל תמונה</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <p>יצירה ועיצוב</p>
-                <ul>
-                    <li><a href="https://tools-by-rotem.github.io/webtools/background-remover">הסרת רקע מתמונה</a></li>
-                    <li><a href="https://tools-by-rotem.github.io/webtools/draw">ציור אינטראקטיבי</a></li>
-                    <li><a href="https://tools-by-rotem.github.io/webtools/image-color-identifier">זיהוי צבעי תמונה</a></li>
-                    <li><a href="https://tools-by-rotem.github.io/webtools/infographics">יצירת אינפוגרפיקות</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <p>נגישות</p>
-                <ul>
-                    <li><a href="https://tools-by-rotem.github.io/webtools/accessibility-toolbar">סרגל נגישות</a></li>
-		                <li><a href="https://tools-by-rotem.github.io/webtools/accessibility-checker">בדיקת נגישות לאתר אינטרנט</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <p>שונות</p>
-                <ul>
-		    <li><a href="https://tools-by-rotem.github.io/webtools/time-zone-converter">ממיר זמן בינלאומי</a></li>
-                    <li><a href="https://tools-by-rotem.github.io/webtools/navigation-links-generator">מחולל קישורי ניווט</a></li>
-                    <li><a href="https://tools-by-rotem.github.io/webtools/reverse-typing-fix">תיקון הקלדה הפוכה</a></li>
-                    <li><a href="https://tools-by-rotem.github.io/webtools/strong-password-generator">מחולל סיסמאות חזקות</a></li>
-                    <li><a href="https://tools-by-rotem.github.io/webtools/time-to-go-home">הגיע הזמן ללכת הביתה</a></li>
-                    <li><a href="https://tools-by-rotem.github.io/webtools/resume-scanner">התאמת קורות חיים לסורקים אוטומטיים</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="footer-bottom">
-    <p>© 2025 כל הזכויות שמורות לרותם קנון</p>
-	</div>
-    </footer>
 
     <div id="printContainer" class="print-container">
         <div id="printScore"></div>
@@ -779,5 +603,6 @@ async function generatePDF() {
     }
 }
     </script>
+    <script src="footer.js"></script>
 </body>
 </html>
