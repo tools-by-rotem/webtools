@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>המרת פרנהייט לצלזיוס בלחיצת כפתור | Tools by Rotem</title>
+    <meta name="description" content="מעוניינים להמיר טמפרטורה ממעלות פרנהייט למעלות צלזיוס? הכלי הבא יאפשר לכם לבצע את ההמרה בלחיצת כפתור פשוטה ובחישוב מהיר. להמרת הטמפרטורה לחצו >>>">
+    <link rel="canonical" href="https://tools-by-rotem.github.io/webtools/fahrenheit-to-celsius" />
+    <link rel="icon" type="image/x-icon" href="/webtools/site-favicon.ico">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            font-size: 16px;
+        }
+
+        .main-header {
+            background-color: #2d3436;
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 60px;
+            width: auto;
+        }
+
+        .main-footer {
+            background-color: #2d3436;
+            color: white;
+            padding: 3rem 0 1.5rem;
+            margin-top: 4rem;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .footer-section h3 {
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a {
+            color: #ddd;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: #0984e3;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-right: -4px;
+        }
+
+        .social-icons img {
+            width: 24px;
+            height: 24px;
+            transition: opacity 0.3s ease;
+            margin-right: -4px;
+        }
+
+        .social-icons a:hover img {
+            opacity: 0.8;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #444;
+        }
+
+        .converter-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-grow: 1;
+            margin: 2rem 0;
+        }
+
+        .converter {
+            width: 450px;
+            background-color: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .converter:hover {
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
+        }
+
+        .converter-title {
+            font-size: 22px;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            font-weight: 600;
+            position: relative;
+        }
+
+        .converter-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background-color: #3498db;
+        }
+
+        .input-wrapper {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 18px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .input-wrapper input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .input-wrapper .unit {
+            position: absolute;
+            top: 50%;
+            left: 15px;
+            transform: translateY(-50%);
+            color: #7f8c8d;
+            font-size: 16px;
+        }
+
+        .convert-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .convert-btn:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: 500;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        #result.show {
+            opacity: 1;
+        }
+
+        .result-cold {
+            color: #2980b9;
+        }
+
+        .result-warm {
+            color: #e74c3c;
+        }
+
+        .result-moderate {
+            color: #2ecc71;
+        }
+
+        .article-content {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .article-content h2 {
+            color: #2d3436;
+            margin: 1.5rem 0 1rem;
+        }
+
+        .article-content ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 1rem 0;
+        }
+
+        .article-content li {
+            margin: 0.5rem 0;
+            padding-right: 1.5rem;
+            position: relative;
+        }
+
+        .article-content li::before {
+            content: "•";
+            position: absolute;
+            right: 0;
+            color: #0984e3;
+        }
+
+        .article-content p {
+            margin: 1rem 0;
+            line-height: 1.8;
+        }
+
+ @media (max-width: 768px) {
+            .header-container {
+                padding: 0 1rem;
+            }
+
+            .footer-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .footer-section {
+                align-items: center;
+            }
+        }
+
+    </style>
+    <script src="https://website-widgets.pages.dev/dist/sienna.min.js" defer></script>
+</head>
+<body>
+  <header class="main-header">
+        <div class="header-container">
+            <a href="https://tools-by-rotem.github.io/webtools/" class="logo">
+                <img src="https://tools-by-rotem.github.io/webtools/site-logo.png" alt="רותם קנון לוגו">
+            </a>
+        </div>
+    </header>
+    
+    <div class="converter-container">
+        <div class="converter">
+            <h1 class="converter-title">המרת טמפרטורות מפרנהייט לצלזיוס</h1>
+            
+            <div class="input-wrapper">
+                <input 
+                    type="number" 
+                    id="fahrenheit" 
+                    placeholder="טמפרטורה בפרנהייט"
+                    step="any"
+                >
+                <span class="unit">°F</span>
+            </div>
+            
+            <button class="convert-btn" onclick="convertTemperature()">
+                המרה לצלזיוס
+            </button>
+            
+            <div id="result"></div>
+        </div>
+    </div>
+
+    <div class="article-content">
+        <h2>איך להשתמש בכלי להמרת פרנהייט לצלזיוס</h2>
+        <p>המרת פרנהייט לצלזיוס היא פעולה פשוטה ומהירה שלא מצריכה מכם יותר מדי. כדי להתחיל:</p>
+        <ul>
+            <li><strong>הזינו את מעלות הפרנהייט</strong>: כתבו את מעלות הפרנהייט בשדה הטקסט.</li>
+            <li><strong>לחצו על כפתור ההמרה</strong>: לחצו על כפתור "המרה לצלזיוס" בכדי לבצע את ההמרה.</li>
+            <li><strong>קבלו את מעלות הצלזיוס</strong>: בתחתית הכלי, תוכלו לראות את מעלות הצלזיוס בהשוואה למעלות הפרנהייט.</li>
+        </ul>
+
+        <h2>פרנהייט מול צלזיוס - מי טוב יותר?</h2>
+        <p>הטמפרטורה היא אחת המדידות הבסיסיות בחיינו, אבל לא תמיד היו לנו סולמות אחידים למדוד אותה. שני המדענים שהשפיעו על הדרך שבה אנחנו מודדים חום וקור הם דניאל גבריאל פרנהייט ואנדרס צלזיוס. איך הם פיתחו את הסולמות שלהם, ואיך זה משפיע עלינו עד היום?</p>
+
+        <h2>איך מחשבים את הטמפרטורה?</h2>
+        <p>שני סולמות המדידה מבוססים על נקודות קבועות בטבע. צלזיוס מתמקד במים: נקודת הקיפאון של מים היא 0°C ונקודת הרתיחה היא 100°C (בלחץ אטמוספרי רגיל). פרנהייט, לעומת זאת, מבוסס על סקאלה שונה: נקודת הקיפאון של מים היא 32°F, ונקודת הרתיחה היא 212°F.
+
+אם נרצה להמיר בין הסולמות, הנוסחה מ°פרנהייט ל°צלזיוס היא:
+<br>
+<strong> C = (F - 32) / 1.8 </strong>
+<br>
+ולהפך, מ°צלזיוס ל°פרנהייט:
+<br>
+<strong> F = C × 1.8 + 32 </strong>
+<br>
+המרות כאלה חשובות במיוחד למי שנוסע בין מדינות שמשתמשות בסולמות שונים, כמו ארה"ב (פרנהייט) ורוב העולם (צלזיוס).
+</p>
+
+        <h2>אנדרס צלזיוס והסולם ההגיוני</h2>
+        <p>אנדרס צלזיוס היה אסטרונום שוודי שחי במאה ה-18. בשנת 1742 הוא הציג את סולם הטמפרטורה שנושא את שמו – מעלות צלזיוס. הסולם שלו התבסס על נקודות הרתיחה והקיפאון של המים:
+<br>
+<strong> 100 מעלות – נקודת הקיפאון של המים </strong>
+<br>
+<strong> 0 מעלות – נקודת הרתיחה של המים </strong>
+<br>
+כן, קראתם נכון – בהתחלה הסולם של צלזיוס היה הפוך! אחרי כמה שנים, מדענים אחרים שינו את הכיוון, וכך קיבלנו את מה שאנחנו מכירים היום: 0 מעלות זה קיפאון ו-100 מעלות זה רתיחה.
+
+היתרון של סולם צלזיוס הוא שהוא מבוסס על תופעה פיזיקלית פשוטה, מה שהפך אותו לסולם הנפוץ ביותר בעולם, במיוחד במדינות שמשתמשות בשיטה המטרית.</p>
+
+        <h2>דניאל גבריאל פרנהייט והסולם שמתאים לאירופה של פעם</h2>
+        <p>לפני צלזיוס, המדען הגרמני דניאל גבריאל פרנהייט היה הראשון שפיתח מדחום מדויק ואמין. בתחילת המאה ה-18, הוא יצר סולם טמפרטורות שהתבסס על שלוש נקודות עוגן:
+<br>
+<strong> 0 מעלות – הטמפרטורה הנמוכה ביותר שהצליח לייצר עם תערובת של מי מלח וקרח </strong>
+<br>
+<strong> 32 מעלות – נקודת הקיפאון של המים </strong>
+<br>
+<strong> 212 מעלות – נקודת הרתיחה של המים </strong>
+<br>
+הרעיון של פרנהייט היה לייצר סולם שבו רוב הטמפרטורות היומיומיות ייפלו בטווח נוח, בלי מספרים שליליים. עד היום, ארצות הברית ומדינות נוספות עדיין משתמשות בפרנהייט, למרות שהרוב עברו לצלזיוס.
+</p>
+
+ <h2>למה יש לנו שני סולמות?</h2>
+        <p>אז למה חלק מהעולם משתמש בפרנהייט וחלק בצלזיוס? זה בעיקר עניין של היסטוריה והרגלים. בזמן שהאירופאים והעולם המדעי אימצו את סולם צלזיוס, ארצות הברית וקנדה (בעבר) המשיכו להשתמש בפרנהייט, מכיוון שהוא היה נפוץ במדינות דוברות אנגלית.
+
+בסופו של דבר, צלזיוס הפך לסולם הבינלאומי במדע, בתעשייה ובחיי היום-יום ברוב העולם. אבל אם תטיילו בארה"ב או תצפו בתחזית מזג האוויר אמריקאית – תצטרכו להכיר את סולם פרנהייט ולדעת להמיר בין השניים.</p>
+
+    </div>
+
+    <footer class="main-footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <p>רשתות חברתיות</p>
+                <div class="social-icons">
+                    <a href="https://www.linkedin.com/in/rotem-kanon" target="_blank">
+                        <img src="https://cdn-icons-png.flaticon.com/512/145/145807.png" alt="LinkedIn">
+                    </a>
+                    <a href="https://github.com/tools-by-rotem" target="_blank">
+                        <img src="https://cdn-icons-png.flaticon.com/512/2111/2111432.png" alt="GitHub">
+                    </a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <p>ניווט באתר</p>
+                <ul>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/">ספריית הכלים</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/accessibility-statement">הצהרת נגישות</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <p>כמויות חיפושים</p>
+                <ul>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/google-search-volume">כמות חיפושים בגוגל</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/spotify-search-volume">כמות חיפושים בספוטיפיי</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/soundcloud-search-volume">כמות חיפושים בסאונדקלאוד </a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/competitors-traffic">חישוב תנועה לאתרי מתחרים </a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <p>תצוגה מקדימה</p>
+                <ul>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/open-graph-checker">בדיקת Open Graph</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/google-serp-preview">תצוגה מקדימה לנראות בגוגל</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/social-link-preview">תצוגה מקדימה לרשתות חברתיות</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <p>אופטימיזציה</p>
+                <ul>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/page-speed-test">בדיקת מהירות טעינה</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/mobile-simulator">בדיקת תאימות למכשירים ניידים</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/image-minify-converter">המרת פורמט וכיווץ משקל תמונה</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <p>יצירה ועיצוב</p>
+                <ul>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/background-remover">הסרת רקע מתמונה</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/draw">ציור אינטראקטיבי</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/image-color-identifier">זיהוי צבעי תמונה</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/infographics">יצירת אינפוגרפיקות</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <p>נגישות</p>
+                <ul>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/accessibility-toolbar">סרגל נגישות</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/accessibility-checker">בדיקת נגישות לאתר אינטרנט</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <p>המרת יחידות</p>
+                <ul>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/time-zone-converter">המרת זמן בינלאומי</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/fahrenheit-to-celsius">המרת פרנהייט לצלזיוס</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <p>שונות</p>
+                <ul>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/navigation-links-generator">מחולל קישורי ניווט</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/reverse-typing-fix">תיקון הקלדה הפוכה</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/strong-password-generator">מחולל סיסמאות חזקות</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/time-to-go-home">הגיע הזמן ללכת הביתה</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/resume-scanner">התאמת קורות חיים לסורקים אוטומטיים</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 כל הזכויות שמורות לרותם קנון</p>
+        </div>
+    </footer>
+
+    <script>
+        function convertTemperature() {
+            const fahrenheitInput = document.getElementById('fahrenheit');
+            const resultDiv = document.getElementById('result');
+
+            const fahrenheit = parseFloat(fahrenheitInput.value);
+
+            if (isNaN(fahrenheit)) {
+                resultDiv.textContent = 'אנא הכנס מספר תקף';
+                resultDiv.className = 'show';
+                return;
+            }
+
+            const celsius = ((fahrenheit - 32) * 5/9).toFixed(2);
+            
+            let resultClass = 'show result-moderate';
+            if (celsius < 0) {
+                resultClass = 'show result-cold';
+            } else if (celsius > 30) {
+                resultClass = 'show result-warm';
+            }
+
+            resultDiv.textContent = `${fahrenheit}°F = ${celsius}°C`;
+            resultDiv.className = resultClass;
+        }
+    </script>
+</body>
+</html>
