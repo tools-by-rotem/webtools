@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>בדיקה אוטומטית לגודל מסך מחשב נייד | Tools by Rotem</title>
+    <meta name="description" content="איך בודקים גודל מסך מחשב נייד וטלפון? בקלות ובמהירות בעזרת הבדיקה האוטומטית. בכניסה אל הכלי, יוצגו לכם רוחב וגובה המסך לצד נתונים נוספים אודות המסך. לבדיקה >>>">
+    <link rel="canonical" href="https://tools-by-rotem.github.io/webtools/screen-size-checker" />
+    <link rel="icon" type="image/x-icon" href="/webtools/site-favicon.ico">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            text-align: center;
+            direction: rtl;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-header {
+            background-color: #2d3436;
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            width: 100%;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 60px;
+            width: auto;
+        }
+
+        .main-footer {
+            background-color: #2d3436;
+            color: white;
+            padding: 3rem 0 1.5rem;
+            margin-top: auto;
+            width: 100%;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            text-align: right;
+        }
+
+        .footer-section p {
+            color: white;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+            padding-right: 0;
+        }
+
+        .footer-section a {
+            color: #ddd;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            display: inline-block;
+        }
+
+        .footer-section a:hover {
+            color: #0984e3;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-start;
+        }
+
+        .social-icons img {
+            width: 24px;
+            height: 24px;
+            transition: opacity 0.3s ease;
+        }
+
+        .social-icons a:hover img {
+            opacity: 0.8;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #444;
+        }
+        
+        .container {
+            width: 95%;
+            max-width: 800px;
+            margin: 2rem auto;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        
+        .info-box {
+            background-color: #f0f8ff;
+            border: 1px solid #b3e0ff;
+            border-radius: 5px;
+            margin: 15px 0;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .info-item {
+            margin: 10px 0;
+            font-size: 18px;
+        }
+        
+        .main-info {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+            gap: 40px;
+        }
+        
+        .screen-size-item {
+            background-color: #e6f7ff;
+            border: 2px solid #1890ff;
+            border-radius: 8px;
+            padding: 15px 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .screen-size-label {
+            font-weight: bold;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .screen-size-value {
+            font-family: monospace;
+            font-size: 24px;
+            background-color: #f0f8ff;
+            padding: 5px 10px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+        
+        .secondary-info {
+            margin-top: 30px;
+        }
+        
+        .label {
+            font-weight: bold;
+            display: inline-block;
+            width: 250px;
+        }
+        
+        .value {
+            font-family: monospace;
+            font-size: 18px;
+            background-color: #eee;
+            padding: 2px 8px;
+            border-radius: 3px;
+        }
+
+        .article-content {
+            width: 95%;
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            text-align: right;
+        }
+
+        .article-content h2 {
+            color: #2d3436;
+            margin: 1.5rem 0 1rem;
+        }
+
+        .article-content ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 1rem 0;
+        }
+
+        .article-content li {
+            margin: 0.5rem 0;
+            padding-right: 1.5rem;
+            position: relative;
+        }
+
+        .article-content li::before {
+            content: "•";
+            position: absolute;
+            right: 0;
+            color: #0984e3;
+        }
+
+        .article-content p {
+            margin: 1rem 0;
+            line-height: 1.8;
+        }
+        
+        @media (max-width: 600px) {
+            .container, .article-content {
+                width: 92%;
+                padding: 15px;
+                margin: 1rem auto;
+            }
+
+            .main-info {
+                flex-direction: column;
+                gap: 20px;
+                align-items: center;
+            }
+            
+            .screen-size-item {
+               width: 100%;
+               max-width: 300px;
+               text-align: center;
+            }
+
+            .header-container {
+                padding: 0 1rem;
+            }
+
+            .footer-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .footer-section {
+                align-items: center;
+            }
+
+            .social-icons {
+                justify-content: center;
+            }
+
+            .label {
+                width: auto;
+                display: block;
+                margin-bottom: 5px;
+            }
+
+            .info-item {
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .container, .article-content {
+                width: 95%;
+                padding: 10px;
+            }
+
+            .screen-size-value {
+                font-size: 20px;
+            }
+        }
+    </style>
+<script src="https://website-widgets.pages.dev/dist/sienna.min.js" defer></script>
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-container">
+            <a href="https://tools-by-rotem.github.io/webtools/" class="logo">
+                <img src="https://tools-by-rotem.github.io/webtools/site-logo.png" alt="רותם קנון לוגו">
+            </a>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1>בדיקת גודל מסך</h1>
+        
+        <div class="main-info">
+            <div class="screen-size-item">
+                <div class="screen-size-label">רוחב מסך</div>
+                <div class="screen-size-value" id="screen-width">-</div>
+                <div>פיקסלים</div>
+            </div>
+            
+            <div class="screen-size-item">
+                <div class="screen-size-label">גובה מסך</div>
+                <div class="screen-size-value" id="screen-height">-</div>
+                <div>פיקסלים</div>
+            </div>
+        </div>
+        
+        <div class="info-box secondary-info" id="current-size">
+            <div class="info-item">
+                <span class="label">יחס רוחב-גובה:</span>
+                <span class="value" id="aspect-ratio">-</span>
+            </div>
+            <div class="info-item">
+                <span class="label">צפיפות פיקסלים (DPR):</span>
+                <span class="value" id="pixel-ratio">-</span>
+            </div>
+            <div class="info-item">
+                <span class="label">מערכת הפעלה:</span>
+                <span class="value" id="device-type">-</span>
+            </div>
+            <div class="info-item">
+                <span class="label">מצב (אופקי/אנכי):</span>
+                <span class="value" id="orientation">-</span>
+            </div>
+            <div class="info-item">
+                <span class="label">רוחב חלון דפדפן:</span>
+                <span class="value" id="inner-width">-</span> פיקסלים
+            </div>
+            <div class="info-item">
+                <span class="label">גובה חלון דפדפן:</span>
+                <span class="value" id="inner-height">-</span> פיקסלים
+            </div>
+        </div>
+    </div>
+    <div class="article-content">
+        <h2>איך להשתמש בכלי לבדיקת גודל מסך</h2>
+        <p>בדיקת גודל המסך היא בדיקה אוטומטית שלא מצריכה מכם שום פעולה. תוכלו לראות את רוחב וגובה במסך בחלקו העליון של הכלי.</p>
+
+        <h2>איך תבחרו את גודל המסך המתאים לצרכים שלכם?</h2>
+        <p>כשזה מגיע לבחירת גודל המסך, לא משנה אם זה למחשב, לטלפון או לטאבלט – צריך לקחת בחשבון הרבה יותר מרק מספר האינצ'ים. המסך שאנחנו משתמשים בו משפיע על חוויית השימוש שלנו, בין אם אנחנו עובדים, משחקים או סתם גולשים באינטרנט. אז איך יודעים איזה גודל מסך הכי מתאים לכל מטרה?</p>
+
+        <h2>למי שעובדים כל היום מול המחשב</h2>
+        <p>אם אתם עובדים הרבה שעות מול המסך, גודל המסך יכול להשפיע ישירות על הנוחות שלכם. מסך קטן מדי עלול להקשות על קריאה ועריכת מסמכים, בעוד שמסך גדול מדי עשוי להיות לא פרקטי אם אין מספיק מקום על השולחן. לרוב, אנשים שעובדים עם טקסטים, גליונות נתונים או קוד יעדיפו מסכים בגודל 24-27 אינץ' עם רזולוציה גבוהה כדי להקל על העיניים. לעומת זאת, מי שמתעסקים בעיצוב גרפי או עריכת וידאו יכולים ליהנות ממסכים גדולים יותר, כמו 32 אינץ' ומעלה, עם צבעים מדויקים ורזולוציית 4K.</p>
+
+        <h2>לגיימרים ואוהבי הסרטים</h2>
+        <p>כשזה מגיע למשחקים ולצפייה בתכנים, גודל המסך משפיע לא רק על החוויה, אלא גם על הביצועים. גיימרים תחרותיים מעדיפים מסכים בגודל 24-27 אינץ', עם קצב רענון גבוה (כמו 144Hz או 240Hz) וזמן תגובה נמוך כדי לקבל חוויית משחק חלקה. לעומתם, מי שנהנים ממשחקי עולם פתוח או חוויות קולנועיות יעדיפו מסכים גדולים יותר, כמו 32 אינץ' ומעלה, שיאפשרו להם להרגיש "בתוך המשחק". גם לחובבי הסרטים מסך גדול יותר, עם צבעים עשירים ותמיכה ב-HDR, ייתן חוויה קרובה יותר למה שמקבלים בטלוויזיה איכותית.</p>
+
+        <h2>למשתמשי מובייל</h2>
+        <p>גם בטלפונים ניידים גודל המסך משחק תפקיד חשוב. אם אתם משתמשים בטלפון בעיקר לשיחות והודעות, מסך קטן יותר (5.5-6 אינץ') יהיה קל ונוח יותר לשימוש ביד אחת. אבל אם אתם מרבים לצפות בסרטונים, לשחק או לעבוד עם הטלפון, כנראה שתעדיפו מסך גדול יותר (6.5 אינץ' ומעלה), שיאפשר לראות יותר תוכן בלי להתאמץ. מצד שני, מסך גדול מדי יכול להיות מסורבל לנשיאה בכיס או לתפעול ביד אחת. חשוב שגודל מסך <a href="https://tools-by-rotem.github.io/webtools/mobile-simulator" style="font-weight: bold;">הטלפון הנייד יהיה מותאם</a> לצרכים שלכם.</p>
+
+        <h2>איך בודקים גודל מסך מחשב נייד?</h2>
+        <p>לפעמים אנחנו בכלל לא בטוחים איזה גודל מסך יש לנו, וזה יכול להיות מידע חשוב כשמחפשים אביזרים מתאימים כמו מעמד, מגן מסך או תיק נשיאה. בדיוק בשביל זה פיתחתי כלי אינטראקטיבי שבודק את גודל המסך שלכם במהירות ובדיוק מרבי, כך שתוכלו לדעת את המידות הנכונות.</p>
+
+        <h2>אז מה הגודל שמתאים לכם?</h2>
+        <p>אין תשובה אחת נכונה – הכול תלוי בצרכים שלכם ובאופן שבו אתם משתמשים במכשיר. לפני שאתם קונים מסך חדש, כדאי לבדוק את השימוש היומיומי שלכם, את הגודל שאתם מרגישים איתו בנוח, ואת המגבלות של השטח שיש לכם בבית או בתיק. בסופו של דבר, המסך הנכון יכול לשפר משמעותית את חוויית השימוש שלכם, אז שווה לבחור בחוכמה.</p>
+    </div>
+
+    <footer class="main-footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <p>רשתות חברתיות</p>
+                <div class="social-icons">
+                    <a href="https://www.linkedin.com/in/rotem-kanon" target="_blank">
+                        <img src="https://cdn-icons-png.flaticon.com/512/145/145807.png" alt="LinkedIn">
+                    </a>
+                    <a href="https://github.com/tools-by-rotem" target="_blank">
+                        <img src="https://cdn-icons-png.flaticon.com/512/2111/2111432.png" alt="GitHub">
+                    </a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <p>ניווט באתר</p>
+                <ul>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/">ספריית הכלים</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/accessibility-statement">הצהרת נגישות</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <p>כמויות חיפושים</p>
+                <ul>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/google-search-volume">כמות חיפושים בגוגל</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/spotify-search-volume">כמות חיפושים בספוטיפיי</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/soundcloud-search-volume">כמות חיפושים בסאונדקלאוד </a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/competitors-traffic">חישוב תנועה לאתרי מתחרים </a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <p>תצוגה מקדימה</p>
+                <ul>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/open-graph-checker">בדיקת Open Graph</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/google-serp-preview">תצוגה מקדימה לנראות בגוגל</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/social-link-preview">תצוגה מקדימה לרשתות חברתיות</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <p>אופטימיזציה</p>
+                <ul>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/page-speed-test">בדיקת מהירות טעינה</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/mobile-simulator">בדיקת תאימות למכשירים ניידים</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/image-minify-converter">המרת פורמט וכיווץ משקל תמונה</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <p>יצירה ועיצוב</p>
+                <ul>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/background-remover">הסרת רקע מתמונה</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/draw">ציור אינטראקטיבי</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/image-color-identifier">זיהוי צבעי תמונה</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/infographics">יצירת אינפוגרפיקות</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <p>נגישות</p>
+                <ul>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/accessibility-toolbar">סרגל נגישות</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/accessibility-checker">בדיקת נגישות לאתר אינטרנט</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <p>המרת יחידות</p>
+                <ul>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/time-zone-converter">המרת זמן בינלאומי</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/fahrenheit-to-celsius">המרת פרנהייט לצלזיוס</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <p>שונות</p>
+                <ul>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/navigation-links-generator">מחולל קישורי ניווט</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/reverse-typing-fix">תיקון הקלדה הפוכה</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/strong-password-generator">מחולל סיסמאות חזקות</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/time-to-go-home">הגיע הזמן ללכת הביתה</a></li>
+                    <li><a href="https://tools-by-rotem.github.io/webtools/resume-scanner">התאמת קורות חיים לסורקים אוטומטיים</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 כל הזכויות שמורות לרותם קנון</p>
+        </div>
+    </footer>
+
+    <script>
+        // מזהה GCD של שני מספרים
+        function gcd(a, b) {
+            return b ? gcd(b, a % b) : a;
+        }
+        
+        // חישוב יחס רוחב-גובה
+        function calculateAspectRatio(width, height) {
+            const divisor = gcd(width, height);
+            return (width / divisor) + ":" + (height / divisor);
+        }
+        
+        // זיהוי סוג המכשיר
+        function detectDeviceType() {
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            
+            if (/android/i.test(userAgent)) {
+                return "Android";
+            }
+            
+            if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+                return "iOS";
+            }
+            
+            if (/windows phone/i.test(userAgent)) {
+                return "Windows Phone";
+            }
+            
+            if (/Macintosh/.test(userAgent)) {
+                return "MacOS";
+            }
+            
+            if (/Windows/.test(userAgent)) {
+                return "Windows";
+            }
+            
+            if (/Linux/.test(userAgent)) {
+                return "Linux";
+            }
+            
+            return "לא ידוע";
+        }
+        
+        // עדכון הנתונים בתצוגה
+        function updateScreenInfo() {
+            const innerWidth = window.innerWidth;
+            const innerHeight = window.innerHeight;
+            const screenWidth = window.screen.width;
+            const screenHeight = window.screen.height;
+            const pixelRatio = window.devicePixelRatio || 1;
+            const aspectRatio = calculateAspectRatio(screenWidth, screenHeight);
+            const deviceType = detectDeviceType();
+            const orientation = innerWidth > innerHeight ? "אופקי (landscape)" : "אנכי (portrait)";
+            
+            document.getElementById('inner-width').textContent = innerWidth;
+            document.getElementById('inner-height').textContent = innerHeight;
+            document.getElementById('screen-width').textContent = screenWidth;
+            document.getElementById('screen-height').textContent = screenHeight;
+            document.getElementById('aspect-ratio').textContent = aspectRatio;
+            document.getElementById('pixel-ratio').textContent = pixelRatio.toFixed(2);
+            document.getElementById('device-type').textContent = deviceType;
+            document.getElementById('orientation').textContent = orientation;
+        }
+        
+        // אתחול הכלי
+        document.addEventListener('DOMContentLoaded', function() {
+            // עדכון ראשוני
+            updateScreenInfo();
+            
+            // התאמת גודל החלון
+            window.addEventListener('resize', updateScreenInfo);
+            
+            // האזנה לשינויי כיוון במכשירים ניידים
+            window.addEventListener('orientationchange', updateScreenInfo);
+        });
+    </script>
+</body>
+</html>
