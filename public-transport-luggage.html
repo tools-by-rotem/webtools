@@ -328,6 +328,15 @@
       .selector-option {
         min-width: 150px;
       }
+      
+      .footer-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .footer-section {
+                align-items: center;
+            }
     }
 
     @media (max-width: 576px) {
@@ -342,6 +351,15 @@
       .selector-option {
         width: 100%;
       }
+      
+      .footer-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .footer-section {
+                align-items: center;
+            }
     }
   </style>
 </head>
@@ -358,7 +376,7 @@
       <p class="subtitle">בחרו את אמצעי התחבורה ואת סוג המטען כדי לבדוק האם ניתן להעלות אותו</p>
 
     <div class="selector-container">
-      <div class="selector-title">שלב ראשון - בחרו את אמצעי התחבורה:</div>
+      <h2 class="selector-title">שלב ראשון - בחרו את אמצעי התחבורה:</h2>
       <div class="selector-options" id="transport-options">
         <div class="selector-option" data-transport="train">רכבת ישראל</div>
         <div class="selector-option" data-transport="light-rail">רכבת קלה</div>
@@ -368,7 +386,7 @@
     </div>
 
     <div class="selector-container">
-      <div class="selector-title">שלב שני - בחרו את סוג המטען:</div>
+      <h2 class="selector-title">שלב שני - בחרו את סוג המטען:</h2>
       <div class="selector-options" id="cargo-options">
         <div class="selector-option" data-cargo="folding-bike">אופניים מתקפלים</div>
         <div class="selector-option" data-cargo="regular-bike">אופניים רגילים</div>
