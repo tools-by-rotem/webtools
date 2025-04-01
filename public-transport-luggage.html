@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>מותר לעלות עם זה לתחבורה הציבורית? | Tools by Rotem</title>
   <meta name="description" content="רוצים לנסוע לים ולא בטוחים אם מותר להעלות גלשן לאוטובוס? נוסעים באופניים לרכבת אך לא בטוחים אם מותר לעלות איתן? בדקו את תנאי העלאת המטען לתחבורה הציבורית >>>">
-    <link rel="canonical" href="https://tools-by-rotem.github.io/webtools/public-transport-luggage" />
-    <link rel="icon" type="image/x-icon" href="/webtools/site-favicon.ico">
+  <link rel="canonical" href="https://tools-by-rotem.github.io/webtools/public-transport-luggage" />
+  <link rel="icon" type="image/x-icon" href="/webtools/site-favicon.ico">
   <style>
     :root {
       --primary-color: #1e88e5;
@@ -52,20 +52,41 @@
       padding-bottom: 20px;
     }
 
-    .selector-container {
-      display: flex;
-      flex-direction: column;
+    .step-container {
+      display: none;
       background-color: white;
       border-radius: 8px;
       box-shadow: var(--box-shadow);
       padding: 20px;
       margin-bottom: 30px;
+      animation: fadeIn 0.3s ease-in;
     }
 
-    .selector-title {
+    .step-container.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .step-title {
       font-size: 1.2rem;
       margin-bottom: 15px;
       color: var(--primary-color);
+    }
+
+    .step-number {
+      display: inline-block;
+      width: 30px;
+      height: 30px;
+      background-color: var(--primary-color);
+      color: white;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 30px;
+      margin-left: 10px;
     }
 
     .selector-options {
@@ -97,12 +118,39 @@
       border-color: var(--primary-color);
     }
 
+    .navigation-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+
+    .nav-button {
+      padding: 10px 20px;
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .nav-button:disabled {
+      background-color: var(--border-color);
+      cursor: not-allowed;
+    }
+
+    .nav-button:hover:not(:disabled) {
+      background-color: #1565c0;
+    }
+
     .results-container {
+      display: none;
       background-color: white;
       border-radius: 8px;
       box-shadow: var(--box-shadow);
       padding: 20px;
       margin-bottom: 30px;
+      animation: fadeIn 0.3s ease-in;
     }
 
     .results-title {
@@ -200,9 +248,9 @@
     }
 
     .guidelines-list {
-     list-style-type: none;
-     margin: 0;
-     padding: 0;
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
     }
 
     .guidelines-list li {
@@ -364,6 +412,7 @@
             }
     }
   </style>
+  <script src="https://website-widgets.pages.dev/dist/sienna.min.js" defer></script>
 </head>
 <body>
   <header class="main-header">
@@ -373,22 +422,26 @@
             </a>
         </div>
     </header>
+    
   <div class="container">
-      <h1>העלאת מטען לתחבורה ציבורית</h1>
-      <p class="subtitle">בחרו את אמצעי התחבורה ואת סוג המטען כדי לבדוק האם ניתן להעלות אותו</p>
+    <h1>העלאת מטען לתחבורה ציבורית</h1>
+    <p class="subtitle">בחרו את אמצעי התחבורה ואת סוג המטען כדי לבדוק האם ניתן להעלות אותו</p>
 
-    <div class="selector-container">
-      <h2 class="selector-title">שלב ראשון - בחרו את אמצעי התחבורה הציבורית:</h2>
+    <div id="step1" class="step-container active">
+      <h2 class="step-title"><span class="step-number">1</span>בחרו את אמצעי התחבורה הציבורית:</h2>
       <div class="selector-options" id="transport-options">
         <div class="selector-option" data-transport="train">רכבת ישראל</div>
         <div class="selector-option" data-transport="light-rail">רכבת קלה</div>
         <div class="selector-option" data-transport="inter-city-bus">אוטובוס בינעירוני</div>
         <div class="selector-option" data-transport="city-bus">אוטובוס עירוני</div>
       </div>
+      <div class="navigation-buttons">
+        <button class="nav-button" id="nextToStep2" disabled>הבא</button>
+      </div>
     </div>
 
-    <div class="selector-container">
-      <h2 class="selector-title">שלב שני - בחרו את סוג המטען:</h2>
+    <div id="step2" class="step-container">
+      <h2 class="step-title"><span class="step-number">2</span>בחרו את סוג המטען:</h2>
       <div class="selector-options" id="cargo-options">
         <div class="selector-option" data-cargo="folding-bike">אופניים מתקפלים</div>
         <div class="selector-option" data-cargo="regular-bike">אופניים רגילים</div>
@@ -399,15 +452,22 @@
         <div class="selector-option" data-cargo="luggage">מזוודה/תיק</div>
         <div class="selector-option" data-cargo="stroller">עגלת תינוק</div>
       </div>
+      <div class="navigation-buttons">
+        <button class="nav-button" id="backToStep1">חזור</button>
+        <button class="nav-button" id="showResults" disabled>הצג תוצאות</button>
+      </div>
     </div>
 
-    <div class="results-container hidden" id="results">
+    <div id="results" class="results-container">
       <div class="results-title">
         <span class="results-icon" id="results-icon"></span>
-        <h2 id="results-title">הנחיות</h2>
+        <h2 id="results-title">תוצאות הבדיקה</h2>
       </div>
       <div class="results-info" id="results-info"></div>
       <div id="results-details"></div>
+      <div class="navigation-buttons">
+        <button class="nav-button" id="startOver">התחל מחדש</button>
+      </div>
     </div>
 
     <div class="guidelines">
@@ -465,9 +525,9 @@
         <p>המידע מבוסס על הנחיות רשמיות של רכבת ישראל, חברות האוטובוסים ונהלי משרד התחבורה. ההחלטה הסופית נתונה לשיקול דעת צוות התחבורה הציבורית. מומלץ לבדוק את ההנחיות באתרים הרשמיים של חברות התחבורה הציבורים.</p>
       </div>
     </div>
-    </div>
-    
-    <footer class="main-footer">
+  </div>
+  
+  <footer class="main-footer">
         <div class="footer-container">
             <div class="footer-section">
                 <p>רשתות חברתיות</p>
@@ -683,56 +743,59 @@
           }
         },
         'city-bus': {
-  'folding-bike': {
-    allowed: 'conditional',
-    title: 'מותר בתנאים מסוימים',
-    details: 'אופניים מתקפלים מותרים רק אם הם מקופלים לחלוטין ומוכנסים לתוך תיק. הנהג רשאי לסרב להעלותם אם הם מלוכלכים או עלולים ללכלך את האוטובוס או את הנוסעים.'
-  },
-  'regular-bike': {
-    allowed: false,
-    title: 'אסור',
-    details: 'חל איסור מוחלט להכניס אופניים לא מתקפלים (רגילים) לאוטובוס עירוני.'
-  },
-  'folding-scooter': {
-    allowed: 'conditional',
-    title: 'מותר כשמקופל לחלוטין',
-    details: 'קורקינט מקופל מותר באוטובוס עירוני בתנאי שהוא מקופל לחלוטין ואינו מלוכלך.'
-  },
-  'regular-scooter': {
-    allowed: false,
-    title: 'אסור',
-    details: 'חל איסור מוחלט להעלות קורקינט לא מקופל לאוטובוס עירוני.'
-  },
-  'surfboard': {
-    allowed: false,
-    title: 'אסור',
-    details: 'חל איסור מוחלט להעלות גלשן לאוטובוס עירוני.'
-  },
-  'pet': {
-    allowed: 'conditional',
-    title: 'מותר בתנאים מחמירים',
-    details: 'מותר להעלות רק בעל חיים שניתן להניחו על ברכי הנוסע, כשהוא קשור ברצועה ועם זמם לפיו. חריגים: כלבי נחייה המלווים עיוור או כלבי שירות מורשים.'
-  },
-  'luggage': {
-    allowed: 'conditional',
-    title: 'מותר בתנאים מסוימים',
-    details: 'נוסע רשאי לקחת עימו מטען יד ללא תשלום נוסף, ובלבד שלא יגרום הפרעה או נזק לנוסעים. אסור להעלות דברים שעלולים ללכלך או לפגוע באדם או בלבושו (כמו למשל כוס שתייה לא מכוסה או שתייה חמה), או מפיצים ריחות רעים.'
-  },
-  'stroller': {
-    allowed: 'conditional',
-    title: 'מותר כשמקופלת',
-    details: 'ניתן להעלות עגלת תינוק מקופלת בלבד. הנהג רשאי לסרב להעלות את העגלה מנימוקי צפיפות.'
-  }
-}
+          'folding-bike': {
+            allowed: 'conditional',
+            title: 'מותר בתנאים מסוימים',
+            details: 'אופניים מתקפלים מותרים רק אם הם מקופלים לחלוטין ומוכנסים לתוך תיק. הנהג רשאי לסרב להעלותם אם הם מלוכלכים או עלולים ללכלך את האוטובוס או את הנוסעים.'
+          },
+          'regular-bike': {
+            allowed: false,
+            title: 'אסור',
+            details: 'חל איסור מוחלט להכניס אופניים לא מתקפלים (רגילים) לאוטובוס עירוני.'
+          },
+          'folding-scooter': {
+            allowed: 'conditional',
+            title: 'מותר כשמקופל לחלוטין',
+            details: 'קורקינט מקופל מותר באוטובוס עירוני בתנאי שהוא מקופל לחלוטין ואינו מלוכלך.'
+          },
+          'regular-scooter': {
+            allowed: false,
+            title: 'אסור',
+            details: 'חל איסור מוחלט להעלות קורקינט לא מקופל לאוטובוס עירוני.'
+          },
+          'surfboard': {
+            allowed: false,
+            title: 'אסור',
+            details: 'חל איסור מוחלט להעלות גלשן לאוטובוס עירוני.'
+          },
+          'pet': {
+            allowed: 'conditional',
+            title: 'מותר בתנאים מחמירים',
+            details: 'מותר להעלות רק בעל חיים שניתן להניחו על ברכי הנוסע, כשהוא קשור ברצועה ועם זמם לפיו. חריגים: כלבי נחייה המלווים עיוור או כלבי שירות מורשים.'
+          },
+          'luggage': {
+            allowed: 'conditional',
+            title: 'מותר בתנאים מסוימים',
+            details: 'נוסע רשאי לקחת עימו מטען יד ללא תשלום נוסף, ובלבד שלא יגרום הפרעה או נזק לנוסעים. אסור להעלות דברים שעלולים ללכלך או לפגוע באדם או בלבושו (כמו למשל כוס שתייה לא מכוסה או שתייה חמה), או מפיצים ריחות רעים.'
+          },
+          'stroller': {
+            allowed: 'conditional',
+            title: 'מותר כשמקופלת',
+            details: 'ניתן להעלות עגלת תינוק מקופלת בלבד. הנהג רשאי לסרב להעלות את העגלה מנימוקי צפיפות.'
+          }
+        }
       };
 
       // References to DOM elements
+      const step1 = document.getElementById('step1');
+      const step2 = document.getElementById('step2');
+      const resultsContainer = document.getElementById('results');
       const transportOptions = document.getElementById('transport-options');
       const cargoOptions = document.getElementById('cargo-options');
-      const resultsContainer = document.getElementById('results');
-      const resultsIcon = document.getElementById('results-icon');
-      const resultsTitle = document.getElementById('results-title');
-      const resultsInfo = document.getElementById('results-info');
+      const nextToStep2Button = document.getElementById('nextToStep2');
+      const backToStep1Button = document.getElementById('backToStep1');
+      const showResultsButton = document.getElementById('showResults');
+      const startOverButton =document.getElementById('startOver');
       const resultsDetails = document.getElementById('results-details');
 
       // Add event listeners to transport options
@@ -747,8 +810,8 @@
           this.classList.add('selected');
           selectedTransport = this.getAttribute('data-transport');
           
-          // Update results if both selections are made
-          updateResults();
+          // Enable next button
+          nextToStep2Button.disabled = false;
         });
       });
 
@@ -764,65 +827,92 @@
           this.classList.add('selected');
           selectedCargo = this.getAttribute('data-cargo');
           
-          // Update results if both selections are made
-          updateResults();
+          // Enable show results button
+          showResultsButton.disabled = false;
         });
+      });
+
+      // Navigation event listeners
+      nextToStep2Button.addEventListener('click', () => {
+        step1.classList.remove('active');
+        step2.classList.add('active');
+      });
+
+      backToStep1Button.addEventListener('click', () => {
+        step2.classList.remove('active');
+        step1.classList.add('active');
+      });
+
+      showResultsButton.addEventListener('click', () => {
+        step2.classList.remove('active');
+        resultsContainer.style.display = 'block';
+        updateResults();
+      });
+
+      startOverButton.addEventListener('click', () => {
+        // Reset selections
+        selectedTransport = null;
+        selectedCargo = null;
+        
+        // Clear selected classes
+        transportOptions.querySelectorAll('.selector-option').forEach(opt => {
+          opt.classList.remove('selected');
+        });
+        cargoOptions.querySelectorAll('.selector-option').forEach(opt => {
+          opt.classList.remove('selected');
+        });
+        
+        // Disable buttons
+        nextToStep2Button.disabled = true;
+        showResultsButton.disabled = true;
+        
+        // Hide results and show step 1
+        resultsContainer.style.display = 'none';
+        step1.classList.add('active');
       });
 
       // Function to update results
       function updateResults() {
-  if (selectedTransport && selectedCargo) {
-    // ודא שהחלק הזה עובד כנדרש
-    const rule = transportRules[selectedTransport][selectedCargo];
-    
-    // ודא שהכלי מציג תוצאות גם אם ההרשאה היא 'false'
-    if (rule) {
-      // קוד להצגת תוצאות
-      resultsContainer.classList.remove('hidden');
-      
-      // קוד נוסף...
-      
-      // ודא שכל המצבים מטופלים כראוי
-      let resultClass = '';
-      let resultIcon = '';
-      
-      if (rule.allowed === true) {
-        resultClass = 'result-allowed';
-        resultIcon = '✅';
-      } else if (rule.allowed === 'conditional') {
-        resultClass = 'result-conditional';
-        resultIcon = '⚠️';
-      } else if (rule.allowed === false) {
-        resultClass = 'result-denied';
-        resultIcon = '❌';
+        if (selectedTransport && selectedCargo) {
+          const rule = transportRules[selectedTransport][selectedCargo];
+          
+          if (rule) {
+            let resultClass = '';
+            let resultIcon = '';
+            
+            if (rule.allowed === true) {
+              resultClass = 'result-allowed';
+              resultIcon = '✅';
+            } else if (rule.allowed === 'conditional') {
+              resultClass = 'result-conditional';
+              resultIcon = '⚠️';
+            } else if (rule.allowed === false) {
+              resultClass = 'result-denied';
+              resultIcon = '❌';
+            }
+            
+            resultsDetails.innerHTML = `
+              <div class="result-item ${resultClass}">
+                <span class="result-icon">${resultIcon}</span>
+                <div class="result-content">
+                  <div class="result-title">${rule.title}</div>
+                  <div class="result-details">${rule.details}</div>
+                </div>
+              </div>
+            `;
+          } else {
+            resultsDetails.innerHTML = `
+              <div class="result-item result-denied">
+                <span class="result-icon">❓</span>
+                <div class="result-content">
+                  <div class="result-title">אין מידע זמין</div>
+                  <div class="result-details">אין לנו מידע לגבי שילוב זה כרגע. אנא פנה לחברת התחבורה הציבורית לקבלת מידע מדויק.</div>
+                </div>
+              </div>
+            `;
+          }
+        }
       }
-      
-      // הצג תוצאות גם אם ההרשאה היא 'false'
-      resultsDetails.innerHTML = `
-        <div class="result-item ${resultClass}">
-          <span class="result-icon">${resultIcon}</span>
-          <div class="result-content">
-            <div class="result-title">${rule.title}</div>
-            <div class="result-details">${rule.details}</div>
-          </div>
-        </div>
-      `;
-    } else {
-      // טפל במקרה שאין כללים עבור שילוב זה
-      resultsContainer.classList.remove('hidden');
-      resultsInfo.textContent = `מידע לא זמין`;
-      resultsDetails.innerHTML = `
-        <div class="result-item result-denied">
-          <span class="result-icon">❓</span>
-          <div class="result-content">
-            <div class="result-title">אין מידע זמין</div>
-            <div class="result-details">אין לנו מידע לגבי שילוב זה כרגע. אנא פנה לחברת התחבורה הציבורית לקבלת מידע מדויק.</div>
-          </div>
-        </div>
-      `;
-    }
-  }
-}
     });
   </script>
 </body>
