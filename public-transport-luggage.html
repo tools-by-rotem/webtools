@@ -124,6 +124,17 @@
       margin-top: 20px;
     }
 
+    /* מרכוז כפתורים בשלב 1 ו-3 */
+    #step1 .navigation-buttons,
+    #results .navigation-buttons {
+      justify-content: center;
+    }
+
+    /* שמירת כפתורים בצדדים בשלב 2 */
+    #step2 .navigation-buttons {
+      justify-content: space-between;
+    }
+
     .nav-button {
       padding: 10px 20px;
       background-color: var(--primary-color);
@@ -387,7 +398,22 @@
             .footer-section {
                 align-items: center;
             }
+            
+            h1 {
+    font-size: 1.8rem; /* מקטין מעט את גודל הכותרת במובייל */
+  }
+  
+  h1 .mobile-break {
+    display: block; /* גורם לאלמנט להופיע בשורה חדשה */
+    margin-top: 5px; /* מרווח קטן בין השורות */
+  }
     }
+    
+    @media (min-width: 769px) {
+  h1 .mobile-break {
+    display: inline; /* במסכים גדולים, האלמנט יופיע באותה שורה */
+  }
+}
 
     @media (max-width: 576px) {
       .container {
@@ -424,7 +450,7 @@
     </header>
     
   <div class="container">
-    <h1>העלאת מטען לתחבורה ציבורית</h1>
+    <h1>העלאת מטען<span class="mobile-break"> לתחבורה ציבורית</span></h1>
     <p class="subtitle">בחרו את אמצעי התחבורה ואת סוג המטען כדי לבדוק האם ניתן להעלות אותו</p>
 
     <div id="step1" class="step-container active">
