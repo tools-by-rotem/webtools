@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>חישוב גובה הטבת מס לפי חוק האנג'לים | Tools by Rotem</title>
+  <meta name="description" content="מתלבטים אם שווה לכם להשקיע בסטארטאפ? ההשקעה עשויה לזכות אתכם בהטבת מס. חוק האנג'לים מאפשר למשקיעים פרטיים להשקיע בסטארטאפים חדשים ובתמורה לקבל הטבת מס. בדקו >>>">
+    <link rel="canonical" href="https://tools-by-rotem.github.io/webtools/accessibility-checker" />
+    <link rel="icon" type="image/x-icon" href="/webtools/site-favicon.ico">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      direction: rtl;
+      background: #f8f9fa;
+      padding: 0;
+      margin: 0;
+    }
+    .container {
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+      margin-top: 30px;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    input[type="number"],
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      margin-top: 5px;
+      box-sizing: border-box;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    button {
+      margin-top: 25px;
+      padding: 12px;
+      width: 100%;
+      background: #2980b9;
+      color: white;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #1c5980;
+    }
+    select {
+     width: 100%;
+     padding: 12px;
+     margin-top: 5px;
+     box-sizing: border-box;
+     border: 1px solid #ddd;
+     border-radius: 4px;
+     background-color: white;
+    }
+    .result {
+      margin-top: 25px;
+      padding: 20px;
+      background: #ecf0f1;
+      border-radius: 5px;
+      line-height: 1.6;
+    }
+    .article-container {
+      max-width: 850px;
+      margin: 0 auto;
+      padding: 2rem;
+      background-color: #fff;
+      box-shadow: 0 0 15px rgba(0,0,0,0.05);
+      border-radius: 12px;
+      margin-top: 3rem;
+      margin-bottom: 3rem;
+    }
+
+    h2 {
+      color: #2c3e50;
+      font-size: 1.6rem;
+      margin-top: 2rem;
+    }
+
+    p {
+      margin-bottom: 1rem;
+    }
+    .main-header {
+      background-color: #2d3436;
+      color: white;
+      padding: 1rem 0;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      width: 100%;
+    }
+    .header-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .logo img {
+      height: 60px;
+      width: auto;
+    }
+    .main-footer {
+      background-color: #2d3436;
+      color: white;
+      padding: 3rem 0 1.5rem;
+      margin-top: 4rem;
+      width: 100%;
+    }
+    .footer-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+    }
+    .footer-section {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+    .footer-section h3 {
+      color: white;
+      margin-bottom: 1rem;
+    }
+    .footer-section ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .footer-section ul li {
+      margin-bottom: 0.5rem;
+    }
+    .footer-section a {
+      color: #ddd;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    .footer-section a:hover {
+      color: #0984e3;
+    }
+    .social-icons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-right: -4px;
+    }
+    .social-icons img {
+      width: 24px;
+      height: 24px;
+      transition: opacity 0.3s ease;
+      margin-right: -4px;
+    }
+    .social-icons a:hover img {
+      opacity: 0.8;
+    }
+    .footer-bottom {
+      text-align: center;
+      margin-top: 2rem;
+      padding-top: 1rem;
+      border-top: 1px solid #444;
+    }
+    @media (max-width: 768px) {
+      .container {
+        padding: 15px;
+      }
+      input[type="number"],
+      input[type="text"],
+      select {
+        padding: 10px;
+      }
+      .footer-container {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1.5rem;
+      }
+      .article-container {
+        padding: 1.2rem;
+      }
+
+      h2 {
+        font-size: 1.3rem;
+      }
+    }
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 24px;
+      }
+      .footer-container {
+        grid-template-columns: 1fr;
+      }
+      .article-container {
+        padding: 1.2rem;
+      }
+
+      h2 {
+        font-size: 1.3rem;
+      }
+    }
+    #loader {
+      display: none;
+      text-align: center;
+      margin: 20px auto;
+    }
+    .error-message {
+      color: #e74c3c;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    .radio-group {
+      display: flex;
+      gap: 20px;
+      margin-top: 10px;
+    }
+    .radio-option {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .radio-option input[type="radio"] {
+      margin: 0;
+    }
+    .disclaimer {
+      margin-top: 30px;
+      padding: 15px;
+      background: #fff3cd;
+      border: 1px solid #ffeeba;
+      border-radius: 4px;
+      color: #856404;
+      font-size: 14px;
+    }
+  </style>
+  <script src="https://website-widgets.pages.dev/dist/sienna.min.js" defer></script>
+</head>
+<body>
+  <header class="main-header">
+    <div class="header-container">
+      <a href="https://tools-by-rotem.github.io/webtools/" class="logo">
+        <img src="https://tools-by-rotem.github.io/webtools/site-logo.png" alt="רותם קנון לוגו">
+      </a>
+    </div>
+  </header>
+  
+  <div class="container">
+    <h1>חישוב הטבת חוק האנג'לים</h1>
+
+    <label>סכום השקעה (ש"ח):</label>
+    <input type="number" id="investment" placeholder="לדוגמה: 1,000,000" min="0" />
+
+    <label>רווח חייב במס לפני השקעה (ש"ח):</label>
+    <input type="number" id="taxable" placeholder="לדוגמה: 2,000,000" min="0" />
+
+    <label>האם החזקת את המניות לפחות 3 שנים?</label>
+    <div class="radio-group">
+      <label class="radio-option">
+        <input type="radio" name="held3years" value="כן"> כן
+      </label>
+      <label class="radio-option">
+        <input type="radio" name="held3years" value="לא"> לא
+      </label>
+    </div>
+
+    <label>האם החברה עומדת בתנאים (חדשה, טכנולוגית, לא חילקה דיבידנדים)?</label>
+    <div class="radio-group">
+      <label class="radio-option">
+        <input type="radio" name="startupValid" value="כן"> כן
+      </label>
+      <label class="radio-option">
+        <input type="radio" name="startupValid" value="לא"> לא
+      </label>
+    </div>
+
+    <button onclick="calculate()">חישוב גובה ההטבה</button>
+
+    <div id="loader">
+      <img src="https://i.gifer.com/ZZ5H.gif" alt="טוען..." style="width: 60px;" />
+    </div>
+
+    <div class="result" id="result"></div>
+
+    <div class="disclaimer">
+      <strong>הערה חשובה:</strong> המידע המוצג במחשבון זה הינו כללי בלבד ואינו מהווה תחליף לייעוץ מקצועי. מומלץ להיוועץ עם רואה חשבון או יועץ מס מוסמך לקבלת ייעוץ מקצועי המותאם למקרה הספציפי שלכם.
+    </div>
+  </div>
+
+<div class="article-container">
+    <section>
+      <h2>בואו נדבר קצת על חוק האנג'לים</h2>
+      <p>
+        כשמישהו מקים סטארטאפ, אחד הדברים הראשונים שהוא צריך – חוץ מרעיון טוב וצוות חזק – זה כסף.
+        אבל למצוא מימון בשלב מוקדם זה לא פשוט. רוב המשקיעים המוסדיים מעדיפים לחכות לראות שהמיזם כבר מתקדם ויש לו תוצאות,
+        והבנקים לא ממהרים לפתוח את הארנק לרעיונות חדשים. מי שבכל זאת נכנסים לתמונה בשלב הזה הם משקיעים פרטיים שמוכנים לקחת סיכון – מה שנקרא בעולם ההשקעות "אנג'לים".
+      </p>
+      <p>
+        כדי לעודד את אותם אנג'לים להשקיע דווקא בסטארטאפים ישראליים בתחילת הדרך, נולד חוק שנקרא "חוק האנג'לים".
+        החוק קיים כבר למעלה מעשור, ולמרות שהוא לא מאוד מוכר בציבור הרחב – הוא יכול להוזיל משמעותית את גובה המס שמשלמים משקיעים כאלה.
+      </p>
+    </section>
+
+    <section>
+      <h2>מה בעצם אומר החוק?</h2>
+      <p>
+        אם אתם משקיעים פרטיים, ויש לכם הכנסות חייבות במס – כמו משכורת גבוהה, רווחים מעסק או השקעות –
+        ואתם משקיעים כסף בחברת סטארטאפ שעומדת בתנאים שנקבעו בחוק, תוכלו לקבל הטבת מס משתלמת מאוד.
+        הכסף שהשקעתם ייחשב כהוצאה מוכרת – מה שאומר שתחויבו במס רק על הסכום שנשאר אחרי ההשקעה.
+      </p>
+      <p>
+        לדוגמה, אם הרווחתם מיליון שקלים בשנה והשקעתם 300 אלף שקלים בסטארטאפ,
+        המס שיחושב עליכם יהיה כאילו הרווחתם רק 700 אלף.
+        ככה אתם משלמים פחות מס, ונותר לכם יותר כסף ביד – תוך כדי שאתם עוזרים למיזם צעיר להתקדם.
+      </p>
+    </section>
+
+    <section>
+      <h2>כמה אפשר לקבל?</h2>
+      <p>
+        החוק לא נותן את ההטבה בלי גבול. אפשר לקבל הטבת מס על השקעה של עד חמישה מיליון שקלים בשנה לכל משקיע.
+        כלומר, אם השקעתם יותר, ייתכן שתהנו מהתשואה, אבל ההטבה במס תינתן רק עד סכום התקרה של חמשת המיליון הראשונים בכל שנת מס.
+      </p>
+    </section>
+
+    <section>
+      <h2>מי נחשב "אנג'ל"?</h2>
+      <p>
+        לא כל השקעה נחשבת להשקעת אנג’ל. ההשקעה צריכה להתבצע ישירות – כלומר, לא דרך קרן השקעות, חברה בע"מ או מתווך.
+        בנוסף, צריך לוודא שאין קשר משפחתי או מקצועי מוקדם ביניכם לבין החברה.
+        אם אתם קרובי משפחה של בעלי המניות או שאתם עובדים בחברה – לא תוכלו ליהנות מההטבה.
+      </p>
+    </section>
+
+    <section>
+      <h2>באיזה סוג של חברות אפשר להשקיע?</h2>
+      <p>
+        לא כל סטארטאפ עונה על הקריטריונים. החברה צריכה להיות ישראלית, פרטית (כלומר לא כזו שנסחרת בבורסה), צעירה יחסית,
+        ועם פעילות בתחום טכנולוגי או תעשייה עתירת ידע. חשוב גם שחלק גדול מההוצאות שלה – לפחות 75% – יהיו על מחקר ופיתוח.
+        המטרה היא לעודד השקעות בחברות שנמצאות בתחילת הדרך, עם פוטנציאל לפיתוח טכנולוגיות חדשות ולא בשלב שבו הן כבר הפכו לעסק מבוסס.
+      </p>
+    </section>
+
+    <section>
+      <h2>בואו נסכם</h2>
+      <p>
+        אם יש לכם כסף פנוי, אתם מאמינים ברעיון של יזמים צעירים ורוצים גם לעזור להם וגם להנות מהטבת מס שווה – שווה לבדוק את חוק האנג'לים.
+      </p>
+    </section>
+  </div>
+
+  <footer class="main-footer">
+    <div class="footer-container">
+      <div class="footer-section">
+        <p>רשתות חברתיות</p>
+        <div class="social-icons">
+          <a href="https://www.linkedin.com/in/rotem-kanon" target="_blank">
+            <img src="https://cdn-icons-png.flaticon.com/512/145/145807.png" alt="LinkedIn">
+          </a>
+          <a href="https://github.com/tools-by-rotem" target="_blank">
+            <img src="https://images.icon-icons.com/3685/PNG/512/github_logo_icon_229278.png" alt="GitHub">
+          </a>
+          <a href="https://www.tiktok.com/@rotemkanon" target="_blank">
+            <img src="https://cdn-icons-png.flaticon.com/512/4782/4782345.png" alt="Tiktok">
+          </a>
+        </div>
+      </div>
+      <div class="footer-section">
+        <p>ניווט באתר</p>
+        <ul>
+          <li><a href="https://tools-by-rotem.github.io/webtools/">ספריית הכלים</a></li>
+          <li><a href="https://tools-by-rotem.github.io/webtools/accessibility-statement">הצהרת נגישות</a></li>
+          <li><a href="https://tools-by-rotem.github.io/webtools/sitemap">מפת אתר</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <p>כמויות חיפושים</p>
+        <ul>
+          <li><a href="https://tools-by-rotem.github.io/webtools/google-search-volume">כמות חיפושים בגוגל</a></li>
+          <li><a href="https://tools-by-rotem.github.io/webtools/spotify-search-volume">כמות חיפושים בספוטיפיי</a></li>
+          <li><a href="https://tools-by-rotem.github.io/webtools/soundcloud-search-volume">כמות חיפושים בסאונדקלאוד </a></li>
+          <li><a href="https://tools-by-rotem.github.io/webtools/competitors-traffic">חישוב תנועה לאתרי מתחרים </a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <p>תצוגה מקדימה</p>
+        <ul>
+          <li><a href="https://tools-by-rotem.github.io/webtools/open-graph-checker">בדיקת Open Graph</a></li>
+          <li><a href="https://tools-by-rotem.github.io/webtools/google-serp-preview">תצוגה מקדימה לנראות בגוגל</a></li>
+          <li><a href="https://tools-by-rotem.github.io/webtools/social-link-preview">תצוגה מקדימה לרשתות חברתיות</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <p>אופטימיזציה</p>
+        <ul>
+          <li><a href="https://tools-by-rotem.github.io/webtools/page-speed-test">בדיקת מהירות טעינה</a></li>
+          <li><a href="https://tools-by-rotem.github.io/webtools/mobile-simulator">בדיקת תאימות למכשירים ניידים</a></li>
+          <li><a href="https://tools-by-rotem.github.io/webtools/image-minify-converter">המרת פורמט וכיווץ משקל תמונה</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <p>יצירה ועיצוב</p>
+        <ul>
+          <li><a href="https://tools-by-rotem.github.io/webtools/background-remover">הסרת רקע מתמונה</a></li>
+          <li><a href="https://tools-by-rotem.github.io/webtools/draw">ציור אינטראקטיבי</a></li>
+          <li><a href="https://tools-by-rotem.github.io/webtools/image-color-identifier">זיהוי צבעי תמונה</a></li>
+          <li><a href="https://tools-by-rotem.github.io/webtools/infographics">יצירת אינפוגרפיקות</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <p>נגישות</p>
+        <ul>
+          <li><a href="https://tools-by-rotem.github.io/webtools/accessibility-toolbar">סרגל נגישות</a></li>
+          <li><a href="https://tools-by-rotem.github.io/webtools/accessibility-checker">בדיקת נגישות לאתר אינטרנט</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <p>שונות</p>
+        <ul>
+          <li><a href="https://tools-by-rotem.github.io/webtools/navigation-links-generator">מחולל קישורי ניווט</a></li>
+          <li><a href="https://tools-by-rotem.github.io/webtools/reverse-typing-fix">תיקון הקלדה הפוכה</a></li>
+          <li><a href="https://tools-by-rotem.github.io/webtools/strong-password-generator">מחולל סיסמאות חזקות</a></li>
+          <li><a href="https://tools-by-rotem.github.io/webtools/time-to-go-home">הגיע הזמן ללכת הביתה</a></li>
+          <li><a href="https://tools-by-rotem.github.io/webtools/resume-scanner">התאמת קורות חיים לסורקים אוטומטיים</a></li>
+          <li><a href="https://tools-by-rotem.github.io/webtools/time-zone-converter">המרת זמן בינלאומי</a></li>
+          <li><a href="https://tools-by-rotem.github.io/webtools/fahrenheit-to-celsius">המרת פרנהייט לצלזיוס</a></li>
+          <li><a href="https://tools-by-rotem.github.io/webtools/screen-size-checker">בדיקת גודל מסך</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 כל הזכויות שמורות לרותם קנון</p>
+    </div>
+  </footer>
+
+  <script>
+    function calculate() {
+      const investment = Number(document.getElementById('investment').value);
+      const taxable = Number(document.getElementById('taxable').value);
+      const held3years = document.querySelector('input[name="held3years"]:checked')?.value;
+      const startupValid = document.querySelector('input[name="startupValid"]:checked')?.value;
+      const resultDiv = document.getElementById('result');
+      const loader = document.getElementById('loader');
+      const taxRate = 0.47;
+      const investmentCap = 5000000; // תקרה עליונה לפי חוק האנג'לים
+
+      // נקה תוצאות קודמות
+      resultDiv.innerHTML = '';
+      
+      // בדיקת שדות ריקים
+      if (!investment || !taxable || !held3years || !startupValid) {
+        resultDiv.innerHTML = "<div class='error-message'>אנא מלא את כל השדות לפני החישוב.</div>";
+        return;
+      }
+
+      // הצג אנימציית טעינה
+      loader.style.display = "block";
+      resultDiv.style.display = "none";
+
+      // דמה עיבוד לאפקט טעינה
+      setTimeout(() => {
+        // הסתר אנימציית טעינה
+        loader.style.display = "none";
+        resultDiv.style.display = "block";
+
+        let resultText = '';
+
+        // בדיקת תנאי הזכאות והצגת סיבת אי-זכאות
+        if (held3years === 'לא' && startupValid === 'לא') {
+          resultText = "לא ניתן לקבל את ההטבה לפי חוק האנג'לים מהסיבות הבאות:<br>" +
+                      "1. לא הוחזקו המניות למשך 3 שנים לפחות<br>" +
+                      "2. החברה אינה עומדת בתנאי החוק (חברה חדשה, טכנולוגית, ללא חלוקת דיבידנדים)";
+        } else if (held3years === 'לא') {
+          resultText = "לא ניתן לקבל את ההטבה לפי חוק האנג'לים – המניות לא הוחזקו למשך 3 שנים לפחות.";
+        } else if (startupValid === 'לא') {
+          resultText = "לא ניתן לקבל את ההטבה לפי חוק האנג'לים – החברה אינה עומדת בתנאי החוק (חברה חדשה, טכנולוגית, ללא חלוקת דיבידנדים).";
+        } else {
+          let actualInvestment = investment;
+          let note = '';
+
+          if (investment > investmentCap) {
+            actualInvestment = investmentCap;
+            note = `סכום ההשקעה חורג מהתקרה המזכה (5,000,000 ש"ח). ההטבה חושבה לפי תקרה זו בלבד.`;
+          }
+
+          const reducedTaxable = taxable - actualInvestment;
+          const taxSaved = actualInvestment * taxRate;
+
+          resultText = `השקעת ${investment.toLocaleString()} ש"ח בסטארטאפ.`;
+          
+          if (note) {
+            resultText += `<br><strong>שימו לב:</strong> ${note}`;
+          }
+
+          resultText += `
+            <br>ההכנסה החייבת שלכם ירדה ל: ${reducedTaxable.toLocaleString()} ש"ח.
+            <br>חסכת במס: ${taxSaved.toLocaleString()} ש"ח (בהנחת מס שולי של 47%).
+          `;
+        }
+
+        resultDiv.innerHTML = resultText;
+      }, 1500); // 1.5 שניות של אנימציית טעינה
+    }
+  </script>
+</body>
+</html>
