@@ -195,6 +195,32 @@
             80%, 100% { content: '...'; }
         }
 
+        /* Article Styles - עם קונטיינר לבן ורספונסיביות */
+        .article-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            direction: rtl;
+        }
+
+        .article-container h2 {
+            color: #2d3436;
+            margin: 1.5rem 0 1rem;
+            font-size: 2rem;
+            text-align: center;
+        }
+
+        .article-container p {
+            margin: 1rem 0;
+            line-height: 1.8;
+            font-size: 1.1rem;
+            color: #333;
+            text-align: justify;
+        }
+
         /* Footer Styles */
         .main-footer {
             background-color: #2d3436;
@@ -281,6 +307,45 @@
         }
 
         /* רספונסיביות למסכים קטנים */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 15px;
+            }
+            
+            .chat-container {
+                max-width: 100%;
+                height: 70vh;
+                min-height: 500px;
+            }
+
+            .article-container {
+                margin: 1rem;
+                padding: 1.5rem;
+                border-radius: 10px;
+            }
+
+            .article-container h2 {
+                font-size: 1.5rem;
+                margin: 1rem 0;
+            }
+
+            .article-container p {
+                font-size: 1rem;
+                line-height: 1.6;
+                margin: 0.8rem 0;
+            }
+
+            .header-container {
+                padding: 0 1rem;
+            }
+
+            .footer-container {
+                padding: 0 1rem;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 1.5rem;
+            }
+        }
+
         @media (max-width: 480px) {
             .main-content {
                 padding: 10px;
@@ -288,7 +353,7 @@
             
             .chat-container {
                 border-radius: 15px;
-                height: calc(100vh - 200px);
+                height: calc(100vh - 250px);
                 min-height: 400px;
             }
             
@@ -315,7 +380,7 @@
             .chat-input {
                 min-width: 150px;
                 padding: 10px 14px;
-                font-size: 16px; /* מונע זום באייפון */
+                font-size: 16px;
             }
             
             .send-button {
@@ -323,13 +388,26 @@
                 min-width: 70px;
             }
 
-            .header-container {
-                padding: 0 1rem;
+            .article-container {
+                margin: 0.5rem;
+                padding: 1rem;
+                border-radius: 8px;
+            }
+
+            .article-container h2 {
+                font-size: 1.3rem;
+                margin: 0.8rem 0;
+            }
+
+            .article-container p {
+                font-size: 0.9rem;
+                line-height: 1.5;
+                margin: 0.6rem 0;
             }
 
             .footer-container {
-                padding: 0 1rem;
                 grid-template-columns: 1fr;
+                gap: 1rem;
             }
         }
 
@@ -345,6 +423,20 @@
             .send-button {
                 width: 100%;
                 min-width: 100%;
+            }
+
+            .article-container {
+                margin: 0.25rem;
+                padding: 0.8rem;
+            }
+
+            .article-container h2 {
+                font-size: 1.2rem;
+            }
+
+            .article-container p {
+                font-size: 0.85rem;
+                line-height: 1.4;
             }
         }
     </style>
@@ -376,6 +468,42 @@
                 <button class="send-button" id="sendButton">שליחה</button>
             </div>
         </div>
+    </div>
+    
+    <div class="article-container">
+        <h2>למה אתם באמת רוצים את זה?</h2>
+
+        <p>עצרו רגע.<br>
+        קחו נשימה.<br>
+        תחשבו על משהו שאתם מאוד רוצים.<br>
+        משהו שבוער בכם, שמסעיר אתכם, שגורם לכם לדמיין עתיד אחר.</p>
+
+        <p>יש לכם את זה? מעולה. עכשיו נשאל את השאלה הכי פשוטה ולפעמים הכי מתסכלת שיכולה להישאל:<br>
+        למה?</p>
+
+        <p>כשאנחנו שואלים את עצמנו "למה אני רוצה את זה?", אנחנו מתחילים לקלף שכבות.<br>
+        בהתחלה זו תשובה אוטומטית: "כי זה ייתן לי יותר חופש", "כי זה מה שתמיד רציתי", "כי זה יוכיח משהו".</p>
+
+        <p>אבל אז מגיעה השאלה שוב: למה?<br>
+        וזה הרגע שבו הקליפה נסדקת.</p>
+
+        <p>כי מתחת לרצון יש צורך.<br>
+        ומתחת לצורך – יש פחד, תקווה, כאב ישן, אולי חלום שלא העזנו להודות בו בקול.</p>
+
+        <p>ולפעמים, אחרי כמה שכבות של "למה", אנחנו מגלים שרצינו משהו לא בגלל שהוא שלנו – אלא כי מישהו פעם אמר שזה מה שצריך לרצות.</p>
+
+        <p>הכלי שבניתי כאן הוא כמו ילד סקרן – הילד שבתוככם – שמסרב להסתפק בתשובות שטחיות.<br>
+        הוא שואל "למה?" לא כדי להקשות, אלא כדי להזכיר לכם שיש משהו עמוק יותר, קרוב יותר ללב, שדורש הקשבה.</p>
+
+        <p>ואולי זו כל המשמעות:<br>
+        לא לרדוף אחרי המטרות – אלא לעצור לרגע, להתבונן פנימה, ולגלות מה באמת מניע אותנו.</p>
+
+        <p>כי כשאנחנו מבינים את הסיבה האמיתית לרצון – הרצון עצמו משתנה.<br>
+        הוא הופך להיות יותר מדויק, יותר כן, לפעמים גם יותר קטן – אבל הרבה יותר אמיתי.</p>
+
+        <p>אז כשהכלי שואל אתכם "למה?", ענו לו.<br>
+        שוב ושוב.<br>
+        עד שתגיעו לסיבה האמיתית.</p>
     </div>
     
     <footer class="main-footer">
