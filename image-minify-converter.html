@@ -259,7 +259,7 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Responsive Styles */
+        /* Responsive Styles - תיקון מרכוז במובייל */
         @media (max-width: 768px) {
             .header-container {
                 padding: 0 1rem;
@@ -267,7 +267,14 @@
 
             .container {
                 padding: 1rem;
-                margin: 1rem;
+                margin: 1rem auto; /* השינוי העיקרי - הוספת auto למרכוז */
+                max-width: calc(100% - 2rem); /* הבטחה שהקונטיינר לא יחרוג מהמסך */
+            }
+
+            .article-container {
+                margin: 1rem auto 3rem auto; /* גם כאן תיקון למרכוז */
+                padding: 1rem;
+                max-width: calc(100% - 2rem);
             }
 
             .footer-container {
