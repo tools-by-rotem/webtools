@@ -386,13 +386,76 @@ h1 {
   border-top: 1px solid #444;
 }
 
+/* FAQ Section Styling - מיושר עם הקונטיינר הראשי */
+.faq-section {
+  max-width: 1000px;
+  margin: 40px auto 0;
+  padding: 0 20px;
+}
+
+details {
+  border: none;
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin: 12px 0;
+  background: #ffffff;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+  text-align: right;
+}
+
+details:hover {
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+details summary {
+  font-weight: 600;
+  cursor: pointer;
+  position: relative;
+  padding-left: 24px;
+  list-style: none;
+}
+
+details summary::-webkit-details-marker {
+  display: none;
+}
+
+details summary::before {
+  content: '+';
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-weight: bold;
+  font-size: 20px;
+  color: #0078d7;
+  transition: transform 0.3s;
+}
+
+details[open] summary::before {
+  content: '-';
+}
+
+details p {
+  margin-top: 12px;
+  line-height: 1.7;
+  color: #444;
+}
+
+.faq-title {
+    text-align: center;
+    color: #007BFF;
+    margin-top: 1em;
+    font-size: 2em;
+  }
+
 @media (max-width: 768px) {
   .selector-option {
     min-width: 150px;
   }
   
   .step-number {
-    width: 24px;     /* מקטין את מעגל המספר */
+    width: 24px;     
     height: 24px;
     line-height: 24px;
     font-size: 0.9rem;
@@ -408,18 +471,22 @@ h1 {
   }
   
   h1 {
-    font-size: 1.8rem; /* מקטין מעט את גודל הכותרת במובייל */
+    font-size: 1.8rem;
   }
   
   h1 .mobile-break {
-    display: block; /* גורם לאלמנט להופיע בשורה חדשה */
-    margin-top: 5px; /* מרווח קטן בין השורות */
+    display: block;
+    margin-top: 5px;
+  }
+  
+  .faq-section {
+    padding: 0 10px;
   }
 }
 
 @media (min-width: 769px) {
   h1 .mobile-break {
-    display: inline; /* במסכים גדולים, האלמנט יופיע באותה שורה */
+    display: inline;
   }
 }
 
@@ -444,9 +511,62 @@ h1 {
   .footer-section {
     align-items: center;
   }
+  
+  .faq-section {
+    padding: 0 10px;
+  }
 }
   </style>
   <script src="https://website-widgets.pages.dev/dist/sienna.min.js" defer></script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "מה אסור להעלות לאוטובוס?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "אסור להעלות לאוטובוס חפצים מסוכנים, כמו גזיות, חומרי דליקה, כלי נשק (ללא רישיון), חפצים חדים פתוחים, או כל דבר שעלול להוות סיכון לנוסעים אחרים. חלק מהחברות מגבילות גם העלאת פריטים גדולים או ריחניים (כמו דגים או צבעים)."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "האם מותר להעלות אופניים לאוטובוס בין-עירוני?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "באופן כללי, מותר להעלות אופניים רגילים לאוטובוס בינעירוני בתא המטען בלבד. תמיד כדאי לבדוק מול מפעיל הקו הספציפי."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "האם מותר לעלות עם קורקינט לאוטובוס?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "כן, אפשר לעלות עם קורקינט מתקפל אם הוא מקופל ואינו מפריע לנוסעים. קורקינט חשמלי שאינו מתקפל או גדול במיוחד עשוי להיתקל בסירוב, תלוי בנהג ובתפוסת האוטובוס."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "האם מותר להעלות אופניים לרכבת הקלה?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "אסור להעלות אופניים שאינם מתקפלים לרכבת הקלה. אופניים מתקפלים יורשו לעלות לרכבת הקלה בכל שעות הפעילות."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "האם מותר להעלות אופניים לרכבת ישראל?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "מותר להעלות אופניים רגילים בימים א'-ה' בין השעות 09:00-15:00 ובין 19:00-06:00 למחרת. בימי ו' וערבי חג ניתן להעלות בכל שעות הפעילות."
+      }
+    }
+  ]
+}
+</script>
+
 </head>
 <body>
   <header class="main-header">
@@ -520,7 +640,7 @@ h1 {
       <div class="guidelines-section">
         <h3 class="section-title">אופניים רגילים</h3>
         <ul class="guidelines-list">
-          <li><strong>רכבת ישראל:</strong> מותר להעלות אופניים רגילים לרכבת ישראל רק בשעות השפל: ימים א'-ה' בין 09:00–15:00 ובין 19:00–06:00 למחרת, ובימי ו' וערבי חג בכל שעות הפעילות. לא ניתן להעלות במוצ"ש ובמוצאי חג. יש להעלותם לקרון הדרומי הייעודי.</li>
+          <li><strong>רכבת ישראל:</strong> מותר להעלות אופניים רגילים לרכבת ישראל רק בשעות השפל: ימים א'-ה' בין 15:00–09:00 ובין 06:00–19:00 למחרת, ובימי ו' וערבי חג בכל שעות הפעילות. לא ניתן להעלות במוצ"ש ובמוצאי חג. יש להעלותם לקרון הדרומי הייעודי.</li>
   <li><strong>רכבת קלה:</strong> אסור להעלות אופניים רגילים לרכבת הקלה בשום מקרה.</li>
   <li><strong>אוטובוס בינעירוני:</strong> מותר להעלות אופניים רגילים לאוטובוס בינעירוני בתא המטען בלבד, וללא תשלום. הנהג רשאי לסרב לאופניים מלוכלכים או גדולים במיוחד.</li>
   <li><strong>אוטובוס עירוני:</strong> אסור להעלות אופניים רגילים (לא מתקפלים) לאוטובוס עירוני.</li>
@@ -598,6 +718,34 @@ h1 {
         <p>המידע מבוסס על הנחיות רשמיות של רכבת ישראל, חברות האוטובוסים ונהלי משרד התחבורה. ההחלטה הסופית נתונה לשיקול דעת צוות התחבורה הציבורית. מומלץ לבדוק את ההנחיות באתרים הרשמיים של חברות התחבורה הציבורים.</p>
       </div>
     </div>
+  </div>
+  
+<h2 class="faq-title">שאלות נפוצות</h2>
+<div class="faq-section">
+    <details>
+      <summary>מה אסור להעלות לאוטובוס?</summary>
+      <p>אסור להעלות לאוטובוס חפצים מסוכנים, כמו גזיות, חומרי דליקה, כלי נשק (ללא רישיון), חפצים חדים פתוחים, או כל דבר שעלול להוות סיכון לנוסעים אחרים. חלק מהחברות מגבילות גם העלאת פריטים גדולים או ריחניים (כמו דגים או צבעים).</p>
+    </details>
+
+    <details>
+      <summary>האם מותר להעלות אופניים לאוטובוס בין-עירוני?</summary>
+      <p>באופן כללי, מותר להעלות אופניים רגילים לאוטובוס בינעירוני בתא המטען בלבד. תמיד כדאי לבדוק מול מפעיל הקו הספציפי.</p>
+    </details>
+
+    <details>
+      <summary>האם מותר לעלות עם קורקינט לאוטובוס?</summary>
+      <p>כן, אפשר לעלות עם קורקינט מתקפל אם הוא מקופל ואינו מפריע לנוסעים. קורקינט חשמלי שאינו מתקפל או גדול במיוחד עשוי להיתקל בסירוב, תלוי בנהג ובתפוסת האוטובוס.</p>
+    </details>
+
+    <details>
+      <summary>האם מותר להעלות אופניים לרכבת הקלה?</summary>
+      <p>אסור להעלות אופניים שאינם מתקפלים לרכבת הקלה. אופניים מתקפלים יורשו לעלות לרכבת הקלה בכל שעות הפעילות.</p>
+    </details>
+
+    <details>
+      <summary>האם מותר להעלות אופניים לרכבת ישראל?</summary>
+      <p>מותר להעלות אופניים רגילים בימים א'-ה' בין השעות 09:00-15:00 ובין 19:00-06:00 למחרת. בימי ו' וערבי חג ניתן להעלות בכל שעות הפעילות.</p>
+    </details>
   </div>
   
   <footer class="main-footer">
@@ -982,7 +1130,7 @@ h1 {
                 <span class="result-icon">❓</span>
                 <div class="result-content">
                   <div class="result-title">אין מידע זמין</div>
-                  <div class="result-details">אין לנו מידע לגבי שילוב זה כרגע. אנא פנה לחברת התחבורה הציבורית לקבלת מידע מדויק.</div>
+                  <div class="result-details">אין לנו מידע לגבי שילוב זה כרגע. אנא פנו לחברת התחבורה הציבורית לקבלת מידע מדויק.</div>
                 </div>
               </div>
             `;
