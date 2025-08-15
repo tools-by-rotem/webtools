@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>מציאת הופעות ואירועים עם כניסה חופשית | Tools by Rotem</title>
-    <meta name="description" content="למה לשלם מאות שקלים על כרטיסים להופעות כשאפשר למצוא הופעות ואירועים עם כניסה חופשית? לחצו כדי למצוא את כל הפרסומים על האירועים הכי חמים עם כניסה חופשית >>>">
+    <meta name="description" content="למה לשלם מאות שקלים על כרטיסים כשאפשר למצוא הופעות ואירועים עם כניסה חופשית? לחצו כדי למצוא את כל הפרסומים על ההופעות והאירועים הכי חמים עם כניסה חופשית >>>">
     <link rel="canonical" href="https://tools-by-rotem.github.io/webtools/free-entry-events" />
     <link rel="icon" type="image/x-icon" href="/webtools/site-favicon.ico">
     <style>
@@ -65,6 +65,42 @@
             margin-bottom: 30px;
             font-size: 2.2em;
             font-weight: 600;
+        }
+
+        .city-selector {
+            margin-bottom: 25px;
+        }
+
+        .city-selector label {
+            display: block;
+            color: #555;
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .city-selector select {
+            width: 100%;
+            max-width: 300px;
+            padding: 12px 16px;
+            font-size: 1.1em;
+            border: 2px solid #e0e6ed;
+            border-radius: 12px;
+            background: white;
+            color: #333;
+            transition: all 0.3s ease;
+            appearance: none;
+            background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="%23666" d="M2 0L0 2h4zm0 5L0 3h4z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: left 12px center;
+            background-size: 12px;
+            padding-left: 35px;
+        }
+
+        .city-selector select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
 
         .search-btn {
@@ -166,6 +202,10 @@
                 padding: 16px 30px;
                 font-size: 1.2em;
                 min-width: 220px;
+            }
+
+            .city-selector select {
+                max-width: 100%;
             }
 
             .article-container h2 {
@@ -312,9 +352,38 @@
   
     <div class="main-container">
         <div class="tool-container">
-            <h1>🎭 חיפוש הופעות ואירועים בכניסה חופשית</h1>
+            <h1>חיפוש הופעות ואירועים בכניסה חופשית</h1>
+            
+            <div class="city-selector">
+                <label for="city-select">תראו לי מופעים ב:</label>
+                <select id="city-select">
+                    <option value="">כל הארץ</option>
+                    <option value="תל אביב">תל אביב</option>
+                    <option value="חיפה">חיפה</option>
+                    <option value="ירושלים">ירושלים</option>
+                    <option value="באר שבע">באר שבע</option>
+                    <option value="נתניה">נתניה</option>
+                    <option value="ראשון לציון">ראשון לציון</option>
+                    <option value="פתח תקווה">פתח תקווה</option>
+                    <option value="כפר סבא">כפר סבא</option>
+                    <option value="רעננה">רעננה</option>
+                    <option value="הרצליה">הרצליה</option>
+                    <option value="אשדוד">אשדוד</option>
+                    <option value="מודיעין">מודיעין</option>
+                    <option value="רמת גן">רמת גן</option>
+                    <option value="חולון">חולון</option>
+                    <option value="רחובות">רחובות</option>
+                    <option value="אשקלון">אשקלון</option>
+                    <option value="בת ים">בת ים</option>
+                    <option value="נהריה">נהריה</option>
+                    <option value="עכו">עכו</option>
+                    <option value="נתיבות">נתיבות</option>
+                    <option value="אילת">אילת</option>
+                </select>
+            </div>
+
             <button class="search-btn" onclick="searchFreeEvents()">
-                לחיפוש אירועים והופעות
+                מעבר לתוצאות
                 <span class="icon">🔍</span>
             </button>
         </div>
@@ -322,27 +391,30 @@
         <div class="article-container">
             <h2>איך להשתמש בכלי</h2>
             
-            <h3>שלב 1: לחצו על הכפתור</h3>
-            <p>לחצו על הכפתור "לחיפוש אירועים והופעות" כדי לפתוח את גוגל עם חיפוש מותאם אישית שמוצא פרסומים בפייסבוק על הופעות ואירועים בכניסה חופשית.</p>
+            <h3>שלב 1: בחרו עיר (אופציונלי)</h3>
+            <p>אם אתם מעוניינים באירועים באזור מסוים, בחרו את העיר המועדפת עליכם מהרשימה. השארת הבחירה על "כל הארץ" תציג אירועים מכל רחבי הארץ.</p>
+            
+            <h3>שלב 2: לחצו על הכפתור</h3>
+            <p>לחצו על הכפתור "מעבר לתוצאות" כדי לפתוח את גוגל עם חיפוש מותאם אישית שמוצא פרסומים בפייסבוק על הופעות ואירועים בכניסה חופשית.</p>
             
             <div class="highlight">
                 <p><strong>💡 מה הכלי עושה בדיוק?</strong><br>
-                הכלי מחפש בפייסבוק פוסטים של עיריות, חברות הפקה ומארגני אירועים שמכילים את המילים "כניסה חופשית".</p>
+                הכלי מחפש בפייסבוק פוסטים של עיריות, חברות הפקה ומארגני אירועים שמכילים את המונח "כניסה חופשית" ואת שם העיר שבחרתם (אם בחרתם).</p>
             </div>
 
-            <h3>שלב 2: עיינו בתוצאות החיפוש</h3>
+            <h3>שלב 3: עיינו בתוצאות החיפוש</h3>
             <p>אחרי הלחיצה על הכפתור יופיע עמוד חדש בגוגל עם תוצאות החיפוש. בו תוכלו לראות פוסטים מפייסבוק של:</p>
             <ul>
-                <li>עיריות ומועצות מקומיות המפרסמות אירועי תרבות עם כניסה חופשית</li>
-                <li>חברות הפקה ומארגני אירועים המפיקים את האירועים הללו</li>
-                <li>פסטיבלים והופעות ברחבי הארץ הפתוחים לקהל הרחב</li>
+                <li>עיריות ומועצות מקומיות המפרסמות אירועי תרבות עם כניסה חופשית.</li>
+                <li>חברות הפקה ומארגני אירועים המפיקים את האירועים הללו.</li>
+                <li>פסטיבלים והופעות ברחבי הארץ הפתוחים לקהל הרחב.</li>
             </ul>
 
-            <h3>שלב 3: פתחו את התוצאות ובחרו את ההופעות והאירועים שמעניינים אתכם</h3>
-            <p>לחצו על התוצאות המוצגות וקראו על ההופעות והאירועים המפורסמים</p>
+            <h3>שלב 4: פתחו את התוצאות ובחרו את ההופעות והאירועים שמעניינים אתכם</h3>
+            <p>לחצו על התוצאות המוצגות וקראו על ההופעות והאירועים המפורסמים.</p>
 
-            <h3>שלב 4: להוסיף את האירועים ליומן</h3>
-            <p>כל מה שנותר לכם הוא להוסיף את האירועים וההופעות שמעניינים אתכם ליומן וללוח השנה כדי לוודא שאין התנגשויות</p>
+            <h3>שלב 5: להוסיף את האירועים ליומן</h3>
+            <p>כל מה שנותר לכם הוא להוסיף את האירועים וההופעות שמעניינים אתכם ליומן ולוח השנה כדי לוודא שאין התנגשויות.</p>
 
             <div class="highlight">
                 <h3><strong>🎯 טיפ למציאת אירועים עדכניים:</strong></h3>
@@ -434,7 +506,7 @@
 					<li><a href="https://tools-by-rotem.github.io/webtools/ai-image-generator">מחולל תמונות AI</a></li>
 					<li><a href="https://tools-by-rotem.github.io/webtools/reasons-revealer">חושף הסיבות</a></li>
 					<li><a href="https://tools-by-rotem.github.io/webtools/phobia">מנוע חיפוש לפוביות</a></li>
-					<li><a href="https://tools-by-rotem.github.io/webtools/angels-law">חוק האנג’לים</a></li>
+					<li><a href="https://tools-by-rotem.github.io/webtools/angels-law">חוק האנג'לים</a></li>
                 </ul>
             </div>
         </div>
@@ -445,7 +517,16 @@
   
     <script>
         function searchFreeEvents() {
-            const searchQuery = 'site:facebook.com "כניסה חופשית"';
+            const citySelect = document.getElementById('city-select');
+            const selectedCity = citySelect.value;
+            
+            let searchQuery = 'site:facebook.com "כניסה חופשית"';
+            
+            // אם נבחרה עיר מסוימת, הוסף אותה לחיפוש
+            if (selectedCity) {
+                searchQuery += ` "${selectedCity}"`;
+            }
+            
             const googleSearchUrl = `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`;
             
             window.open(googleSearchUrl, '_blank', 'noopener,noreferrer');
