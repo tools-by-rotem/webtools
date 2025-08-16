@@ -143,7 +143,7 @@ button:hover {
     content: attr(data-tooltip);
     position: absolute;
     top: -25px;
-    right: 110%;
+    left: 110%;
     background-color: #333;
     color: white;
     padding: 5px;
@@ -226,6 +226,15 @@ button:hover {
         }
 
 @media screen and (max-width: 768px) {
+    .icon:hover::after {
+        right: 50%;
+        transform: translateX(50%);
+        top: 25px;
+        white-space: normal;
+        width: 200px;
+        max-width: 90vw;
+    }
+
     .footer-container {
         grid-template-columns: 1fr; /* שורה אחת במקום טורים */
         text-align: center; /* מירכוז טקסט */
@@ -264,6 +273,7 @@ button:hover {
 
     <div class="container">
         <h1>חישוב נפח חיפוש בגוגל</h1>
+        <p>הכלי מספק הערכה במקרים בהם הכלים המסורתיים מחזירים שאין חיפושים</p>
         <form id="searchVolumeForm">
             <label for="N">
                 כמות תוצאות (N):
@@ -398,6 +408,5 @@ button:hover {
             document.getElementById("searchVolume").textContent = searchVolume.toFixed(2);
         });
     </script>
-
 </body>
 </html>
