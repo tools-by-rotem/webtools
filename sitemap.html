@@ -101,31 +101,6 @@
             text-decoration: underline;
         }
         
-        .search-container {
-            margin-bottom: 30px;
-            text-align: center;
-        }
-        
-        #search-input {
-            padding: 10px 15px;
-            width: 100%;
-            max-width: 500px;
-            border: 2px solid #ddd;
-            border-radius: 30px;
-            font-size: 16px;
-            outline: none;
-            transition: border-color 0.3s;
-        }
-        
-        #search-input:focus {
-            border-color: #3498db;
-        }
-        
-        .highlight {
-            background-color: #fffacd;
-            font-weight: bold;
-        }
-        
         .main-header {
             background-color: #2d3436;
             color: white;
@@ -245,13 +220,6 @@
         margin-bottom: 20px;
     }
     
-    /* שיפור תיבת החיפוש */
-    #search-input {
-        width: 90%;
-        font-size: 16px;
-        padding: 12px;
-    }
-    
     /* התאמת הקטגוריות */
     .sitemap-container {
         grid-template-columns: 1fr;
@@ -351,10 +319,6 @@
 
     <div class="container">
         <h1>מפת האתר</h1>
-        
-        <div class="search-container">
-            <input type="text" id="search-input" placeholder="חיפוש כלים באתר...">
-        </div>
         
         <div class="sitemap-container">
             <div class="category" data-category="navigation">
@@ -523,72 +487,5 @@
             <p>© 2025 כל הזכויות שמורות לרותם קנון</p>
         </div>
     </footer>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const searchInput = document.getElementById('search-input');
-            const categoryBoxes = document.querySelectorAll('.category');
-            const allLinks = document.querySelectorAll('.category a');
-            
-            searchInput.addEventListener('input', function() {
-                const searchTerm = this.value.trim().toLowerCase();
-                
-                if (searchTerm === '') {
-                    // Reset everything if search is empty
-                    allLinks.forEach(link => {
-                        const text = link.textContent;
-                        link.innerHTML = text;
-                        link.parentElement.style.display = 'block';
-                    });
-                    
-                    categoryBoxes.forEach(box => {
-                        box.style.display = 'block';
-                    });
-                    
-                    return;
-                }
-                
-                // Hide all categories first
-                categoryBoxes.forEach(box => {
-                    box.style.display = 'none';
-                });
-                
-                // Search through links
-                let foundResults = false;
-                
-                allLinks.forEach(link => {
-                    const text = link.textContent.toLowerCase();
-                    const parentCategory = link.closest('.category');
-                    
-                    if (text.includes(searchTerm)) {
-                        // Show this category
-                        parentCategory.style.display = 'block';
-                        foundResults = true;
-                        
-                        // Highlight the matching text
-                        const regex = new RegExp(searchTerm, 'gi');
-                        const highlightedText = link.textContent.replace(
-                            regex, 
-                            match => `<span class="highlight">${match}</span>`
-                        );
-                        
-                        link.innerHTML = highlightedText;
-                        link.parentElement.style.display = 'block';
-                    } else {
-                        // Hide this link
-                        link.parentElement.style.display = 'none';
-                    }
-                });
-                
-                // Check if any items are visible in each category
-                categoryBoxes.forEach(box => {
-                    const visibleItems = box.querySelectorAll('li[style="display: block;"]');
-                    if (visibleItems.length === 0) {
-                        box.style.display = 'none';
-                    }
-                });
-            });
-        });
-    </script>
 </body>
 </html>
