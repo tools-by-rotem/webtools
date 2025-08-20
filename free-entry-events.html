@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
@@ -520,6 +521,14 @@
         function searchFreeEvents() {
             const citySelect = document.getElementById('city-select');
             const selectedCity = citySelect.value;
+
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbyUGz-vwTKz3iM4iink8wlCJrTkJ9Rqey8bAaghUEOUQaUdQrt4Q52b6qAslHSh0rJeEg/exec';
+
+        fetch(scriptURL, {
+          method: 'POST',
+          body: JSON.stringify({ query: selectedCity })
+        })
+        .catch(err => console.error('Error sending to Google Sheets:', err));
             
             let searchQuery = 'site:facebook.com "כניסה חופשית"';
             
