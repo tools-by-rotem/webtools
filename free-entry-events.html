@@ -63,7 +63,7 @@
         h1 {
             color: #333;
             margin-bottom: 30px;
-            font-size: 2.2em;
+            font-size: 1.8em;
             font-weight: 600;
         }
 
@@ -101,6 +101,85 @@
             outline: none;
             border-color: #667eea;
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .source-selector {
+            margin-bottom: 25px;
+        }
+
+        .source-selector > label {
+            display: block;
+            color: #555;
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .switch-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .switch-label {
+            font-size: 1em;
+            color: #777;
+            transition: all 0.3s ease;
+        }
+
+        .switch-label.active {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+            border-radius: 30px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+        }
+
+        input:not(:checked) + .slider {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(30px);
         }
 
         .search-btn {
@@ -277,7 +356,7 @@
             }
             
             h1 {
-                font-size: 1.8em;
+                font-size: 1.5em;
             }
             
             .search-btn {
@@ -487,6 +566,18 @@
                 </select>
             </div>
 
+            <div class="source-selector">
+                <label>מקור התוצאות:</label>
+                <div class="switch-container">
+                    <span class="switch-label active">פייסבוק</span>
+                    <label class="switch">
+                        <input type="checkbox" id="source-toggle" checked>
+                        <span class="slider"></span>
+                    </label>
+                    <span class="switch-label">אתרי עיריות</span>
+                </div>
+            </div>
+
             <button class="search-btn" onclick="searchFreeEvents()">
                 מעבר לתוצאות
                 <span class="icon">🔍</span>
@@ -644,6 +735,8 @@
         function searchFreeEvents() {
             const citySelect = document.getElementById('city-select');
             const selectedCity = citySelect.value;
+            const sourceToggle = document.getElementById('source-toggle');
+            const isFacebook = sourceToggle.checked;
 
             const scriptURL = 'https://script.google.com/macros/s/AKfycbyUGz-vwTKz3iM4iink8wlCJrTkJ9Rqey8bAaghUEOUQaUdQrt4Q52b6qAslHSh0rJeEg/exec';
 
@@ -652,18 +745,20 @@
           body: JSON.stringify({ query: selectedCity })
         })
         .catch(err => console.error('Error sending to Google Sheets:', err));
-            
-            let searchQuery = 'site:facebook.com "כניסה חופשית"';
-            
+
+            let searchQuery = isFacebook
+                ? 'site:facebook.com "כניסה חופשית"'
+                : 'inurl:muni.il "כניסה חופשית"';
+
             // אם נבחרה עיר מסוימת, הוסף אותה לחיפוש
             if (selectedCity) {
                 searchQuery += ` "${selectedCity}"`;
             }
-            
+
             const googleSearchUrl = `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`;
-            
+
             window.open(googleSearchUrl, '_blank', 'noopener,noreferrer');
-            
+
             // אפקט חזותי לכפתור
             const btn = event.target;
             btn.style.transform = 'scale(0.95)';
@@ -671,6 +766,18 @@
                 btn.style.transform = '';
             }, 150);
         }
+
+        // הוספת פונקציה לעדכון הלייבלים
+        document.getElementById('source-toggle').addEventListener('change', function() {
+            const labels = document.querySelectorAll('.switch-label');
+            if (this.checked) {
+                labels[0].classList.add('active');
+                labels[1].classList.remove('active');
+            } else {
+                labels[0].classList.remove('active');
+                labels[1].classList.add('active');
+            }
+        });
         
         function openTutorial() {
   const modal = document.getElementById("tutorialModal");
