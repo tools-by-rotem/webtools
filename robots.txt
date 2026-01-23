@@ -1,0 +1,25 @@
+User-agent: *
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: BingAI
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Grok
+Allow: /
+
+User-agent: DeepSeek
+Allow: /
+
+Sitemap: https://tools-by-rotem.github.io/webtools/sitemap.xml
