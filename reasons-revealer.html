@@ -593,7 +593,8 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <p>© 2025 כל הזכויות שמורות לרותם קנון</p>
+            <p>© <span id="year"></span> כל הזכויות שמורות לרותם קנון</p>
+            <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
         </div>
     </footer>
 
