@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>סימלוטור ביקורת בגוגל מפות - חישוב נקודות | Tools by Rotem</title>
+    <meta name="description" content="משאירים ביקורות לעסקים בגוגל מפות? ידעתם שאפשר לקבל אפילו יותר נקודות על כל ביקורת שמשאירים? בעזרת הסימולטור תוכלו לחשב את כמות הנקודות האופטימלית ביותר >>>">
+    <link rel="canonical" href="https://tools-by-rotem.github.io/webtools/google-reviews-simulator"/>
+    <link rel="icon" type="image/x-icon" href="/webtools/site-favicon.ico">
+<style>
+  :root{
+    --ink: #1a1a1a;
+    --muted: #767676;
+    --line: #e4e4e4;
+    --bar: #1a1a1a;
+    --accent: #2f9e6e;
+  }
+  *{ box-sizing: border-box; }
+  body{
+    margin:0;
+    background: #ffffff;
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  }
+  .main-header {
+    background-color: #2d3436;
+    color: white;
+    padding: 1rem 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+
+  .header-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .logo img {
+    height: 60px;
+    width: auto;
+  }
+
+  .main-content {
+    flex: 1;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+  }
+  .wrap{
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+  h1{
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0 0 28px;
+  }
+
+  .layout{
+    display: grid;
+    grid-template-columns: 1fr 200px;
+    gap: 40px;
+    align-items: start;
+  }
+  .row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap: 16px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .row .label{ font-size: 14.5px; }
+  .row .label .pts{ color: var(--muted); font-size: 12.5px; margin-inline-start: 6px; }
+
+  .stepper{ display:flex; align-items:center; gap:0; border:1px solid var(--line); border-radius: 8px; overflow:hidden; flex-shrink:0; }
+  .stepper button{
+    width: 30px; height: 32px; background: #fafafa; color: var(--ink);
+    border: none; cursor:pointer; font-size: 16px;
+  }
+  .stepper button:hover{ background: #efefef; }
+  .stepper input{
+    width: 48px; text-align:center; background: #fff; color: var(--ink);
+    border: none; border-inline: 1px solid var(--line);
+    font-size: 14px; height: 32px;
+    -moz-appearance: textfield;
+  }
+  .stepper input::-webkit-outer-spin-button, .stepper input::-webkit-inner-spin-button{ -webkit-appearance:none; margin:0; }
+
+  .review-row{ padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .review-row textarea{
+    width: 100%; min-height: 64px; margin-top: 8px; resize: vertical;
+    border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px;
+    font-family: inherit; font-size: 14px;
+  }
+  .review-row .charinfo{ font-size: 12px; color: var(--muted); margin-top: 6px; }
+
+  .bar-box{
+    position: sticky;
+    top: 30px;
+    text-align: center;
+  }
+  .bar-total{
+    font-size: 34px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .bar-sub{ font-size: 12.5px; color: var(--muted); margin-bottom: 18px; }
+  .bar-track{
+    position: relative;
+    width: 60px;
+    height: 300px;
+    background: #f2f2f2;
+    border-radius: 30px;
+    margin: 0 auto;
+    overflow: hidden;
+  }
+  .bar-fill{
+    position: absolute;
+    bottom: 0; right: 0; left: 0;
+    height: var(--pct, 0%);
+    background: var(--bar);
+    border-radius: 30px;
+    transition: height .35s ease;
+  }
+  .bar-level{
+    font-size: 13px; margin-top: 16px; color: var(--muted);
+  }
+  .bar-level b{ color: var(--ink); }
+
+  .stars{
+    display:flex;
+    gap: 4px;
+    direction: ltr;
+  }
+  .stars .star{
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    color: #dcdcdc;
+    user-select: none;
+    transition: color .12s ease;
+  }
+  .stars .star.filled{ color: #f2a900; }
+
+  .reset-btn{
+    margin-top: 20px;
+    background: none;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 13px;
+    cursor: pointer;
+    color: var(--muted);
+  }
+  .reset-btn:hover{ border-color: #ccc; color: var(--ink); }
+
+  /* guide section */
+  .guide{
+    margin-top: 64px;
+    padding-top: 40px;
+    border-top: 1px solid var(--line);
+  }
+  .guide h2{
+    font-size: 19px;
+    font-weight: 700;
+    margin: 0 0 18px;
+  }
+  .guide h3{
+    font-size: 15px;
+    font-weight: 700;
+    margin: 24px 0 8px;
+  }
+  .guide p{
+    font-size: 14.5px;
+    line-height: 1.7;
+    color: #3a3a3a;
+    margin: 0 0 10px;
+  }
+  .guide ul{
+    margin: 8px 0 10px;
+    padding-inline-start: 20px;
+  }
+  .guide li{
+    font-size: 14.5px;
+    line-height: 1.7;
+    color: #3a3a3a;
+    margin-bottom: 6px;
+  }
+
+  .faq{
+    margin-top: 48px;
+    padding-top: 40px;
+    border-top: 1px solid var(--line);
+  }
+  .faq h2{
+    font-size: 19px;
+    font-weight: 700;
+    margin: 0 0 18px;
+  }
+  .faq details{
+    border-bottom: 1px solid var(--line);
+    padding: 14px 0;
+  }
+  .faq summary{
+    font-size: 14.5px;
+    font-weight: 600;
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .faq summary::-webkit-details-marker{ display:none; }
+  .faq summary::after{
+    content: '+';
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--muted);
+    flex-shrink: 0;
+    transition: transform .15s ease;
+  }
+  .faq details[open] summary::after{
+    content: '−';
+  }
+  .faq p{
+    font-size: 14px;
+    line-height: 1.7;
+    color: #3a3a3a;
+    margin: 10px 0 0;
+  }
+
+  /* ---------- footer (top-level, not inside a media query) ---------- */
+  .main-footer {
+    background-color: #2d3436;
+    color: white;
+    padding: 3rem 0 1.5rem;
+    margin-top: 4rem;
+  }
+
+  .footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+  }
+
+  .footer-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .footer-section p {
+    color: white;
+    margin-bottom: 1rem;
+    font-weight: bold;
+  }
+
+  .footer-section ul {
+    list-style: none;
+  }
+
+  .footer-section ul li {
+    margin-bottom: 0.5rem;
+  }
+
+  .footer-section a {
+    color: #ddd;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  .footer-section a:hover {
+    color: #6c63ff;
+  }
+
+  .social-icons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-right: -4px;
+  }
+
+  .social-icons img {
+    width: 24px;
+    height: 24px;
+    transition: opacity 0.3s ease;
+  }
+
+  .social-icons img:hover {
+    opacity: 0.8;
+  }
+
+  .footer-bottom {
+    text-align: center;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #444;
+  }
+
+  /* ---------- responsive: header/content/footer ---------- */
+  @media (max-width: 768px) {
+    .header-container {
+      padding: 0 1rem;
+    }
+
+    .main-content {
+      padding: 1rem;
+    }
+
+    .footer-container {
+      grid-template-columns: 1fr;
+      text-align: center;
+    }
+
+    .footer-section {
+      align-items: center;
+    }
+  }
+
+  /* ---------- mobile: horizontal points meter, same thickness as desktop ---------- */
+  @media (max-width: 700px){
+    .layout{ grid-template-columns: 1fr; }
+    .bar-box{
+      position: static;
+      text-align: initial;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+    }
+    .bar-total{ font-size: 26px; margin: 0; white-space: nowrap; }
+    .bar-sub{ display: none; }
+    .bar-track{
+      width: 100%;
+      height: 60px;
+      margin: 0;
+      flex: 1;
+    }
+    .bar-fill{
+      top: 0; bottom: 0; right: 0; left: auto;
+      height: 100%;
+      width: var(--pct, 0%);
+      transition: width .35s ease;
+    }
+    .bar-level{ margin-top: 0; white-space: nowrap; font-size: 12px; flex-shrink: 0; }
+  }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/sienna-accessibility@latest/dist/sienna-accessibility.umd.js" defer></script>
+</head>
+<body>
+    <header class="main-header">
+    <div class="header-container">
+      <a href="https://tools-by-rotem.github.io/webtools/" class="logo">
+        <img src="https://tools-by-rotem.github.io/webtools/site-logo.webp" alt="רותם קנון לוגו">
+      </a>
+    </div>
+  </header>
+    
+<div class="wrap">
+  <h1>סימלוטור ביקורת בגוגל מפות</h1>
+
+  <div class="layout">
+    <div class="form-col">
+
+      <div class="review-row">
+        <div class="label">ביקורת כתובה <span class="pts">10 נק' + 10 בונוס מעל 200 תווים</span></div>
+        <textarea id="reviewText" placeholder="כתבו כאן טיוטה..."></textarea>
+        <div class="charinfo"><span id="charCount">0</span> תווים</div>
+      </div>
+
+      <div class="row">
+        <div class="label">דירוג <span class="pts">נקודה אחת</span></div>
+        <div class="stars" id="stars" data-value="0">
+          <span class="star" data-v="1">★</span>
+          <span class="star" data-v="2">★</span>
+          <span class="star" data-v="3">★</span>
+          <span class="star" data-v="4">★</span>
+          <span class="star" data-v="5">★</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="label">תמונות <span class="pts">5 נק' לכל אחת</span></div>
+        <div class="stepper"><button data-t="photos" data-d="-1">−</button><input id="photos" type="number" value="0" min="0"><button data-t="photos" data-d="1">+</button></div>
+      </div>
+      <div class="row">
+        <div class="label">תיוגי תמונות <span class="pts">3 נק' לכל תיוג</span></div>
+        <div class="stepper"><button data-t="tags" data-d="-1">−</button><input id="tags" type="number" value="0" min="0"><button data-t="tags" data-d="1">+</button></div>
+      </div>
+      <div class="row">
+        <div class="label">כיתובים לתמונות <span class="pts">10 נק' לכל כיתוב</span></div>
+        <div class="stepper"><button data-t="captions" data-d="-1">−</button><input id="captions" type="number" value="0" min="0"><button data-t="captions" data-d="1">+</button></div>
+      </div>
+      <div class="row">
+        <div class="label">סרטונים <span class="pts">7 נק' לכל סרטון</span></div>
+        <div class="stepper"><button data-t="videos" data-d="-1">−</button><input id="videos" type="number" value="0" min="0"><button data-t="videos" data-d="1">+</button></div>
+      </div>
+      <div class="row">
+        <div class="label">תשובות לשאלות על מקום <span class="pts">נק' אחת</span></div>
+        <div class="stepper"><button data-t="answers" data-d="-1">−</button><input id="answers" type="number" value="0" min="0"><button data-t="answers" data-d="1">+</button></div>
+      </div>
+      <div class="row">
+        <div class="label">תשובות בקטע שאלות ותשובות <span class="pts">3 נק'</span></div>
+        <div class="stepper"><button data-t="qa" data-d="-1">−</button><input id="qa" type="number" value="0" min="0"><button data-t="qa" data-d="1">+</button></div>
+      </div>
+      <div class="row">
+        <div class="label">עריכות פרטי מקום <span class="pts">5 נק'</span></div>
+        <div class="stepper"><button data-t="edits" data-d="-1">−</button><input id="edits" type="number" value="0" min="0"><button data-t="edits" data-d="1">+</button></div>
+      </div>
+      <div class="row">
+        <div class="label">הוספת מקום <span class="pts">15 נק'</span></div>
+        <div class="stepper"><button data-t="places" data-d="-1">−</button><input id="places" type="number" value="0" min="0"><button data-t="places" data-d="1">+</button></div>
+      </div>
+      <div class="row">
+        <div class="label">הוספת כביש <span class="pts">15 נק'</span></div>
+        <div class="stepper"><button data-t="roads" data-d="-1">−</button><input id="roads" type="number" value="0" min="0"><button data-t="roads" data-d="1">+</button></div>
+      </div>
+      <div class="row">
+        <div class="label">בדיקת עובדה <span class="pts">נק' אחת</span></div>
+        <div class="stepper"><button data-t="facts" data-d="-1">−</button><input id="facts" type="number" value="0" min="0"><button data-t="facts" data-d="1">+</button></div>
+      </div>
+      <div class="row">
+        <div class="label">דיווח על פריט שגוי <span class="pts">נק' אחת</span></div>
+        <div class="stepper"><button data-t="reports" data-d="-1">−</button><input id="reports" type="number" value="0" min="0"><button data-t="reports" data-d="1">+</button></div>
+      </div>
+
+      <button class="reset-btn" id="resetBtn">איפוס</button>
+    </div>
+
+    <div class="bar-box">
+      <div class="bar-total" id="totalPoints">0</div>
+      <div class="bar-sub">נקודות</div>
+      <div class="bar-track"><div class="bar-fill" id="barFill"></div></div>
+      <div class="bar-level">רמה <b id="curLevel">1</b> · <span id="needText">15 עד רמה 2</span></div>
+    </div>
+  </div>
+
+  <div class="guide">
+    <h2>איך משתמשים בכלי</h2>
+    <p>סמנו כמה כוכבים תדרגו, כתבו טיוטה של הביקורת (או הדביקו טקסט שכבר כתבתם) והזינו כמה תמונות, סרטונים, תיוגים וכיתובים אתם מתכננים לצרף. הבר בצד מתעדכן מיד ומראה כמה נקודות זה שווה בסך הכול, ובאיזו רמה בתוכנית הממליצים המקומיים תהיו אחרי הפעולה.</p>
+    <p>אם באותו ביקור גם ענית על שאלה על המקום, ערכתם פרט, הוספתם מקום או כביש חסר, או בדקתם עובדה - אפשר להוסיף גם את זה ולראות איך זה משפיע על הסכום.</p>
+
+    <h3>למה בכלל להשאיר ביקורת בגוגל מפות?</h3>
+    <p>ביקורת שכתבתם לא נשארת רק "נקודות" - היא המידע שממנו אנשים אחרים מחליטים אם ללכת למקום, מה להזמין או למה להיזהר. ביקורת מפורטת ואמינה, עם תמונות אמיתיות, עוזרת לעסקים קטנים להתגלות ועוזרת לקהילה לקבל תמונה מדויקת יותר של המקום.</p>
+    <p>מעבר לתרומה לקהילה, צבירת נקודות מקדמת אתכם בתוכנית הממליצים המקומיים של גוגל:</p>
+    <ul>
+      <li>ברמה 4 (250 נקודות) מופיע תג "ממליץ מקומי" ליד השם שלכם בכל תוכן שאתם מוסיפים.</li>
+      <li>ככל שהרמה עולה, הפרופיל שלכם נראה אמין יותר לגולשים אחרים שקוראים את הביקורות.</li>
+      <li>גוגל מציעה מדי פעם הטבות והזמנות מיוחדות לממליצים פעילים ברמות גבוהות.</li>
+    </ul>
+  </div>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "איך הכלי מחשב את הנקודות?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "לכל פעולה יש ניקוד קבוע שנקבע על ידי גוגל (למשל 5 נקודות לתמונה או 10 נקודות לביקורת כתובה). הכלי פשוט מחבר את כל הפעולות שסימנתם לפי אותה טבלה, ומציג את הסכום בזמן אמת."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "מאיפה מגיע בונוס ה-10 הנקודות הנוסף על הביקורת?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "גוגל מעניקה 10 נקודות בונוס על ביקורת שאורכה עולה על 200 תווים. הכלי סופר את התווים בטיוטה שכתבתם ומוסיף את הבונוס אוטומטית ברגע שעוברים את הסף."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "מה ההבדל בין 'תשובה' לבין 'תשובה בקטע שאלות ותשובות'?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "'תשובה' מתייחסת למענה על שאלות אוטומטיות שגוגל שואלת על מקום שביקרתם בו (למשל אם יש חניה) ושווה נקודה אחת. תשובה בקטע 'שאלות ותשובות' היא מענה לשאלה ציבורית ששאל משתמש אחר על המקום, ושווה 3 נקודות."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "האם דירוג בכוכבים משפיע על מספר הנקודות לפי כמות הכוכבים?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "לא. דירוג שווה נקודה אחת בלבד, ללא קשר אם דירגתם כוכב אחד או חמישה. מספר הכוכבים משפיע רק על הציון שהמקום מקבל, לא על הניקוד האישי שלכם."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "מה קורה כשמגיעים לרמה 4?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "מרמה 4 (250 נקודות) ואילך מופיע תג 'ממליץ מקומי' ליד כל תוכן שאתם מוסיפים במפות Google - ביקורות, תמונות ותשובות כאחד."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "האם הכלי שומר את הנתונים שהזנתי?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "לא. כל הנתונים נשארים בדפדפן שלכם בלבד לצורך התצוגה, ומתאפסים כשרעננים או סוגרים את העמוד."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <div class="faq">
+    <h2>שאלות ותשובות</h2>
+
+    <details>
+      <summary>איך הכלי מחשב את הנקודות?</summary>
+      <p>לכל פעולה יש ניקוד קבוע שנקבע על ידי גוגל (למשל 5 נקודות לתמונה או 10 נקודות לביקורת כתובה). הכלי פשוט מחבר את כל הפעולות שסימנתם לפי אותה טבלה, ומציג את הסכום בזמן אמת.</p>
+    </details>
+
+    <details>
+      <summary>מאיפה מגיע בונוס ה-10 הנקודות הנוסף על הביקורת?</summary>
+      <p>גוגל מעניקה 10 נקודות בונוס על ביקורת שאורכה עולה על 200 תווים. הכלי סופר את התווים בטיוטה שכתבתם ומוסיף את הבונוס אוטומטית ברגע שעוברים את הסף.</p>
+    </details>
+
+    <details>
+      <summary>מה ההבדל בין "תשובה" לבין "תשובה בקטע שאלות ותשובות"?</summary>
+      <p>"תשובה" מתייחסת למענה על שאלות אוטומטיות שגוגל שואלת על מקום שביקרתם בו (למשל אם יש חניה) ושווה נקודה אחת. תשובה בקטע "שאלות ותשובות" היא מענה לשאלה ציבורית ששאל משתמש אחר על המקום, ושווה 3 נקודות.</p>
+    </details>
+
+    <details>
+      <summary>האם דירוג בכוכבים משפיע על מספר הנקודות לפי כמות הכוכבים?</summary>
+      <p>לא. דירוג שווה נקודה אחת בלבד, ללא קשר אם דירגתם כוכב אחד או חמישה. מספר הכוכבים משפיע רק על הציון שהמקום מקבל, לא על הניקוד האישי שלכם.</p>
+    </details>
+
+    <details>
+      <summary>מה קורה כשמגיעים לרמה 4?</summary>
+      <p>מרמה 4 (250 נקודות) ואילך מופיע תג "ממליץ מקומי" ליד כל תוכן שאתם מוסיפים במפות Google - ביקורות, תמונות ותשובות כאחד.</p>
+    </details>
+
+    <details>
+      <summary>האם הכלי שומר את הנתונים שהזנתי?</summary>
+      <p>לא. כל הנתונים נשארים בדפדפן שלכם בלבד לצורך התצוגה, ומתאפסים כשרעננים או סוגרים את העמוד.</p>
+    </details>
+  </div>
+</div>
+         <footer class="main-footer">
+    <div class="footer-container">
+      <div class="footer-section">
+        <p>רשתות חברתיות</p>
+        <div class="social-icons">
+          <a href="https://www.linkedin.com/in/rotem-kanon" target="_blank">
+            <img src="https://cdn-icons-png.flaticon.com/512/145/145807.png" alt="LinkedIn">
+          </a>
+          <a href="https://github.com/tools-by-rotem" target="_blank">
+            <img src="https://images.icon-icons.com/3685/PNG/512/github_logo_icon_229278.png" alt="GitHub">
+          </a>
+          <a href="https://www.tiktok.com/@rotemkanon" target="_blank">
+            <img src="https://cdn-icons-png.flaticon.com/512/4782/4782345.png" alt="Tiktok">
+          </a>
+        </div>
+      </div>
+      <div class="footer-section">
+        <p>ניווט באתר</p>
+        <ul>
+          <li><a href="https://tools-by-rotem.github.io/webtools/">ספריית הכלים</a></li>
+          <li><a href="https://tools-by-rotem.github.io/webtools/accessibility-statement">הצהרת נגישות</a></li>
+          <li><a href="https://tools-by-rotem.github.io/webtools/privacy-policy">מדיניות פרטיות</a></li>
+          <li><a href="https://tools-by-rotem.github.io/webtools/sitemap">מפת אתר</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <p>כמויות חיפושים</p>
+        <ul>
+          <li><a href="https://tools-by-rotem.github.io/webtools/google-search-volume">כמות חיפושים בגוגל</a></li>
+          <li><a href="https://tools-by-rotem.github.io/webtools/spotify-search-volume">כמות חיפושים בספוטיפיי</a></li>
+          <li><a href="https://tools-by-rotem.github.io/webtools/soundcloud-search-volume">כמות חיפושים בסאונדקלאוד </a></li>
+          <li><a href="https://tools-by-rotem.github.io/webtools/competitors-traffic">חישוב תנועה לאתרי מתחרים </a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <p>תצוגה מקדימה</p>
+        <ul>
+          <li><a href="https://tools-by-rotem.github.io/webtools/open-graph-checker">בדיקת Open Graph</a></li>
+          <li><a href="https://tools-by-rotem.github.io/webtools/google-serp-preview">תצוגה מקדימה לנראות בגוגל</a></li>
+          <li><a href="https://tools-by-rotem.github.io/webtools/social-link-preview">תצוגה מקדימה לרשתות חברתיות</a></li>
+          <li><a href="https://tools-by-rotem.github.io/webtools/google-reviews-simulator">סימולטור ביקורת בגוגל מפות</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <p>אופטימיזציה</p>
+        <ul>
+          <li><a href="https://tools-by-rotem.github.io/webtools/page-speed-test">בדיקת מהירות טעינה</a></li>
+          <li><a href="https://tools-by-rotem.github.io/webtools/mobile-simulator">בדיקת תאימות למכשירים ניידים</a></li>
+          <li><a href="https://tools-by-rotem.github.io/webtools/image-minify-converter">המרת פורמט וכיווץ משקל תמונה</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <p>יצירה ועיצוב</p>
+        <ul>
+          <li><a href="https://tools-by-rotem.github.io/webtools/background-remover">הסרת רקע מתמונה</a></li>
+          <li><a href="https://tools-by-rotem.github.io/webtools/draw">ציור אינטראקטיבי</a></li>
+          <li><a href="https://tools-by-rotem.github.io/webtools/image-color-identifier">זיהוי צבעי תמונה</a></li>
+          <li><a href="https://tools-by-rotem.github.io/webtools/infographics">יצירת אינפוגרפיקות</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <p>נגישות</p>
+        <ul>
+          <li><a href="https://tools-by-rotem.github.io/webtools/accessibility-toolbar">סרגל נגישות</a></li>
+          <li><a href="https://tools-by-rotem.github.io/webtools/accessibility-checker">בדיקת נגישות לאתר אינטרנט</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <p>שונות</p>
+        <ul>
+          <li><a href="https://tools-by-rotem.github.io/webtools/navigation-links-generator">מחולל קישורי ניווט</a></li>
+          <li><a href="https://tools-by-rotem.github.io/webtools/reverse-typing-fix">תיקון הקלדה הפוכה</a></li>
+          <li><a href="https://tools-by-rotem.github.io/webtools/strong-password-generator">מחולל סיסמאות חזקות</a></li>
+          <li><a href="https://tools-by-rotem.github.io/webtools/time-to-go-home">הגיע הזמן ללכת הביתה</a></li>
+          <li><a href="https://tools-by-rotem.github.io/webtools/resume-scanner">התאמת קורות חיים לסורקים אוטומטיים</a></li>
+          <li><a href="https://tools-by-rotem.github.io/webtools/time-zone-converter">המרת זמן בינלאומי</a></li>
+          <li><a href="https://tools-by-rotem.github.io/webtools/fahrenheit-to-celsius">המרת פרנהייט לצלזיוס</a></li>
+          <li><a href="https://tools-by-rotem.github.io/webtools/screen-size-checker">בדיקת גודל מסך</a></li>
+          <li><a href="https://tools-by-rotem.github.io/webtools/public-transport-luggage">העלאת מטען לתחבורה הציבורית</a></li>
+          <li><a href="https://tools-by-rotem.github.io/webtools/ai-image-generator">מחולל תמונות AI</a></li>
+          <li><a href="https://tools-by-rotem.github.io/webtools/reasons-revealer">חושף הסיבות</a></li>
+          <li><a href="https://tools-by-rotem.github.io/webtools/phobia">מנוע חיפוש לפוביות</a></li>
+          <li><a href="https://tools-by-rotem.github.io/webtools/angels-law">חוק האנג'לים</a></li>
+          <li><a href="https://tools-by-rotem.github.io/webtools/free-entry-events">מציאת הופעות בכניסה חופשית</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© <span id="year"></span> כל הזכויות שמורות לרותם קנון</p>
+      <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+    </div>
+  </footer>
+
+<script>
+(function(){
+  const LEVELS = [0,15,75,250,500,1500,5000,15000,50000,100000];
+  const CAP = 500;
+
+  const ids = ['photos','tags','captions','videos','answers','qa','edits','places','roads','facts','reports'];
+  const $ = id => document.getElementById(id);
+  const getNum = id => { const v = parseInt($(id).value,10); return isNaN(v)||v<0 ? 0 : v; };
+  const getStars = () => parseInt($('stars').dataset.value, 10) || 0;
+
+  function paintStars(){
+    const val = getStars();
+    document.querySelectorAll('#stars .star').forEach(s => {
+      s.classList.toggle('filled', parseInt(s.dataset.v,10) <= val);
+    });
+  }
+
+  function calc(){
+    const reviewLen = $('reviewText').value.trim().length;
+    $('charCount').textContent = reviewLen;
+
+    const captions = Math.min(getNum('captions'), getNum('photos'));
+
+    let total = 0;
+    total += getStars() > 0 ? 1 : 0;
+    total += reviewLen > 0 ? 10 : 0;
+    total += reviewLen >= 200 ? 10 : 0;
+    total += getNum('photos') * 5;
+    total += getNum('tags') * 3;
+    total += captions * 10;
+    total += getNum('videos') * 7;
+    total += getNum('answers') * 1;
+    total += getNum('qa') * 3;
+    total += getNum('edits') * 5;
+    total += getNum('places') * 15;
+    total += getNum('roads') * 15;
+    total += getNum('facts') * 1;
+    total += getNum('reports') * 1;
+
+    $('totalPoints').textContent = total.toLocaleString('en-US');
+
+    const pct = Math.min(100, (total / CAP) * 100);
+    $('barFill').style.setProperty('--pct', pct + '%');
+
+    let levelIdx = LEVELS.filter(min => min <= total).length;
+    $('curLevel').textContent = levelIdx;
+    if (levelIdx < 10){
+      const need = LEVELS[levelIdx] - total;
+      $('needText').textContent = need.toLocaleString('en-US') + ' עד רמה ' + (levelIdx+1);
+    } else {
+      $('needText').textContent = 'רמה מקסימלית';
+    }
+  }
+
+  document.addEventListener('input', e => {
+    if (e.target.matches('input, textarea')) calc();
+  });
+
+  document.querySelectorAll('.stepper button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.t;
+      const dir = parseInt(btn.dataset.d,10);
+      const max = id === 'rating' ? 1 : Infinity;
+      const cur = getNum(id);
+      $(id).value = Math.max(0, Math.min(max, cur+dir));
+      calc();
+    });
+  });
+
+  document.querySelectorAll('#stars .star').forEach(s => {
+    s.addEventListener('click', () => {
+      const v = parseInt(s.dataset.v, 10);
+      const cur = getStars();
+      $('stars').dataset.value = (cur === v) ? 0 : v;
+      paintStars();
+      calc();
+    });
+  });
+
+  $('resetBtn').addEventListener('click', () => {
+    ids.forEach(id => $(id).value = 0);
+    $('reviewText').value = '';
+    $('stars').dataset.value = 0;
+    paintStars();
+    calc();
+  });
+
+  paintStars();
+  calc();
+})();
+</script>
+</body>
+</html>
